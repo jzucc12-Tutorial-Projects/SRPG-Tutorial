@@ -28,6 +28,16 @@ public class GridSystem
     }
     #endregion
 
+    #region //Validation
+    public bool IsValidPosition(GridPosition gridPosition)
+    {
+        if(gridPosition.x < 0) return false;
+        if(gridPosition.z < 0) return false;
+        if(gridPosition.x >= width) return false;
+        return gridPosition.z < height;
+    }
+    #endregion
+
     #region Getters
     public Vector3 GetWorldPosition(GridPosition gridPosition)
     {
@@ -45,6 +55,9 @@ public class GridSystem
     {
         return gridObjectArray[gridPosition.x, gridPosition.z];
     }
+
+    public int GetWidth() => width;
+    public int GetHeight() => height;
     #endregion
 
     #region //Debug

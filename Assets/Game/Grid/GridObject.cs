@@ -34,5 +34,6 @@ public class GridObject
         return $"{gridPosition.ToString()}{unitString}";
     }
     public List<Unit> GetUnits() => units;
+    public bool HasAnyUnit() => units.Count > 0;
     #endregion
 }

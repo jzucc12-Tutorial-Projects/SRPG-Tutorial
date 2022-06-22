@@ -5,8 +5,8 @@ public class Testing : MonoBehaviour
 
 
 
-    private void Awake()
+    private void Update()
     {
-
+        
     }
 }
