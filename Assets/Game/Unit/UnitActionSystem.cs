@@ -3,12 +3,15 @@ using UnityEngine;
 
 public class UnitActionSystem : MonoBehaviour
 {
+    #region //Variables
     public static UnitActionSystem instance { get; private set; }
     public event EventHandler OnSelectedUnitChanged;
     private Unit selectedUnit = null;
     [SerializeField] private LayerMask unitMask = -1;
+    #endregion
 
 
+    #region //Monobehaviour
     private void Awake()
     {
         if(instance != null) Destroy(gameObject);
@@ -25,7 +28,9 @@ public class UnitActionSystem : MonoBehaviour
             selectedUnit.ChangePosition(MouseWorld.GetPosition());
         }
     }
-
+    #endregion
+    
+    #region //Unit selection
     private bool TrySelectUnit()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -42,4 +47,5 @@ public class UnitActionSystem : MonoBehaviour
     }
 
     public Unit GetSelectedUnit() => selectedUnit;
+    #endregion
 }
