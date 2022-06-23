@@ -48,6 +48,7 @@ public class GridSystemVisual : MonoBehaviour
             {
                 GridPosition position = new GridPosition(x, z);
                 var single = Instantiate(visualPrefab, LevelGrid.instance.GetWorldPosition(position), Quaternion.identity);
+                single.transform.parent = transform;
                 singles[x,z] = single;
             }
         }

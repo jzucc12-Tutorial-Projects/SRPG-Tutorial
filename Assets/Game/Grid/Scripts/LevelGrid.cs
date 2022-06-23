@@ -5,8 +5,11 @@ using UnityEngine;
 public class LevelGrid : MonoBehaviour
 {
     #region //Variables
+    [SerializeField] private int width = 10;
+    [SerializeField] private int height = 10;
+    [SerializeField] private int cellSize = 2;
     public static LevelGrid instance { get; private set; }
-    private GridSystem gridSystem = null;
+    private GridSystem<GridObject> gridSystem = null;
     [SerializeField] private Transform gridDebugObjectPrefab = null;
     public event Action OnAnyUnitMove;
     #endregion
@@ -18,8 +21,7 @@ public class LevelGrid : MonoBehaviour
         if(instance != null) Destroy(gameObject);
         else 
         {
-            gridSystem = new GridSystem(10, 10, 2);
-            gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
+            gridSystem = new GridSystem<GridObject>(width, height, cellSize, (GridSystem<GridObject> g, GridPosition gridPosition) => new GridObject(g, gridPosition));
             instance = this;
         }
     }
@@ -74,7 +76,8 @@ public class LevelGrid : MonoBehaviour
     public Unit GetUnitAtGridPosition(GridPosition gridPosition) => gridSystem.GetGridObject(gridPosition).GetUnit();
     public GridPosition GetGridPosition(Vector3 worldPosition) => gridSystem.GetGridPosition(worldPosition);
     public Vector3 GetWorldPosition(GridPosition gridPosition) => gridSystem.GetWorldPosition(gridPosition);
-    public int GetWidth() => gridSystem.GetWidth();
-    public int GetHeight() => gridSystem.GetHeight();
+    public int GetWidth() => width;
+    public int GetHeight() => height;
+    public int GetCellSize() => cellSize;
     #endregion
 }

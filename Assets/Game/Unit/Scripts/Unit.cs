@@ -12,9 +12,6 @@ public class Unit : MonoBehaviour
     #endregion
 
     #region //Action variables
-    public MoveAction moveAction {  get; private set; }
-    public SpinAction spinAction {  get; private set; }
-    public ShootAction shootAction { get; private set; }
     private BaseAction[] actions = new BaseAction[0];
     [SerializeField] private int maxActionPoints = 2;
     public event Action OnActionPointChange;
@@ -25,9 +22,6 @@ public class Unit : MonoBehaviour
     #region //Monobehaviour
     private void Awake()
     {
-        moveAction = GetComponent<MoveAction>();
-        spinAction = GetComponent<SpinAction>();
-        shootAction = GetComponent<ShootAction>();
         actions = GetComponents<BaseAction>();
         healthSystem = GetComponent<HealthSystem>();
     }
@@ -106,6 +100,13 @@ public class Unit : MonoBehaviour
     #endregion
 
     #region //Getters
+    public T GetAction<T>() where T : BaseAction
+    {
+        foreach(var action in actions)
+            if(action is T) return (T)action;
+
+        return null;
+    }
     public float GetHealthPercentage() => healthSystem.GetHealthPercentage();
     public int GetActionPoints() => currentActionPoints;
     public GridPosition GetGridPosition() => gridPosition;

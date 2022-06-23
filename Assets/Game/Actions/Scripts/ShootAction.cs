@@ -10,8 +10,10 @@ public class ShootAction : BaseAction
     [SerializeField] private float aimingTimer = 1;
     [SerializeField] private float shootingTimer = 0.1f;
     [SerializeField] private float coolOffTimer = 0.1f;
+    [SerializeField] private LayerMask obstacleLayer = 0;
     private float currentStateTime = 5;
     public event Action<Unit, Unit> OnShoot;
+    public static event Action OnShootStatic;
     #endregion
 
     #region //Shooting state Variables
@@ -37,7 +39,7 @@ public class ShootAction : BaseAction
         {
             case State.Aiming:
                 Vector3 aimDir = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
-                unit.moveAction.Rotate(aimDir);
+                unit.GetAction<MoveAction>().Rotate(aimDir);
                 break;
 
             case State.Shooting:
@@ -91,6 +93,7 @@ public class ShootAction : BaseAction
     private void Shoot()
     {
         OnShoot?.Invoke(unit, targetUnit);
+        OnShootStatic?.Invoke();
         targetUnit.Damage(damage);
     }
 
@@ -99,15 +102,23 @@ public class ShootAction : BaseAction
         return GetValidPositions(unit.GetGridPosition());
     }
 
-    public List<GridPosition> GetValidPositions(GridPosition startPosition)
+    public List<GridPosition> GetValidPositions(GridPosition unitPosition)
     {
         List<GridPosition> validGridPositionList = new List<GridPosition>();
 
-        foreach(var position in LevelGrid.instance.CheckGridRange(startPosition, weaponRange))
+        foreach(var position in LevelGrid.instance.CheckGridRange(unitPosition, weaponRange))
         {
             if(!LevelGrid.instance.HasAnyUnit(position)) continue;
-            bool targetIsEnemy = LevelGrid.instance.GetUnitAtGridPosition(position).IsEnemy();
-            if(unit.IsEnemy() == targetIsEnemy) continue;
+            var target = LevelGrid.instance.GetUnitAtGridPosition(position);
+            if(unit.IsEnemy() == target.IsEnemy()) continue;
+
+            Vector3 unitWorldPosition = LevelGrid.instance.GetWorldPosition(unitPosition);
+            Vector3 shootDir = (target.GetWorldPosition() - unitWorldPosition).normalized;
+            float shoulderHeight = 1.7f;
+            var hit = Physics.Raycast(unitWorldPosition + Vector3.up * shoulderHeight, shootDir,
+                            Vector3.Distance(unitWorldPosition, target.GetWorldPosition()),
+                            obstacleLayer);
+            if(hit) continue;
             validGridPositionList.Add(position);
         }
 
@@ -119,7 +130,7 @@ public class ShootAction : BaseAction
     public override EnemyAIAction GetEnemyAIAction(GridPosition position)
     {
         Unit unit = LevelGrid.instance.GetUnitAtGridPosition(position);
-        return new EnemyAIAction(position, Mathf.RoundToInt(100f - 100f * unit.GetHealthPercentage()));
+        return new EnemyAIAction(position, Mathf.RoundToInt(100f - 1f * unit.GetHealthPercentage()));
     }
     #endregion
 

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 public class GridObject
 {
     #region //Variables
-    private GridSystem gridSystem = null;
+    private GridSystem<GridObject> gridSystem = null;
     private GridPosition gridPosition = new GridPosition();
     private List<Unit> units = new List<Unit>();
     #endregion
 
 
     #region //Constructors
-    public GridObject(GridSystem gridSystem, GridPosition gridPosition)
+    public GridObject(GridSystem<GridObject> gridSystem, GridPosition gridPosition)
     {
         this.gridSystem = gridSystem;
         this.gridPosition = gridPosition;
