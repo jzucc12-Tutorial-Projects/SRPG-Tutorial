@@ -2,8 +2,16 @@ using UnityEngine;
 
 public static class JZVectorExtensions
 {
-    //Courtesy of the GMTK Discord
+    /// <summary>
+    /// Returns a vector where each element is squared
+    /// </summary>
+    public static Vector2 SquareVector(this Vector2 vector)
+    {
+        return new Vector2(vector.x * vector.x, vector.y * vector.y);
+    }
 
+
+    //Courtesy of the GMTK Discord
     /// <summary>
     /// Allows you to replace the a value in a vector
     /// </summary>
@@ -47,5 +55,30 @@ public static class JZVectorExtensions
     public static Vector3 Flatten(this Vector3 vector, Vector3 axis)
     {
         return vector - (axis * Vector3.Dot(vector, axis));
+    }
+
+    /// <summary>
+    /// Returns a vector where each element is squared
+    /// </summary>
+    public static Vector3 SquareVector(this Vector3 vector)
+    {
+        return new Vector3(vector.x * vector.x, vector.y * vector.y, vector.z * vector.z);
+    }
+
+    /// <summary>
+    /// Determines if vector magnitude is within a range using square magnitude
+    /// </summary>
+    public static bool InRange(this Vector2 vector, float range)
+    {
+        return vector.sqrMagnitude <= range * range;
+    }
+
+
+    /// <summary>
+    /// Determines if vector magnitude is within a range using square magnitude
+    /// </summary>
+    public static bool InRange(this Vector3 vector, float range)
+    {
+        return vector.sqrMagnitude <= range * range;
     }
 }
