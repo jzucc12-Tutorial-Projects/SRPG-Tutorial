@@ -40,21 +40,15 @@ public class CameraController : MonoBehaviour
     #region //Move and rotate camera
     private void MoveCamera()
     {
-        Vector3 inputMoveDir = Vector3.zero;
-        if (Input.GetKey(KeyCode.W)) inputMoveDir.z = 1;
-        if (Input.GetKey(KeyCode.S)) inputMoveDir.z = -1;
-        if (Input.GetKey(KeyCode.A)) inputMoveDir.x = -1;
-        if (Input.GetKey(KeyCode.D)) inputMoveDir.x = 1;
-
-        Vector3 moveVector = transform.forward * inputMoveDir.z + transform.right * inputMoveDir.x;
+        Vector3 inputMoveDir = InputManager.instance.GetCameraMove();
+        Vector3 moveVector = transform.forward * inputMoveDir.y + transform.right * inputMoveDir.x;
         transform.position += moveVector * moveSpeed * Time.deltaTime;
     }
 
     private void RotateCamera()
     {
-        Vector3 rotationVector = Vector3.zero;
-        if (Input.GetKey(KeyCode.Q)) rotationVector.y = 1;
-        if (Input.GetKey(KeyCode.E)) rotationVector.y = -1;
+        Vector3 rotationVector = Vector2.zero;
+        rotationVector.y = InputManager.instance.GetCameraRotate();
         transform.eulerAngles += rotationVector * rotationSpeed * Time.deltaTime;
     }
     #endregion
@@ -62,8 +56,7 @@ public class CameraController : MonoBehaviour
     #region //Zoom camera
     private void ZoomCamera()
     {
-        if (Input.mouseScrollDelta.y > 0) followOffset.y -= zoomAmount;
-        if (Input.mouseScrollDelta.y < 0) followOffset.y += zoomAmount;
+        followOffset.y += zoomAmount * InputManager.instance.GetCameraZoom();
         followOffset.y = Mathf.Clamp(followOffset.y, minZoom, maxZoom);
         transposer.m_FollowOffset = Vector3.Lerp(transposer.m_FollowOffset, followOffset, Time.deltaTime * zoomSpeed);
     }

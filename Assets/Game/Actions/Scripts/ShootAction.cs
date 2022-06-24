@@ -11,7 +11,7 @@ public class ShootAction : BaseAction
     [SerializeField] private float shootingTimer = 0.1f;
     [SerializeField] private float coolOffTimer = 0.1f;
     [SerializeField] private LayerMask obstacleLayer = 0;
-    private float currentStateTime = 5;
+    private float currentStateTime = 1;
     public event Action<Unit, Unit> OnShoot;
     public static event Action OnShootStatic;
     #endregion

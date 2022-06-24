@@ -7,7 +7,7 @@ public abstract class BaseAction : MonoBehaviour
     #region //Variables
     protected Unit unit = null;
     protected bool isActive = false;
-    protected Action onActionFinish;
+    protected Action OnActionFinish;
     public static event Action<BaseAction> OnAnyActionStarted;
     public static event Action<BaseAction> OnAnyActionEnded;
     #endregion
@@ -26,14 +26,14 @@ public abstract class BaseAction : MonoBehaviour
     public virtual void TakeAction(GridPosition gridPosition, Action onFinish)
     {
         isActive = true;
-        onActionFinish = onFinish;
+        OnActionFinish = onFinish;
         OnAnyActionStarted?.Invoke(this);
     }
 
     protected void ActionFinish()
     {
         isActive = false;
-        onActionFinish?.Invoke();
+        OnActionFinish?.Invoke();
         OnAnyActionEnded?.Invoke(this);
     }
 

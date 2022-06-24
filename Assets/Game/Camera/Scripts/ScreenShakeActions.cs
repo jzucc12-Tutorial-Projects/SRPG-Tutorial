@@ -8,15 +8,24 @@ public class ScreenShakeActions : MonoBehaviour
     private void OnEnable()
     {
         ShootAction.OnShootStatic += Shake;
+        Grenade.OnExplodeStatic += BigShake;
+        MeleeAction.OnMeleeStatic += Shake;
     }
 
     private void OnDisable()
     {
-        ShootAction.OnShootStatic += Shake;
+        ShootAction.OnShootStatic -= Shake;
+        Grenade.OnExplodeStatic -= BigShake;
+        MeleeAction.OnMeleeStatic -= Shake;
     }
 
     private void Shake()
     {
         screenShake.Shake();
+    }
+
+    private void BigShake()
+    {
+        screenShake.Shake(5);
     }
 }

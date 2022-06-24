@@ -17,6 +17,7 @@ public class GridSystemVisual : MonoBehaviour
     public enum GridVisualType
     {
         White,
+        BlueSoft,
         Blue,
         RedSoft,
         Red,
@@ -89,6 +90,18 @@ public class GridSystemVisual : MonoBehaviour
                 var positions = new List<GridPosition>(LevelGrid.instance.CheckGridRange(unit.GetGridPosition(), shootAction.GetRange()));
                 ShowPositions(positions, GridVisualType.RedSoft);
                 break;
+
+            case MeleeAction meleeAction:
+                visualType = GridVisualType.Red;
+                var meleePosition = new List<GridPosition>(LevelGrid.instance.CheckGridRange(unit.GetGridPosition(), meleeAction.GetRange(), false));
+                ShowPositions(meleePosition, GridVisualType.RedSoft);
+                break;
+
+            case InteractAction interactAction:
+                visualType = GridVisualType.Blue;
+                var interactPosition = new List<GridPosition>(LevelGrid.instance.CheckGridRange(unit.GetGridPosition(), interactAction.GetRange(), false));
+                ShowPositions(interactPosition, GridVisualType.BlueSoft);
+                break;  
         }
 
         ShowPositions(action.GetValidPositions(), visualType);

@@ -37,7 +37,7 @@ public class UnitActionSystem : MonoBehaviour
     private void Update()
     {
         if(isBusy) return;
-        if(!Input.GetMouseButtonDown(0)) return;
+        if(!InputManager.instance.GetMouseClick()) return;
         if(EventSystem.current.IsPointerOverGameObject()) return;
         if(!TurnSystem.instance.IsPlayerTurn()) return;
         
@@ -49,7 +49,7 @@ public class UnitActionSystem : MonoBehaviour
     #region //Unit selection
     private bool TrySelectUnit()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(InputManager.instance.GetMouseScreenPosition());
         bool didHit = Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, unitMask);
         if(!didHit || !hit.collider.TryGetComponent<Unit>(out Unit unit)) return false;
         if(unit.IsEnemy()) return false;
@@ -80,9 +80,9 @@ public class UnitActionSystem : MonoBehaviour
         GridPosition mouseGridPosition = LevelGrid.instance.GetGridPosition(MouseWorld.GetPosition());
         if(!selectedAction.IsValidAction(mouseGridPosition)) return;
         if(!selectedUnit.TryTakeAction(selectedAction)) return;
+        SetBusy();
         selectedAction.TakeAction(mouseGridPosition, ClearBusy);
         actionTaken?.Invoke();
-        SetBusy();
     }
 
     private void SetBusy()

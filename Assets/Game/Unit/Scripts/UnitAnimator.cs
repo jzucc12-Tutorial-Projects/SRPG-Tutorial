@@ -10,7 +10,7 @@ public class UnitAnimator : MonoBehaviour
 
 
     #region //Monobehaviour
-    private void Awake()
+    private void OnEnable()
     {
         if(TryGetComponent<MoveAction>(out MoveAction moveAction))
         {
@@ -22,6 +22,30 @@ public class UnitAnimator : MonoBehaviour
         {
             shootAction.OnShoot += Shoot;
         }
+
+        if(TryGetComponent<MeleeAction>(out MeleeAction meleeAction))
+        {
+            meleeAction.OnMeleeStarted += MeleeAttack;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if(TryGetComponent<MoveAction>(out MoveAction moveAction))
+        {
+            moveAction.StartMoving -= StartMoving;
+            moveAction.StopMoving -= StopMoving;
+        }
+
+        if(TryGetComponent<ShootAction>(out ShootAction shootAction))
+        {
+            shootAction.OnShoot -= Shoot;
+        }
+
+        if(TryGetComponent<MeleeAction>(out MeleeAction meleeAction))
+        {
+            meleeAction.OnMeleeStarted -= MeleeAttack;
+        } 
     }
     #endregion
 
@@ -43,6 +67,11 @@ public class UnitAnimator : MonoBehaviour
     private void StopMoving()
     {
         animator.SetBool("isWalking", false);
+    }
+
+    private void MeleeAttack()
+    {
+        animator.SetTrigger("Melee");
     }
     #endregion
 }

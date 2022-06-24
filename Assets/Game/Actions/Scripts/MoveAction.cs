@@ -79,7 +79,7 @@ public class MoveAction : BaseAction
         {
             if(unitPosition == position) continue;
             if(LevelGrid.instance.HasAnyUnit(position)) continue;
-            if(!Pathfinding.instance.IsWalkable(position)) continue;
+            if(!Pathfinding.instance.GetIsWalkable(position)) continue;
             if(!Pathfinding.instance.HasWalkablePath(unitPosition, position)) continue;
             if(Pathfinding.instance.GetPathLength(unitPosition, position) > maxMoveDistance) continue;
             validGridPositionList.Add(position);

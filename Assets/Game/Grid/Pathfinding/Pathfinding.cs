@@ -33,7 +33,7 @@ public class Pathfinding : MonoBehaviour
     {
         width = LevelGrid.instance.GetWidth();
         height = LevelGrid.instance.GetHeight();
-        cellSize = LevelGrid.instance.GetCellSize();
+        cellSize = LevelConstants.cellSize;
         gridSystem = new GridSystem<PathNode>(width, height, cellSize, (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
         for(int x = 0; x < width; x++)
         {
@@ -182,7 +182,8 @@ public class Pathfinding : MonoBehaviour
     #endregion
 
     #region //Getters
-    public bool IsWalkable(GridPosition gridPosition) => gridSystem.GetGridObject(gridPosition).IsWalkable();
+    public bool GetIsWalkable(GridPosition gridPosition) => gridSystem.GetGridObject(gridPosition).IsWalkable();
+    public void SetIsWalkable(GridPosition gridPosition, bool isWalkable) => gridSystem.GetGridObject(gridPosition).SetIsWalkable(isWalkable);
     public int GetPathLength(GridPosition startPosition, GridPosition endPosition)
     {
         FindPath(startPosition, endPosition, out int pathLength);
