@@ -1,24 +1,24 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ShootAction : BaseAction
+public class ShootAction : TargetedAction
 {
     #region //Weapon variables
-    [SerializeField] private int weaponRange = 7;
+    [Header("Shoot Action")]
     [SerializeField] private int damage = 40;
+    [SerializeField] private int maxClip = 6;
     [SerializeField] private float aimingTimer = 1;
     [SerializeField] private float shootingTimer = 0.1f;
     [SerializeField] private float coolOffTimer = 0.1f;
-    [SerializeField] private LayerMask obstacleLayer = 0;
     private float currentStateTime = 1;
-    public event Action<Unit, Unit> OnShoot;
+    public event Action<Unit, ITargetable> OnShoot;
     public static event Action OnShootStatic;
+    private int currentClip;
     #endregion
 
     #region //Shooting state Variables
     private bool canShootBullet = false;
-    private Unit targetUnit = null;
+    private ITargetable target = null;
     private enum State
     {
         Aiming,
@@ -30,6 +30,12 @@ public class ShootAction : BaseAction
 
 
     #region //Monobehaviour
+    protected override void Awake()
+    {
+        base.Awake();
+        currentClip = maxClip;
+    }
+
     private void Update()
     {
         if (!isActive) return;
@@ -38,7 +44,7 @@ public class ShootAction : BaseAction
         switch (currentState)
         {
             case State.Aiming:
-                Vector3 aimDir = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
+                Vector3 aimDir = (target.GetWorldPosition() - unit.GetWorldPosition()).normalized;
                 unit.GetAction<MoveAction>().Rotate(aimDir);
                 break;
 
@@ -75,6 +81,7 @@ public class ShootAction : BaseAction
                 break;
 
             case State.Cooloff:
+                currentClip--;
                 ActionFinish();
                 break;
         }
@@ -84,64 +91,51 @@ public class ShootAction : BaseAction
     #region //Action performing
     public override void TakeAction(GridPosition gridPosition, Action onFinish)
     {
-        targetUnit = LevelGrid.instance.GetUnitAtGridPosition(gridPosition);
+        target = LevelGrid.instance.GetTargetableAtGridPosition(gridPosition);
         currentState = State.Aiming;
         canShootBullet = true;
         currentStateTime = aimingTimer;
-        base.TakeAction(gridPosition, onFinish);
+        ActionStart(onFinish);
     }
+
+    public override void TakeAltAction(Action onFinish)
+    {
+        currentClip = maxClip;
+        OnActionFinish = onFinish;
+        ActionFinish();
+        Debug.Log("alt");
+    }
+
     private void Shoot()
     {
-        OnShoot?.Invoke(unit, targetUnit);
+        OnShoot?.Invoke(unit, target);
         OnShootStatic?.Invoke();
-        targetUnit.Damage(damage);
+        target.Damage(damage);
     }
 
-    public override List<GridPosition> GetValidPositions()
+    public override bool IsValidAction(GridPosition gridPosition)
     {
-        return GetValidPositions(unit.GetGridPosition());
+        if(currentClip <= 0) return false;
+        return base.IsValidAction(gridPosition);
     }
 
-    public List<GridPosition> GetValidPositions(GridPosition unitPosition)
-    {
-        List<GridPosition> validGridPositionList = new List<GridPosition>();
-
-        foreach(var position in LevelGrid.instance.CheckGridRange(unitPosition, weaponRange))
-        {
-            if(!LevelGrid.instance.HasAnyUnit(position)) continue;
-            var target = LevelGrid.instance.GetUnitAtGridPosition(position);
-            if(unit.IsEnemy() == target.IsEnemy()) continue;
-
-            Vector3 unitWorldPosition = LevelGrid.instance.GetWorldPosition(unitPosition);
-            Vector3 shootDir = (target.GetWorldPosition() - unitWorldPosition).normalized;
-            float shoulderHeight = 1.7f;
-            var hit = Physics.Raycast(unitWorldPosition + Vector3.up * shoulderHeight, shootDir,
-                            Vector3.Distance(unitWorldPosition, target.GetWorldPosition()),
-                            obstacleLayer);
-            if(hit) continue;
-            validGridPositionList.Add(position);
-        }
-
-        return validGridPositionList;
-    }
+    public override bool CanTakeAltAction() => currentClip < maxClip;
     #endregion
 
     #region //Enemy Action
     public override EnemyAIAction GetEnemyAIAction(GridPosition position)
     {
-        Unit unit = LevelGrid.instance.GetUnitAtGridPosition(position);
-        return new EnemyAIAction(position, Mathf.RoundToInt(100f - 1f * unit.GetHealthPercentage()));
+        ITargetable target = LevelGrid.instance.GetUnitAtGridPosition(position);
+        Unit targetUnit = (Unit)target;
+        if(targetUnit == null) return new EnemyAIAction(position, Mathf.RoundToInt(10));
+        else return new EnemyAIAction(position, Mathf.RoundToInt(100f - 1f * targetUnit.GetHealthPercentage()));
     }
     #endregion
 
     #region //Getters
-    public int GetRange() => weaponRange;
-    public override string GetActionName() => "Shoot";
+    public override int GetQuantity() => currentClip;
+    public override string GetActionName() => currentClip > 0 ? "Shoot" : "Reload";
     public Unit GetUnit() => unit;
-    public Unit GetTargetUnit() => targetUnit;
-    public int GetTargetsAtPosition(GridPosition position)
-    {
-        return GetValidPositions(position).Count;
-    }
+    public ITargetable GetTarget() => target;
     #endregion
 }

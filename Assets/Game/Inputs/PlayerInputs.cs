@@ -62,6 +62,15 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Alt Action"",
+                    ""type"": ""Button"",
+                    ""id"": ""a682fe7c-003c-48af-a467-5b98f0deb7fb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -229,6 +238,17 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""action"": ""Mouse Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4bbd7439-7d82-4d42-a146-782e1ca213c6"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Alt Action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -241,6 +261,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         m_Player_CameraRotate = m_Player.FindAction("Camera Rotate", throwIfNotFound: true);
         m_Player_CameraZoom = m_Player.FindAction("CameraZoom", throwIfNotFound: true);
         m_Player_MouseClick = m_Player.FindAction("Mouse Click", throwIfNotFound: true);
+        m_Player_AltAction = m_Player.FindAction("Alt Action", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -304,6 +325,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_CameraRotate;
     private readonly InputAction m_Player_CameraZoom;
     private readonly InputAction m_Player_MouseClick;
+    private readonly InputAction m_Player_AltAction;
     public struct PlayerActions
     {
         private @PlayerInputs m_Wrapper;
@@ -312,6 +334,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         public InputAction @CameraRotate => m_Wrapper.m_Player_CameraRotate;
         public InputAction @CameraZoom => m_Wrapper.m_Player_CameraZoom;
         public InputAction @MouseClick => m_Wrapper.m_Player_MouseClick;
+        public InputAction @AltAction => m_Wrapper.m_Player_AltAction;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -333,6 +356,9 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @MouseClick.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseClick;
                 @MouseClick.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseClick;
                 @MouseClick.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseClick;
+                @AltAction.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAltAction;
+                @AltAction.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAltAction;
+                @AltAction.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAltAction;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -349,6 +375,9 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @MouseClick.started += instance.OnMouseClick;
                 @MouseClick.performed += instance.OnMouseClick;
                 @MouseClick.canceled += instance.OnMouseClick;
+                @AltAction.started += instance.OnAltAction;
+                @AltAction.performed += instance.OnAltAction;
+                @AltAction.canceled += instance.OnAltAction;
             }
         }
     }
@@ -359,5 +388,6 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         void OnCameraRotate(InputAction.CallbackContext context);
         void OnCameraZoom(InputAction.CallbackContext context);
         void OnMouseClick(InputAction.CallbackContext context);
+        void OnAltAction(InputAction.CallbackContext context);
     }
 }

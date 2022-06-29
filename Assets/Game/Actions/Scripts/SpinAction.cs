@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpinAction : BaseAction
 {
     #region //Variables
+    [Header("Spin Action")]
     [SerializeField] private float spinSpeed = 360f;
     [SerializeField] private float spinAmount = 360f;
     private bool startSpinning = false;
@@ -32,7 +33,7 @@ public class SpinAction : BaseAction
     {
         currentAngle = 0;
         startSpinning = true;
-        base.TakeAction(_gridPosition, onFinish);
+        ActionStart(onFinish);
     }
 
     public override List<GridPosition> GetValidPositions()

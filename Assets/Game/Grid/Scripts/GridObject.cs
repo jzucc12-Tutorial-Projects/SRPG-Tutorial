@@ -7,6 +7,7 @@ public class GridObject
     private GridPosition gridPosition = new GridPosition();
     private List<Unit> units = new List<Unit>();
     private IInteractable interactable = null;
+    private ITargetable targetable = null;
     #endregion
 
 
@@ -22,6 +23,7 @@ public class GridObject
     public void AddUnit(Unit unit) => units.Add(unit);
     public void RemoveUnit(Unit unit) => units.Remove(unit);
     public void SetInteractable(IInteractable interactable) => this.interactable = interactable;
+    public void SetTargetable(ITargetable targetable) => this.targetable = targetable;
     #endregion
 
     #region //Getters
@@ -39,5 +41,6 @@ public class GridObject
     public Unit GetUnit() => units.Count > 0 ? units[0] : null;
     public bool HasAnyUnit() => units.Count > 0;
     public IInteractable GetInteractable() => interactable;
+    public ITargetable GetTargetable() => targetable;
     #endregion
 }

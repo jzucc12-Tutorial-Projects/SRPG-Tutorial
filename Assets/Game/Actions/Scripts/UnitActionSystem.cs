@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class UnitActionSystem : MonoBehaviour
 {
@@ -28,23 +29,48 @@ public class UnitActionSystem : MonoBehaviour
         else instance = this;
     }
 
+    private void OnEnable()
+    {
+        InputManager.instance.mouseClick.started += HandleMouseClick;
+        InputManager.instance.altAction.started += HandleAltClick;
+    }
+
+    private void OnDisable()
+    {
+        InputManager.instance.mouseClick.started -= HandleMouseClick;
+        InputManager.instance.altAction.started -= HandleAltClick;
+    }
+
     private void Start()
     {
         SetSelectedUnit(selectedUnit);
         ClearBusy();
     }
+    #endregion
 
-    private void Update()
+    #region //Handle inputs
+    private void HandleMouseClick(InputAction.CallbackContext context)
     {
-        if(isBusy) return;
-        if(!InputManager.instance.GetMouseClick()) return;
-        if(EventSystem.current.IsPointerOverGameObject()) return;
-        if(!TurnSystem.instance.IsPlayerTurn()) return;
-        
+        if(!AllowInput()) return;
         if(TrySelectUnit()) return;
-        HandleSelectedAction();
+        HandleSelectedAction(false);
+    }
+
+    private void HandleAltClick(InputAction.CallbackContext context)
+    {
+        if(!AllowInput()) return;
+        HandleSelectedAction(true);
+    }
+
+    private bool AllowInput()
+    {
+        if(isBusy) return false;
+        if(!TurnSystem.instance.IsPlayerTurn()) return false;
+        if(EventSystem.current.IsPointerOverGameObject()) return false;
+        return true;
     }
     #endregion
+
 
     #region //Unit selection
     private bool TrySelectUnit()
@@ -75,13 +101,16 @@ public class UnitActionSystem : MonoBehaviour
         OnSelectedActionChanged?.Invoke();
     }
 
-    private void HandleSelectedAction()
+    private void HandleSelectedAction(bool isAltAction)
     {
         GridPosition mouseGridPosition = LevelGrid.instance.GetGridPosition(MouseWorld.GetPosition());
-        if(!selectedAction.IsValidAction(mouseGridPosition)) return;
+        if(!isAltAction && !selectedAction.IsValidAction(mouseGridPosition)) return;
+        if(isAltAction && !selectedAction.CanTakeAltAction()) return;
         if(!selectedUnit.TryTakeAction(selectedAction)) return;
+
         SetBusy();
-        selectedAction.TakeAction(mouseGridPosition, ClearBusy);
+        if(isAltAction) selectedAction.TakeAltAction(ClearBusy);
+        else selectedAction.TakeAction(mouseGridPosition, ClearBusy);
         actionTaken?.Invoke();
     }
 
@@ -98,6 +127,4 @@ public class UnitActionSystem : MonoBehaviour
     
     public Unit GetSelectedUnit() => selectedUnit;
     #endregion
-    
-
 }

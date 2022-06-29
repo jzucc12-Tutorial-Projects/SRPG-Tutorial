@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeAction : BaseAction
+public class MeleeAction : TargetedAction
 {
     #region //Weapon variables
-    [SerializeField] private int range = 1;
     [SerializeField] private float beforeHitTimer = 0.5f;
     [SerializeField] private float afterHitTimer = 0.5f;
     #endregion
@@ -18,7 +16,7 @@ public class MeleeAction : BaseAction
     }
     private State currentState = State.BeforeHit;
     private float currentStateTime = 1f;
-    private Unit targetUnit = null;
+    private ITargetable target = null;
     public event Action OnMeleeStarted;
     public static event Action OnMeleeStatic;
     #endregion
@@ -33,7 +31,7 @@ public class MeleeAction : BaseAction
         switch (currentState)
         {
             case State.BeforeHit:
-                Vector3 aimDir = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
+                Vector3 aimDir = (target.GetWorldPosition() - unit.GetWorldPosition()).normalized;
                 unit.GetAction<MoveAction>().Rotate(aimDir);
                 break;
 
@@ -55,7 +53,7 @@ public class MeleeAction : BaseAction
                 currentState = State.AfterHit;
                 currentStateTime = afterHitTimer;
                 OnMeleeStatic?.Invoke();
-                targetUnit.Damage(100);
+                target.Damage(100);
                 break;
 
             case State.AfterHit:
@@ -68,38 +66,20 @@ public class MeleeAction : BaseAction
     #region //Action performing
     public override void TakeAction(GridPosition gridPosition, Action onFinish)
     {
-        targetUnit = LevelGrid.instance.GetUnitAtGridPosition(gridPosition);
+        target = LevelGrid.instance.GetTargetableAtGridPosition(gridPosition);
         currentState = State.BeforeHit;
         currentStateTime = beforeHitTimer;
         OnMeleeStarted?.Invoke();
-        base.TakeAction(gridPosition, onFinish);
+        ActionStart(onFinish);
     }
 
     public override EnemyAIAction GetEnemyAIAction(GridPosition position)
     {
         return new EnemyAIAction(position, 150);
     }
-
-    public override List<GridPosition> GetValidPositions()
-    {
-        List<GridPosition> validPositions = new List<GridPosition>();
-        var unitPosition = unit.GetGridPosition();
-
-        foreach(var position in LevelGrid.instance.CheckGridRange(unitPosition, range, false))
-        {
-            if(position == unitPosition) continue;
-            if(!LevelGrid.instance.HasAnyUnit(position)) continue;
-            var target = LevelGrid.instance.GetUnitAtGridPosition(position);
-            if(unit.IsEnemy() == target.IsEnemy()) continue;
-            validPositions.Add(position);
-        }
-
-        return validPositions;
-    }
     #endregion
 
     #region //Getters
     public override string GetActionName() => "Melee";
-    public int GetRange() => range;
     #endregion
 }

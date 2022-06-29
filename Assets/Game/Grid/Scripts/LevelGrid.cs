@@ -14,7 +14,6 @@ public class LevelGrid : MonoBehaviour
     [SerializeField] private int height = 10;
     public static LevelGrid instance { get; private set; }
     private GridSystem<GridObject> gridSystem = null;
-    [SerializeField] private Transform gridDebugObjectPrefab = null;
     public event Action OnAnyUnitMove;
     #endregion
 
@@ -50,10 +49,11 @@ public class LevelGrid : MonoBehaviour
     }
 
     public void SetInteractableAtGridPosition(GridPosition gridPosition, IInteractable interactable) => gridSystem.GetGridObject(gridPosition).SetInteractable(interactable);
+    public void SetTargetableAtGridPosition(GridPosition gridPosition, ITargetable targetable) => gridSystem.GetGridObject(gridPosition).SetTargetable(targetable);
     #endregion
 
     #region //Validation
-    public IEnumerable<GridPosition> CheckGridRange(GridPosition origin, int offset, bool circularRange = true, bool coutnSelf = false)
+    public IEnumerable<GridPosition> CheckGridRange(GridPosition origin, int offset, bool circularRange = true, bool countSelf = false)
     {
         for(int x = -offset; x <= offset; x++)
         {
@@ -62,7 +62,7 @@ public class LevelGrid : MonoBehaviour
                 GridPosition offsetPosition = new GridPosition(x,z);
                 GridPosition testPosition = origin + offsetPosition;
                 if(!LevelGrid.instance.IsValidPosition(testPosition)) continue;
-                if(!coutnSelf && testPosition == origin) continue;
+                if(!countSelf && testPosition == origin) continue;
                 int testDistance = circularRange ? Mathf.Abs(x) + Mathf.Abs(z) : 0;
                 if(testDistance > offset) continue;
                 yield return testPosition;
@@ -84,6 +84,7 @@ public class LevelGrid : MonoBehaviour
     public GridPosition GetGridPosition(Vector3 worldPosition) => gridSystem.GetGridPosition(worldPosition);
     public Vector3 GetWorldPosition(GridPosition gridPosition) => gridSystem.GetWorldPosition(gridPosition);
     public IInteractable GetInteractableAtGridPosition(GridPosition gridPosition) => gridSystem.GetGridObject(gridPosition).GetInteractable();
+    public ITargetable GetTargetableAtGridPosition(GridPosition gridPosition) => gridSystem.GetGridObject(gridPosition).GetTargetable();
     public int GetWidth() => width;
     public int GetHeight() => height;
     #endregion

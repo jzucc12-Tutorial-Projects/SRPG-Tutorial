@@ -1,13 +1,14 @@
 using System;
 using UnityEngine;
 
-public class HealthSystem : MonoBehaviour
+public class UnitHealth : MonoBehaviour
 {
     #region //Variables
     [SerializeField] private int maxHealth = 100;
     private int currentHealth;
     public event Action OnDeath;
     public event Action<float> OnDamage;
+    private Unit unit = null;
     #endregion
 
 
@@ -15,6 +16,7 @@ public class HealthSystem : MonoBehaviour
     private void Awake()
     {
         currentHealth = maxHealth;
+        unit = GetComponent<Unit>();
     }
     #endregion
 

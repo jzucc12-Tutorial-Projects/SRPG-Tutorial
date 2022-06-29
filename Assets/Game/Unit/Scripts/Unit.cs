@@ -1,12 +1,12 @@
 using System;
 using UnityEngine;
 
-public class Unit : MonoBehaviour
+public class Unit : MonoBehaviour, ITargetable
 {
     #region //Unit base variables
     [SerializeField] private bool isEnemy = false;
     private GridPosition gridPosition;
-    private HealthSystem healthSystem = null;
+    private UnitHealth healthSystem = null;
     public static event Action<Unit> UnitSpawned;
     public static event Action<Unit> UnitDead;
     #endregion
@@ -23,7 +23,7 @@ public class Unit : MonoBehaviour
     private void Awake()
     {
         actions = GetComponents<BaseAction>();
-        healthSystem = GetComponent<HealthSystem>();
+        healthSystem = GetComponent<UnitHealth>();
     }
 
     private void OnEnable()
@@ -43,6 +43,7 @@ public class Unit : MonoBehaviour
         UnitSpawned?.Invoke(this);
         gridPosition = LevelGrid.instance.GetGridPosition(transform.position);
         LevelGrid.instance.AddUnitAtGridPosition(gridPosition, this);
+        LevelGrid.instance.SetTargetableAtGridPosition(GetGridPosition(), this);
     }
 
     private void Update()
@@ -94,6 +95,7 @@ public class Unit : MonoBehaviour
     private void OnDeath()
     {
         UnitDead?.Invoke(this);
+        LevelGrid.instance.SetTargetableAtGridPosition(GetGridPosition(), null);
         LevelGrid.instance.RemoveUnitAtGridPosition(gridPosition, this);
         Destroy(gameObject);
     }
@@ -113,5 +115,6 @@ public class Unit : MonoBehaviour
     public Vector3 GetWorldPosition() => transform.position;
     public BaseAction[] GetActions() => actions;
     public bool IsEnemy() => isEnemy;
+    public bool CanBeTargeted(Unit attackingUnit) => isEnemy ^ attackingUnit.isEnemy;
     #endregion
 }

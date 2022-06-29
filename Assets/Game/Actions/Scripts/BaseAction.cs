@@ -12,6 +12,12 @@ public abstract class BaseAction : MonoBehaviour
     public static event Action<BaseAction> OnAnyActionEnded;
     #endregion
 
+    #region //Position variables
+    [Header("Base Action")]
+    [SerializeField] protected bool circularRange = true;
+    [SerializeField] protected bool includeSelf  = false;
+    #endregion
+
 
     #region //Monobehaviour
     protected virtual void Awake()
@@ -23,7 +29,12 @@ public abstract class BaseAction : MonoBehaviour
     #endregion
 
     #region //Action Performing
-    public virtual void TakeAction(GridPosition gridPosition, Action onFinish)
+    public abstract void TakeAction(GridPosition gridPosition, Action onFinish);
+
+    //Not needed for all actions. Reloading a weapon is an example of an alt action.
+    public virtual void TakeAltAction(Action onFinish) { } 
+
+    protected void ActionStart(Action onFinish)
     {
         isActive = true;
         OnActionFinish = onFinish;
@@ -42,6 +53,7 @@ public abstract class BaseAction : MonoBehaviour
     {
         return GetValidPositions().Contains(gridPosition);
     }
+    public virtual bool CanTakeAltAction() => false;
     #endregion
 
     #region //Enemy action
@@ -64,8 +76,10 @@ public abstract class BaseAction : MonoBehaviour
     #endregion
 
     #region //Getters
+    public virtual int GetQuantity() => -1; //Leave at -1 for an infinite amount
     public abstract string GetActionName();
     public virtual int GetPointCost() => 1;
+    public bool HasCircularRange() => circularRange;
+    public bool IncludeSelf() => includeSelf;
     #endregion
-
 }

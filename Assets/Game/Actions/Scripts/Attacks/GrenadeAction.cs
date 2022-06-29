@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class GrenadeAction : BaseAction
+public class GrenadeAction : TargetedAction
 {
     #region //Variables
-    [SerializeField] private int throwDistance = 4;
     [SerializeField] private Grenade grenadePrefab = null;
     #endregion
 
@@ -19,25 +17,12 @@ public class GrenadeAction : BaseAction
     public override void TakeAction(GridPosition gridPosition, Action onFinish)
     {
         var grenade = Instantiate(grenadePrefab, unit.GetWorldPosition(), Quaternion.identity);
-        grenade.Setup(gridPosition, ActionFinish);
-        base.TakeAction(gridPosition, onFinish);
-    }
-
-    public override List<GridPosition> GetValidPositions()
-    {
-        var validPositions = new List<GridPosition>();
-
-        foreach(var position in LevelGrid.instance.CheckGridRange(unit.GetGridPosition(), throwDistance))
-        {
-            validPositions.Add(position);
-        }
-
-        return validPositions;
+        grenade.SetUp(LevelGrid.instance.GetWorldPosition(gridPosition), ActionFinish);
+        ActionStart(onFinish);
     }
     #endregion
 
     #region //Getters
     public override string GetActionName() => "Grenade";
-    public int GetRange() => throwDistance;
     #endregion
 }

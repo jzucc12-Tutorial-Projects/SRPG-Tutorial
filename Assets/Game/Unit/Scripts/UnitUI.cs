@@ -6,7 +6,7 @@ public class UnitUI : MonoBehaviour
 {
     #region //Unit components
     [SerializeField] private Unit unit = null;
-    [SerializeField] private HealthSystem healthSystem = null;
+    [SerializeField] private UnitHealth healthSystem = null;
     #endregion
 
     #region //UI components

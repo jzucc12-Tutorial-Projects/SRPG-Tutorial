@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEnemy: 0
-  maxActionPoints: 2
+  maxActionPoints: 6
 --- !u!65 &1948232404978133322
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -128,6 +128,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 350271937d172394b91b435502216ded, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  circularRange: 1
+  includeSelf: 0
   maxMoveDistance: 4
   moveSpeed: 4
   rotateSpeed: 4
@@ -144,6 +146,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e3ceb28437b7384c97487fa0e7a02f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  circularRange: 0
+  includeSelf: 1
   spinSpeed: 360
   spinAmount: 360
 --- !u!114 &8702508500721394068
@@ -158,14 +162,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f63085333f41834497c0001cba8bd91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponRange: 7
-  damage: 40
-  aimingTimer: 1
-  shootingTimer: 0.1
-  coolOffTimer: 0.1
+  circularRange: 1
+  includeSelf: 0
+  requiresTargetable: 1
+  actionRange: 7
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 256
+  damage: 40
+  maxClip: 6
+  aimingTimer: 1
+  shootingTimer: 0.1
+  coolOffTimer: 0.1
 --- !u!114 &1211421786331489146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,7 +186,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9012bfd87d51d7248bfafded59966526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throwDistance: 4
+  circularRange: 1
+  includeSelf: 1
+  requiresTargetable: 0
+  actionRange: 5
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
   grenadePrefab: {fileID: 1405143200156881841, guid: 35210049c62b16d4595af9499866e772,
     type: 3}
 --- !u!114 &6195961165147845301
@@ -193,7 +207,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9638d0d471eda604dbcb6613d5df13d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 1
+  circularRange: 0
+  includeSelf: 0
+  requiresTargetable: 1
+  actionRange: 1
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
   beforeHitTimer: 0.7
   afterHitTimer: 0.5
 --- !u!114 &2650283597064394310
@@ -208,7 +228,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb227f166ebcbfc4f99c48b50536e01b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactRange: 1
+  circularRange: 1
+  includeSelf: 0
+  requiresTargetable: 0
+  actionRange: 1
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &704012140628820037
 GameObject:
   m_ObjectHideFlags: 0

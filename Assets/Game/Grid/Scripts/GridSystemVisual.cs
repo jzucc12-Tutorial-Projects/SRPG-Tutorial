@@ -8,22 +8,7 @@ public class GridSystemVisual : MonoBehaviour
     #region //Grid variables
     [SerializeField] private GridSystemVisualSingle visualPrefab = null;
     private GridSystemVisualSingle[,] singles;
-    [System.Serializable]
-    public struct GridVisualTypeMaterial
-    {
-        public GridVisualType visualType;
-        public Material material;
-    }
-    public enum GridVisualType
-    {
-        White,
-        BlueSoft,
-        Blue,
-        RedSoft,
-        Red,
-        Yellow
-    }
-    [SerializeField] private List<GridVisualTypeMaterial> gridMaterials = new List<GridVisualTypeMaterial>();
+    [SerializeField] private List<GridVisualType> gridMaterials = new List<GridVisualType>();
     #endregion
 
 
@@ -72,53 +57,34 @@ public class GridSystemVisual : MonoBehaviour
         HideAll();
         var unit = UnitActionSystem.instance.GetSelectedUnit();
         var action = UnitActionSystem.instance.GetSelectedAction();
-        GridVisualType visualType;
-
-        switch(action)
+        var targetedAction = action as TargetedAction;
+        
+        if(targetedAction != null)
         {
-            default:
-            case MoveAction moveAction:
-                visualType = GridVisualType.White;
-                break;
-
-            case SpinAction spinAction:
-                visualType = GridVisualType.Blue;
-                break;
-
-            case ShootAction shootAction:
-                visualType = GridVisualType.Red;
-                var positions = new List<GridPosition>(LevelGrid.instance.CheckGridRange(unit.GetGridPosition(), shootAction.GetRange()));
-                ShowPositions(positions, GridVisualType.RedSoft);
-                break;
-
-            case MeleeAction meleeAction:
-                visualType = GridVisualType.Red;
-                var meleePosition = new List<GridPosition>(LevelGrid.instance.CheckGridRange(unit.GetGridPosition(), meleeAction.GetRange(), false));
-                ShowPositions(meleePosition, GridVisualType.RedSoft);
-                break;
-
-            case InteractAction interactAction:
-                visualType = GridVisualType.Blue;
-                var interactPosition = new List<GridPosition>(LevelGrid.instance.CheckGridRange(unit.GetGridPosition(), interactAction.GetRange(), false));
-                ShowPositions(interactPosition, GridVisualType.BlueSoft);
-                break;  
+            var positions = targetedAction.GetRangePositions(unit.GetGridPosition());
+            ShowPositions(positions, action, GetGridMaterial(action, false)); 
         }
 
-        ShowPositions(action.GetValidPositions(), visualType);
+        ShowPositions(action.GetValidPositions(), action, GetGridMaterial(action, targetedAction != null));
     }
 
-    private void ShowPositions(List<GridPosition> positions, GridVisualType visualType)
+    private void ShowPositions(List<GridPosition> positions, BaseAction action, Material material)
     {
         foreach(var position in positions)
-            singles[position.x, position.z].Show(GetGridMaterial(visualType));
+            singles[position.x, position.z].Show(material);
     }
 
-    private Material GetGridMaterial(GridVisualType visualType)
+    private Material GetGridMaterial(BaseAction action, bool useTargeted)
     {
         foreach(var gridMaterial in gridMaterials)
         {
-            if(gridMaterial.visualType != visualType) continue;
-            return gridMaterial.material;
+            if(!gridMaterial.actionNames.Contains(action.GetType().ToString())) continue;
+            if(useTargeted)
+            {
+                var tar = (TargetedVisualType) gridMaterial;
+                return tar.targetedMaterial;
+            }
+            else return gridMaterial.baseMaterial;
         }
         return null;
     }

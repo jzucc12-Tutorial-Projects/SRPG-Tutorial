@@ -28,6 +28,7 @@ public class MoveAction : BaseAction
         {
             if(++positionIndex >= positionList.Count)
             {
+                LevelGrid.instance.SetTargetableAtGridPosition(unit.GetGridPosition(), unit);
                 ActionFinish();
                 StopMoving?.Invoke();
             }
@@ -53,6 +54,7 @@ public class MoveAction : BaseAction
 
     public override void TakeAction(GridPosition gridPosition, Action onFinish)
     {
+        LevelGrid.instance.SetTargetableAtGridPosition(unit.GetGridPosition(), null);
         var gridList = Pathfinding.instance.FindPath(unit.GetGridPosition(), gridPosition, out int pathLength);
         positionList = new List<Vector3>();
         foreach(var grid in gridList)
@@ -60,7 +62,7 @@ public class MoveAction : BaseAction
 
         positionIndex = 0;
         StartMoving?.Invoke();
-        base.TakeAction(gridPosition, onFinish);
+        ActionStart(onFinish);
     }
     #endregion
 
@@ -75,7 +77,7 @@ public class MoveAction : BaseAction
         List<GridPosition> validGridPositionList = new List<GridPosition>();
         GridPosition unitPosition = unit.GetGridPosition();
 
-        foreach(var position in LevelGrid.instance.CheckGridRange(unit.GetGridPosition(), maxMoveDistance))
+        foreach(var position in LevelGrid.instance.CheckGridRange(unit.GetGridPosition(), maxMoveDistance, circularRange, includeSelf))
         {
             if(unitPosition == position) continue;
             if(LevelGrid.instance.HasAnyUnit(position)) continue;

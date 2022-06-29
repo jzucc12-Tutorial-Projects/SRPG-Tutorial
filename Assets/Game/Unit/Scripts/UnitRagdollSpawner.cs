@@ -5,12 +5,12 @@ public class UnitRagdollSpawner : MonoBehaviour
 {
     [SerializeField] private UnitRagdoll ragdollPrefab = null;
     [SerializeField] private Transform originalRootbone = null;
-    private HealthSystem healthSystem = null;
+    private UnitHealth healthSystem = null;
 
 
     private void Awake()
     {
-        healthSystem = GetComponent<HealthSystem>();
+        healthSystem = GetComponent<UnitHealth>();
     }
 
     private void OnEnable()

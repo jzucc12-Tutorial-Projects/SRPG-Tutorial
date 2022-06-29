@@ -189,11 +189,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 15
-  explosionRadius: 2
-  damage: 25
-  explosionParticles: {fileID: 2906552735512882425, guid: 847d60e9c65ce1c4eaf9d9d4b8d4cb07,
+  collisionDistance: 0.1
+  hasCollisionParticles: 1
+  collisionParticles: {fileID: 2906552735512882425, guid: 847d60e9c65ce1c4eaf9d9d4b8d4cb07,
     type: 3}
+  hasTrail: 1
   trail: {fileID: 3714845079584441209}
+  hasCurvedPath: 1
   projectilePath:
     serializedVersion: 2
     m_Curve:
@@ -227,6 +229,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  explosionRadius: 2
+  damage: 25
 --- !u!1 &1405143200767621073
 GameObject:
   m_ObjectHideFlags: 0

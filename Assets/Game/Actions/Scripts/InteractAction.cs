@@ -1,17 +1,13 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class InteractAction : BaseAction
+public class InteractAction : TargetedAction
 {
-    [SerializeField] private int interactRange = 1;
-
-
     #region //Action performing
     public override void TakeAction(GridPosition gridPosition, Action onFinish)
     {
         var interactable = LevelGrid.instance.GetInteractableAtGridPosition(gridPosition);
-        base.TakeAction(gridPosition, onFinish);
+        ActionStart(onFinish);
         interactable.Interact(ActionFinish);
     }
 
@@ -24,7 +20,7 @@ public class InteractAction : BaseAction
     {
         List<GridPosition> validPositions = new List<GridPosition>();
         
-        foreach(var position in LevelGrid.instance.CheckGridRange(unit.GetGridPosition(), interactRange, false))
+        foreach(var position in GetRangePositions(unit.GetGridPosition()))
         {
             var interactable = LevelGrid.instance.GetInteractableAtGridPosition(position);
             if(interactable == null) continue;
@@ -37,6 +33,5 @@ public class InteractAction : BaseAction
 
     #region //Getters
     public override string GetActionName() => "Interact";
-    public int GetRange() => interactRange;
     #endregion
 }

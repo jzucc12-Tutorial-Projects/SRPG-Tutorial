@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7610a629916b9e4f98fe1016f38ef75, type: 3}
+  m_Name: Attack Actions
+  m_EditorClassIdentifier: 
+  actionNames:
+  - ShootAction
+  - MeleeAction
+  - GrenadeAction
+  baseMaterial: {fileID: 2100000, guid: 459acefdc21517b4e8985f525790d113, type: 2}
+  targetedMaterial: {fileID: 2100000, guid: ee86cc519265f694ca3bcbb4b984742f, type: 2}

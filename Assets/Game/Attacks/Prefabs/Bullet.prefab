@@ -189,6 +189,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 200
-  trail: {fileID: 2318436204859267625}
-  particles: {fileID: 3968549524953367564, guid: 81b61c9b7a0e8bf419d8388376980c18,
+  collisionDistance: 0.1
+  hasCollisionParticles: 1
+  collisionParticles: {fileID: 3968549524953367564, guid: 81b61c9b7a0e8bf419d8388376980c18,
     type: 3}
+  hasTrail: 1
+  trail: {fileID: 2318436204859267625}
+  hasCurvedPath: 0
+  projectilePath:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

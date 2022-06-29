@@ -50,11 +50,11 @@ public class UnitAnimator : MonoBehaviour
     #endregion
 
     #region //Animation setting
-    private void Shoot(Unit shooter, Unit target)
+    private void Shoot(Unit shooter, ITargetable target)
     {
         animator.SetTrigger("isShooting");
         var bullet = Instantiate(bulletPrefab, bulletOrigin.position, Quaternion.identity);
-        var bulletTarget = target.transform.position;
+        var bulletTarget = target.GetWorldPosition();
         bulletTarget.y = bullet.transform.position.y;
         bullet.SetUp(bulletTarget);
     }
