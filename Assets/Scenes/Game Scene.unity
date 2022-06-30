@@ -1863,7 +1863,7 @@ PrefabInstance:
     - target: {fileID: 9167625014638648862, guid: 3264c3a329cb0474aa94deb150be38e3,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 3
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 9167625014638648862, guid: 3264c3a329cb0474aa94deb150be38e3,
         type: 3}
@@ -2669,6 +2669,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b4c0a1bfcd9ad749b8109d8fcbf2367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &985629162 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1211421786331489146, guid: 4190997705b9e8d419a2a1e826394619,
+    type: 3}
+  m_PrefabInstance: {fileID: 642008498329069535}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9012bfd87d51d7248bfafded59966526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1076219440
 GameObject:
   m_ObjectHideFlags: 0
@@ -3204,6 +3216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d34dee992f41c46bb2d52a0536c637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitActionSystem: {fileID: 0}
   visualPrefab: {fileID: -8927215618812941724, guid: b39df16cca5f04f4692a2f00ed225d7b,
     type: 3}
   gridMaterials:
@@ -3950,7 +3963,7 @@ PrefabInstance:
     - target: {fileID: 9167625014638648862, guid: 3264c3a329cb0474aa94deb150be38e3,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 15
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 9167625014638648862, guid: 3264c3a329cb0474aa94deb150be38e3,
         type: 3}
@@ -4798,7 +4811,7 @@ PrefabInstance:
     - target: {fileID: 9167625014638648862, guid: 3264c3a329cb0474aa94deb150be38e3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 17.000341
+      value: 17.50035
       objectReference: {fileID: 0}
     - target: {fileID: 9167625014638648862, guid: 3264c3a329cb0474aa94deb150be38e3,
         type: 3}
@@ -5280,10 +5293,45 @@ PrefabInstance:
       propertyPath: m_Name
       value: Unit
       objectReference: {fileID: 0}
-    - target: {fileID: 8702508500721394068, guid: 4190997705b9e8d419a2a1e826394619,
+    - target: {fileID: 1211421786331489146, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
-      propertyPath: maxClip
+      propertyPath: maxQuantity
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5363522652886726642, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: event1.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5363522652886726642, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: event1.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 985629162}
+    - target: {fileID: 5363522652886726642, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: event1.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 985629162}
+    - target: {fileID: 5363522652886726642, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: event1.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AnimationAct
+      objectReference: {fileID: 0}
+    - target: {fileID: 5363522652886726642, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: event1.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: AnimationAct
+      objectReference: {fileID: 0}
+    - target: {fileID: 5363522652886726642, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: event1.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GrenadeAction, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5363522652886726642, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: event1.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: GrenadeAction, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

@@ -6,17 +6,18 @@ using UnityEngine.InputSystem;
 public class UnitActionSystem : MonoBehaviour
 {
     public static UnitActionSystem instance { get; private set; }
+    public static event Action UpdateUI;
 
     #region //Unit variables
-    public event EventHandler OnSelectedUnitChanged;
+    public static event Action<Unit> OnSelectedUnitChanged;
     [SerializeField] private Unit selectedUnit = null;
     [SerializeField] private LayerMask unitMask = -1;
     #endregion
 
     #region //Action variables
-    public event Action actionTaken;
-    public event Action<bool> ChangeBusy;
-    public event Action OnSelectedActionChanged;
+    public static event Action actionTaken;
+    public static event Action<bool> ChangeBusy;
+    public static event Action<BaseAction> OnSelectedActionChanged;
     private BaseAction selectedAction = null;
     private bool isBusy = false;
     #endregion
@@ -33,12 +34,14 @@ public class UnitActionSystem : MonoBehaviour
     {
         InputManager.instance.mouseClick.started += HandleMouseClick;
         InputManager.instance.altAction.started += HandleAltClick;
+        BaseAction.OnAnyActionEnded += CheckActiveAction;
     }
 
     private void OnDisable()
     {
         InputManager.instance.mouseClick.started -= HandleMouseClick;
         InputManager.instance.altAction.started -= HandleAltClick;
+        BaseAction.OnAnyActionEnded += CheckActiveAction;
     }
 
     private void Start()
@@ -71,7 +74,6 @@ public class UnitActionSystem : MonoBehaviour
     }
     #endregion
 
-
     #region //Unit selection
     private bool TrySelectUnit()
     {
@@ -87,18 +89,18 @@ public class UnitActionSystem : MonoBehaviour
     private void SetSelectedUnit(Unit newUnit)
     {
         selectedUnit = newUnit;
-        SetSelectedAction(newUnit.GetAction<MoveAction>());
-        OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
+        OnSelectedUnitChanged?.Invoke(newUnit);
+        SetSelectedAction(newUnit.GetRootAction());
     }
 
-    public BaseAction GetSelectedAction() => selectedAction;
+    public Unit GetSelectedUnit() => selectedUnit;
     #endregion
 
     #region //Action selection
     public void SetSelectedAction(BaseAction action)
     {
         selectedAction = action;
-        OnSelectedActionChanged?.Invoke();
+        OnSelectedActionChanged?.Invoke(action);
     }
 
     private void HandleSelectedAction(bool isAltAction)
@@ -119,12 +121,20 @@ public class UnitActionSystem : MonoBehaviour
         isBusy = true;
         ChangeBusy?.Invoke(true);
     }
+    
     private void ClearBusy()
     {
         isBusy = false;
         ChangeBusy?.Invoke(false);
     }
-    
-    public Unit GetSelectedUnit() => selectedUnit;
+
+    public void CheckActiveAction(BaseAction _)
+    {
+        UpdateUI?.Invoke();
+        if(selectedAction.CanSelectAction()) return;
+        SetSelectedAction(selectedUnit.GetRootAction());
+    }
+
+    public BaseAction GetSelectedAction() => selectedAction;
     #endregion
 }

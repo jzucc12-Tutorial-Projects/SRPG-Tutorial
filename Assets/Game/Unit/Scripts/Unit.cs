@@ -5,6 +5,7 @@ public class Unit : MonoBehaviour, ITargetable
 {
     #region //Unit base variables
     [SerializeField] private bool isEnemy = false;
+    [SerializeField] private float rotateSpeed = 5;
     private GridPosition gridPosition;
     private UnitHealth healthSystem = null;
     public static event Action<Unit> UnitSpawned;
@@ -18,12 +19,18 @@ public class Unit : MonoBehaviour, ITargetable
     private int currentActionPoints = 0;
     #endregion
 
+    #region //Weapons
+    private GameObject activeWeapon = null;
+    [SerializeField] private GameObject rifle = null;
+    #endregion
+
 
     #region //Monobehaviour
     private void Awake()
     {
         actions = GetComponents<BaseAction>();
         healthSystem = GetComponent<UnitHealth>();
+        activeWeapon = rifle;
     }
 
     private void OnEnable()
@@ -56,7 +63,7 @@ public class Unit : MonoBehaviour, ITargetable
     }
     #endregion
 
-    #region //Action
+    #region //Action Points
     public bool TryTakeAction(BaseAction action)
     {
         if(CanTakeAction(action))
@@ -101,7 +108,29 @@ public class Unit : MonoBehaviour, ITargetable
     }
     #endregion
 
+    #region //Active weapons
+    public void ShowActiveWeapon()
+    {
+        activeWeapon.SetActive(true);
+    }
+
+    public void HideActiveWeapon()
+    {
+        activeWeapon.SetActive(false);
+    }
+    #endregion
+
+    #region //Rotation
+    //Returns true if the unit is still rotating
+    public bool Rotate(Vector3 targetDirection)
+    {
+        transform.forward = Vector3.Lerp(transform.forward, targetDirection, rotateSpeed * Time.deltaTime);
+        return transform.forward != targetDirection;
+    }
+    #endregion
+
     #region //Getters
+    public BaseAction GetRootAction() => actions[0];
     public T GetAction<T>() where T : BaseAction
     {
         foreach(var action in actions)

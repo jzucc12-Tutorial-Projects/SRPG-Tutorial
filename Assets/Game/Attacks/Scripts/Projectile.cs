@@ -53,13 +53,6 @@ public abstract class Projectile : MonoBehaviour
 
     protected abstract void Collision();
 
-
-    public void SetUp(Vector3 target, Action OnCollision)
-    {
-        this.OnCollision = OnCollision;
-        SetUp(target);
-    }
-
     public virtual void SetUp(Vector3 target)
     {
         this.target = target;

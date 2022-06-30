@@ -4,26 +4,23 @@ using UnityEngine.UI;
 
 public class ActionButtonUI : MonoBehaviour
 {
-    #region //Variables
+    private BaseAction action = null;
+
+    #region //UI Elements
+    [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI actionText = null;
     [SerializeField] private TextMeshProUGUI quantityText = null;
     [SerializeField] private Button button = null;
     [SerializeField] private Image border = null;
-    [SerializeField] private Color activeColor = Color.green;
-    [SerializeField] private Color inactiveColor = Color.white;
-    private BaseAction action = null;
+    [SerializeField] private Image disabledLayer = null;
     #endregion
 
+    #region //Colors
+    [SerializeField] private Color activeColor = Color.green;
+    [SerializeField] private Color inactiveColor = Color.white;
+    [SerializeField] private Color disabledColor = Color.red;
+    #endregion
 
-    private void OnEnable()
-    {
-        BaseAction.OnAnyActionEnded += UpdateUI;
-    }
-
-    private void OnDisable()
-    {
-        BaseAction.OnAnyActionEnded -= UpdateUI;
-    }
 
     #region //UI Updating
     public void SetAction(BaseAction action)
@@ -31,19 +28,31 @@ public class ActionButtonUI : MonoBehaviour
         this.action = action;
         button.onClick.AddListener(() => {
             UnitActionSystem.instance.SetSelectedAction(action);
+            GridSystemVisual.instance.UpdateGridVisual();
         });
         UpdateUI(action);
     }
 
-    private void UpdateUI(BaseAction _)
+    public void UpdateUI(BaseAction activeAction)
     {
         actionText.text = action.GetActionName().ToUpper();
         quantityText.enabled = action.GetQuantity() != -1;
         quantityText.text = $"x{action.GetQuantity()}";
+
+        if(action.CanSelectAction())
+        {
+            disabledLayer.enabled = false;
+            button.interactable = true;
+            border.color = action != activeAction ? inactiveColor : activeColor;
+        }
+        else
+        {
+            disabledLayer.enabled = true;
+            button.interactable = false;
+            border.color = disabledColor;
+        }
     }
 
     public BaseAction GetAction() => action;
-    public void SetActive() => border.color = activeColor;
-    public void SetInactive() => border.color = inactiveColor;
     #endregion
 }

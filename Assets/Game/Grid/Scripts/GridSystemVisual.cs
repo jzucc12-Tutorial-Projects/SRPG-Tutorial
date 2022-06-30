@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class GridSystemVisual : MonoBehaviour
 {
+    public UnitActionSystem unitActionSystem;
     public static GridSystemVisual instance { get; private set; }
 
     #region //Grid variables
@@ -15,18 +16,8 @@ public class GridSystemVisual : MonoBehaviour
     #region //Monobehaviour
     private void Awake()
     {
-        if(instance == null) instance = this;
-        else Destroy(gameObject);
-    }
+        unitActionSystem = FindObjectOfType<UnitActionSystem>();
 
-    private void OnDisable()
-    {
-        UnitActionSystem.instance.OnSelectedActionChanged -= UpdateGridVisual;
-        LevelGrid.instance.OnAnyUnitMove -= UpdateGridVisual;
-    }
-
-    private void Start()
-    {
         singles = new GridSystemVisualSingle[LevelGrid.instance.GetWidth(), LevelGrid.instance.GetHeight()];
         for(int x = 0; x < LevelGrid.instance.GetWidth(); x ++)
         {
@@ -39,8 +30,22 @@ public class GridSystemVisual : MonoBehaviour
             }
         }
 
-        UnitActionSystem.instance.OnSelectedActionChanged += UpdateGridVisual;
+        if(instance == null) instance = this;
+        else Destroy(gameObject);
+    }
+
+    private void OnEnable()
+    {
         LevelGrid.instance.OnAnyUnitMove += UpdateGridVisual;
+    }
+
+    private void OnDisable()
+    {
+        LevelGrid.instance.OnAnyUnitMove -= UpdateGridVisual;
+    }
+
+    private void Start()
+    {
         UpdateGridVisual();
     }
     #endregion
@@ -52,11 +57,11 @@ public class GridSystemVisual : MonoBehaviour
             single.Hide();
     }
 
-    private void UpdateGridVisual()
+    public void UpdateGridVisual()
     {
         HideAll();
-        var unit = UnitActionSystem.instance.GetSelectedUnit();
-        var action = UnitActionSystem.instance.GetSelectedAction();
+        var unit = unitActionSystem.GetSelectedUnit();
+        var action = unitActionSystem.GetSelectedAction();
         var targetedAction = action as TargetedAction;
         
         if(targetedAction != null)

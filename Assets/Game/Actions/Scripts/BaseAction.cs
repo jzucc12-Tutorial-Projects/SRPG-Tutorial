@@ -28,7 +28,7 @@ public abstract class BaseAction : MonoBehaviour
     protected virtual void Start() { }
     #endregion
 
-    #region //Action Performing
+    #region //Action performing
     public abstract void TakeAction(GridPosition gridPosition, Action onFinish);
 
     //Not needed for all actions. Reloading a weapon is an example of an alt action.
@@ -51,8 +51,9 @@ public abstract class BaseAction : MonoBehaviour
     public abstract List<GridPosition> GetValidPositions();
     public virtual bool IsValidAction(GridPosition gridPosition)
     {
-        return GetValidPositions().Contains(gridPosition);
+        return CanSelectAction() && GetValidPositions().Contains(gridPosition);
     }
+    public virtual bool CanSelectAction() => true;
     public virtual bool CanTakeAltAction() => false;
     #endregion
 

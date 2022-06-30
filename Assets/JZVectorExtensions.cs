@@ -81,4 +81,16 @@ public static class JZVectorExtensions
     {
         return vector.sqrMagnitude <= range * range;
     }
+
+    /// <summary>
+    /// Returns true if the unit is almost facing
+    /// </summary>
+    /// <param name="facing">The direction you are currently facing</param>
+    /// <param name="targetDirection">The direction you are comparing against</param>
+    /// <param name="limit">Limit for how close is close enough. Default is 90%.</param>
+    /// <returns></returns>
+    public static bool AlmostFacing(this Vector3 facing, Vector3 targetDirection, float limit = 0.90f)
+    {
+        return Vector3.Dot(facing, targetDirection) >= limit;
+    }
 }

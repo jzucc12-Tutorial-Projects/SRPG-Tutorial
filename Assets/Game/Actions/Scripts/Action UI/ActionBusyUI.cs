@@ -7,12 +7,12 @@ public class ActionBusyUI : MonoBehaviour
     
     private void OnEnable()
     {
-        UnitActionSystem.instance.ChangeBusy += SetUI;
+        UnitActionSystem.ChangeBusy += SetUI;
     }
 
     private void OnDisable()
     {
-        UnitActionSystem.instance.ChangeBusy -= SetUI;
+        UnitActionSystem.ChangeBusy -= SetUI;
     }
 
     private void SetUI(bool busy)

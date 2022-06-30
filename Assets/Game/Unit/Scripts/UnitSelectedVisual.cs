@@ -18,19 +18,19 @@ public class UnitSelectedVisual : MonoBehaviour
 
     private void OnEnable()
     {
-        UnitActionSystem.instance.OnSelectedUnitChanged += ChangeSelected;
+        UnitActionSystem.OnSelectedUnitChanged += ChangeSelected;
     }
 
     private void OnDisable()
     {
-        UnitActionSystem.instance.OnSelectedUnitChanged -= ChangeSelected;
+        UnitActionSystem.OnSelectedUnitChanged -= ChangeSelected;
     }
     #endregion
 
     #region //Updating visuals
-    private void ChangeSelected(object sender, EventArgs args)
+    private void ChangeSelected(Unit newUnit)
     {
-        UpdateVisual(UnitActionSystem.instance.GetSelectedUnit() == unit);
+        UpdateVisual(newUnit == unit);
     }
 
     private void UpdateVisual(bool activate)

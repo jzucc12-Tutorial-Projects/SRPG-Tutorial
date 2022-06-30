@@ -7,7 +7,6 @@ public class MoveAction : BaseAction
     #region //Movement variables
     [SerializeField] private int maxMoveDistance = 4;
     [SerializeField] private float moveSpeed = 4;
-    [SerializeField] private float rotateSpeed = 4;
     [SerializeField] private float threshold = 0.025f;
     private List<Vector3> positionList = new List<Vector3>();
     private int positionIndex = 0;
@@ -42,14 +41,9 @@ public class MoveAction : BaseAction
         var targetPosition = positionList[positionIndex];
         if(Mathf.Abs((targetPosition - transform.position).sqrMagnitude) <= threshold * threshold) return false;
         Vector3 moveDirection = (targetPosition - transform.position).normalized;
-        Rotate(moveDirection);
+        unit.Rotate(moveDirection);
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
         return true;
-    }
-
-    public void Rotate(Vector3 targetDirection)
-    {
-        transform.forward = Vector3.Lerp(transform.forward, targetDirection, rotateSpeed * Time.deltaTime);
     }
 
     public override void TakeAction(GridPosition gridPosition, Action onFinish)

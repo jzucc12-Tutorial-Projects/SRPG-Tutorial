@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -10,45 +9,46 @@ public class UnitActionSystemUI : MonoBehaviour
     [SerializeField] private Transform container = null;
     [SerializeField] private TextMeshProUGUI actionPointText = null;
     private List<ActionButtonUI> buttons = new List<ActionButtonUI>();
+    private Unit currentUnit = null;
+    private BaseAction currentAction = null;
     #endregion
 
 
     #region //Monobehaviour
     private void OnEnable()
     {
-        UnitActionSystem.instance.OnSelectedUnitChanged += OnUnitChange;
-        UnitActionSystem.instance.OnSelectedActionChanged += ChangeSelectedAction;
-        UnitActionSystem.instance.actionTaken += UpdateActionPoints;
-        TurnSystem.instance.IncrementTurn += UpdateActionPoints;
+        UnitActionSystem.OnSelectedUnitChanged += ChangeUnit;
+        UnitActionSystem.OnSelectedActionChanged += ChangeAction;
+        UnitActionSystem.UpdateUI += UpdateUI;
+        TurnSystem.instance.IncrementTurn += UpdateUI;
     }
 
     private void OnDisable()
     {
-        UnitActionSystem.instance.OnSelectedUnitChanged -= OnUnitChange;
-        UnitActionSystem.instance.OnSelectedActionChanged -= ChangeSelectedAction;
-        UnitActionSystem.instance.actionTaken -= UpdateActionPoints;
-        TurnSystem.instance.IncrementTurn -= UpdateActionPoints;
-    }
-
-    private void Start()
-    {
-        UpdateActionPoints();
-        CreateButtons();
-        ChangeSelectedAction();
+        UnitActionSystem.OnSelectedUnitChanged -= ChangeUnit;
+        UnitActionSystem.OnSelectedActionChanged -= ChangeAction;
+        UnitActionSystem.UpdateUI -= UpdateUI;
+        TurnSystem.instance.IncrementTurn -= UpdateUI;
     }
     #endregion
 
     #region //UI Updating
-    private void OnUnitChange(object sender, EventArgs e)
+    private void UpdateUI()
     {
         UpdateActionPoints();
+        UpdateActionButtons();
+    }
+
+    private void ChangeUnit(Unit newUnit)
+    {
+        currentUnit = newUnit;
+        UpdateActionPoints();
         CreateButtons();
-        ChangeSelectedAction();
     }
 
     private void UpdateActionPoints()
     {
-        actionPointText.text = $"Action Points: {UnitActionSystem.instance.GetSelectedUnit().GetActionPoints()}";
+        actionPointText.text = $"Action Points: {currentUnit.GetActionPoints()}";
     }
 
     private void CreateButtons()
@@ -57,8 +57,7 @@ public class UnitActionSystemUI : MonoBehaviour
         foreach(Transform button in container)
             Destroy(button.gameObject);
 
-        var unit = UnitActionSystem.instance.GetSelectedUnit();
-        foreach(var action in unit.GetActions())
+        foreach(var action in currentUnit.GetActions())
         {
             var button = Instantiate(buttonPrefab, container);
             button.SetAction(action);
@@ -66,13 +65,16 @@ public class UnitActionSystemUI : MonoBehaviour
         }
     }
 
-    public void ChangeSelectedAction()
+    private void ChangeAction(BaseAction newAction)
+    {
+        currentAction = newAction;
+        UpdateActionButtons();
+    }
+
+    public void UpdateActionButtons()
     {
         foreach(var button in buttons)
-        {
-            if(button.GetAction() == UnitActionSystem.instance.GetSelectedAction()) button.SetActive();
-            else button.SetInactive();
-        }
+            button.UpdateUI(currentAction);
     }
     #endregion
 }
