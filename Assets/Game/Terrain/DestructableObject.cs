@@ -6,6 +6,7 @@ public class DestructableObject : MonoBehaviour, ITargetable
     public static event Action<GridPosition> DestroyedStatic;
     [SerializeField] private Transform destroyedCratePrefab = null;
     [SerializeField] private int maxHealth = 1;
+    [SerializeField] private Collider myCollider = null;
     private int currentHealth = 0;
 
 
@@ -42,5 +43,9 @@ public class DestructableObject : MonoBehaviour, ITargetable
 
     public Vector3 GetWorldPosition() => transform.position;
 
-    public bool CanBeTargeted(Unit attackingUnit) => true;
+    public bool CanBeTargeted(Unit attackingUnit, bool isHealing) => !isHealing;
+    public Vector3 GetTargetPosition()
+    {
+        return transform.position + Vector3.up * myCollider.bounds.size.y/2;
+    }
 }

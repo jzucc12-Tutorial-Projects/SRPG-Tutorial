@@ -9,7 +9,8 @@ public class MeleeAction : TargetedAction, IAnimatedAction
     #endregion
 
     #region //Animated Actions
-    public event Action<IAnimatedAction> StartRotation;
+    public event Action<IAnimatedAction> SetAnimatedAction;
+    public event Action<string> SetTrigger;
     #endregion
 
 
@@ -17,10 +18,17 @@ public class MeleeAction : TargetedAction, IAnimatedAction
     public override void TakeAction(GridPosition gridPosition, Action onFinish)
     {
         target = LevelGrid.instance.GetTargetableAtGridPosition(gridPosition);
-        StartRotation?.Invoke(this);
-        ActionStart(onFinish);
+        SetAnimatedAction?.Invoke(this);
+        base.TakeAction(gridPosition, onFinish);
     }
+
+    protected override void OnFacing()
+    {
+        SetTrigger?.Invoke("Melee");
+    }
+    #endregion
     
+    #region //Enemy action
     public override EnemyAIAction GetEnemyAIAction(GridPosition position)
     {
         return new EnemyAIAction(position, 150);
@@ -28,25 +36,21 @@ public class MeleeAction : TargetedAction, IAnimatedAction
     #endregion
 
     #region //Animated Action
-    public void OnFacing() { }
 
     public void AnimationAct()
     {
-        if(!isActive) return;
         OnMeleeStatic?.Invoke();
         target.Damage(100);
     }
 
     public void AnimationEnd()
     {
-        if(!isActive) return;
         ActionFinish();
     }
-
-    public AnimData GetAnimData() => new AnimData(target.GetWorldPosition(), "Melee");
     #endregion
 
     #region //Getters
     public override string GetActionName() => "Melee";
+    protected override Vector3 GetTargetPosition() => target.GetWorldPosition();
     #endregion
 }

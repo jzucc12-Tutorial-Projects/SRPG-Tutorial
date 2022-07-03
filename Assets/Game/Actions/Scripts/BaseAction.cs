@@ -47,7 +47,10 @@ public abstract class BaseAction : MonoBehaviour
         OnActionFinish?.Invoke();
         OnAnyActionEnded?.Invoke(this);
     }
+    #endregion
 
+    #region //Action Selection
+    public virtual void OnSelected() { }
     public abstract List<GridPosition> GetValidPositions();
     public virtual bool IsValidAction(GridPosition gridPosition)
     {

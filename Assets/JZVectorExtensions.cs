@@ -93,4 +93,30 @@ public static class JZVectorExtensions
     {
         return Vector3.Dot(facing, targetDirection) >= limit;
     }
+
+    /// <summary>
+    /// Returns a vector where each element of the base vector is squared
+    /// </summary>
+    public static Vector3 ElementSquare(this Vector3 vec)
+    {
+        return new Vector3(vec.x * vec.x, vec.y * vec.y, vec.z * vec.z);
+    }
+    public static Vector2 ElementSquare(this Vector2 vec)
+    {
+        return new Vector2(vec.x * vec.x, vec.y * vec.y);
+    }
+
+    /// <summary>
+    /// Returns the square distance between two vectors
+    /// </summary>
+    public static float SquareDistance(this Vector3 vecA, Vector3 vecB)
+    {
+        var diff = vecB - vecA;
+        return diff.sqrMagnitude;
+    }
+    public static float SquareDistance(this Vector2 vecA, Vector2 vecB)
+    {
+        var diff = vecB - vecA;
+        return diff.sqrMagnitude;
+    }
 }

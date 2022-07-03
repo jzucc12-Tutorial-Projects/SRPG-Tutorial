@@ -5,7 +5,7 @@ public class TurnSystem : MonoBehaviour
 {
     public static TurnSystem instance { get; private set; }
     private int turnNumber = 1;
-    public event Action IncrementTurn;
+    public static event Action<bool> IncrementTurn;
     private bool isPlayerTurn = true;
 
     
@@ -17,17 +17,15 @@ public class TurnSystem : MonoBehaviour
 
     private void Start()
     {
-        IncrementTurn?.Invoke();
+        IncrementTurn?.Invoke(isPlayerTurn);
     }
 
     public void NextTurn()
     {
         turnNumber++;
         isPlayerTurn = !isPlayerTurn;
-        IncrementTurn?.Invoke();
+        IncrementTurn?.Invoke(isPlayerTurn);
     }
 
     public int GetTurnCount() => turnNumber;
-
-    public bool IsPlayerTurn() => isPlayerTurn;
 }

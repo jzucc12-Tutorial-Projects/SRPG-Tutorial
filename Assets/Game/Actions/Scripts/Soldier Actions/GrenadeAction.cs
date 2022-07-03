@@ -13,7 +13,8 @@ public class GrenadeAction : TargetedAction, IAnimatedAction
     #endregion
 
     #region //Animated Actions
-    public event Action<IAnimatedAction> StartRotation;
+    public event Action<IAnimatedAction> SetAnimatedAction;
+    public event Action<string> SetTrigger;
     #endregion
 
 
@@ -25,16 +26,26 @@ public class GrenadeAction : TargetedAction, IAnimatedAction
     }
     #endregion
 
-    #region //Action taking
+    #region //Action performing
     public override void TakeAction(GridPosition gridPosition, Action onFinish)
     {
         target = LevelGrid.instance.GetWorldPosition(gridPosition);
-        StartRotation?.Invoke(this);
-        ActionStart(onFinish);
+        SetAnimatedAction?.Invoke(this);
+        base.TakeAction(gridPosition, onFinish);
     }
 
-    public override bool CanSelectAction() => currentQuantity > 0;
+    protected override void OnFacing()
+    {
+        SetTrigger?.Invoke("Grenade Throw");
+        unit.HideActiveWeapon();
+    }
+    #endregion
 
+    #region //Action selection
+    public override bool CanSelectAction() => currentQuantity > 0;
+    #endregion
+
+    #region //Enemy action
     public override EnemyAIAction GetEnemyAIAction(GridPosition position)
     {
         return new EnemyAIAction(position, 0);
@@ -42,14 +53,8 @@ public class GrenadeAction : TargetedAction, IAnimatedAction
     #endregion
 
     #region //Animated Action
-    public void OnFacing()
-    {
-        unit.HideActiveWeapon();
-    }
-
     public void AnimationAct()
     {
-        if(!isActive) return;
         currentQuantity--;
         var grenade = Instantiate(grenadePrefab, spawnPoint.position, Quaternion.identity);
         grenade.SetUp(target);
@@ -57,16 +62,14 @@ public class GrenadeAction : TargetedAction, IAnimatedAction
 
     public void AnimationEnd()
     {
-        if(!isActive) return;
         unit.ShowActiveWeapon();
         ActionFinish();
     }
-
-    public AnimData GetAnimData() => new AnimData(target, "Grenade Throw", 0.25f, 0.993f);
     #endregion
 
     #region //Getters
     public override int GetQuantity() => currentQuantity;
     public override string GetActionName() => "Grenade";
+    protected override Vector3 GetTargetPosition() => target;
     #endregion
 }

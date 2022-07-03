@@ -57,5 +57,8 @@ public class Door : MonoBehaviour, IInteractable
         animator.SetBool("isOpen", false);
         Pathfinding.instance.SetIsWalkable(gridPosition, false);
     }
+
+    public Vector3 GetWorldPosition() => LevelGrid.instance.GetWorldPosition(GetGridPosition());
+    public GridPosition GetGridPosition() => LevelGrid.instance.GetGridPosition(transform.position);
     #endregion
 }

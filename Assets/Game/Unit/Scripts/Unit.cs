@@ -7,7 +7,7 @@ public class Unit : MonoBehaviour, ITargetable
     [SerializeField] private bool isEnemy = false;
     [SerializeField] private float rotateSpeed = 5;
     private GridPosition gridPosition;
-    private UnitHealth healthSystem = null;
+    private UnitHealth unitHealth = null;
     public static event Action<Unit> UnitSpawned;
     public static event Action<Unit> UnitDead;
     #endregion
@@ -17,11 +17,16 @@ public class Unit : MonoBehaviour, ITargetable
     [SerializeField] private int maxActionPoints = 2;
     public event Action OnActionPointChange;
     private int currentActionPoints = 0;
+    [Tooltip("HP% loss increment that drops accuracy")] [SerializeField, MinMax(0, 1)] private float hpLossToDropAccuracy = 0.1f;
+    [Tooltip("Accuracy drop with above HP loss.")] [SerializeField, MinMax(0, 100)] private int accuracyDropWithHP = 10;
+    private int accuracyMod = 0;
+    private float damageMod = 0;
     #endregion
 
     #region //Weapons
     private GameObject activeWeapon = null;
-    [SerializeField] private GameObject rifle = null;
+    [SerializeField] private GameObject defaultWeapon = null;
+    public event Action<AnimatorOverrideController> OnWeaponSwap;
     #endregion
 
 
@@ -29,25 +34,25 @@ public class Unit : MonoBehaviour, ITargetable
     private void Awake()
     {
         actions = GetComponents<BaseAction>();
-        healthSystem = GetComponent<UnitHealth>();
-        activeWeapon = rifle;
+        unitHealth = GetComponent<UnitHealth>();
+        activeWeapon = defaultWeapon;
     }
 
     private void OnEnable()
     {
-        TurnSystem.instance.IncrementTurn += RestoreActionPoints;
-        healthSystem.OnDeath += OnDeath;
+        UnitSpawned?.Invoke(this);
+        TurnSystem.IncrementTurn += RestoreUnit;
+        unitHealth.OnDeath += OnDeath;
     }
 
     private void OnDisable()
     {
-        TurnSystem.instance.IncrementTurn -= RestoreActionPoints;
-        healthSystem.OnDeath -= OnDeath;
+        TurnSystem.IncrementTurn -= RestoreUnit;
+        unitHealth.OnDeath -= OnDeath;
     }
 
     private void Start()
     {
-        UnitSpawned?.Invoke(this);
         gridPosition = LevelGrid.instance.GetGridPosition(transform.position);
         LevelGrid.instance.AddUnitAtGridPosition(gridPosition, this);
         LevelGrid.instance.SetTargetableAtGridPosition(GetGridPosition(), this);
@@ -63,7 +68,7 @@ public class Unit : MonoBehaviour, ITargetable
     }
     #endregion
 
-    #region //Action Points
+    #region //Action
     public bool TryTakeAction(BaseAction action)
     {
         if(CanTakeAction(action))
@@ -85,10 +90,15 @@ public class Unit : MonoBehaviour, ITargetable
         OnActionPointChange?.Invoke();
     }
 
-    private void RestoreActionPoints()
+    public void AddAccuracyMod(int amount) => accuracyMod += amount;
+    public void AddDamageMod(float amount) => damageMod += amount;
+
+    private void RestoreUnit(bool isPlayerTurn)
     {
-        if(TurnSystem.instance.IsPlayerTurn() ^ !isEnemy) return;
+        if(isPlayerTurn ^ !isEnemy) return;
         currentActionPoints = maxActionPoints;
+        accuracyMod = 0;
+        damageMod = 0;
         OnActionPointChange?.Invoke();
     }
     #endregion
@@ -96,7 +106,12 @@ public class Unit : MonoBehaviour, ITargetable
     #region //Health and damage
     public void Damage(int damage)
     {
-        healthSystem.Damage(damage);
+        unitHealth.Damage(damage);
+    }
+
+    public void Heal(int amount)
+    {
+        unitHealth.Heal(amount);
     }
 
     private void OnDeath()
@@ -109,6 +124,14 @@ public class Unit : MonoBehaviour, ITargetable
     #endregion
 
     #region //Active weapons
+    public void SetActiveWeapon(GameObject newWeapon, AnimatorOverrideController controller)
+    {
+        HideActiveWeapon();
+        activeWeapon = newWeapon;
+        if(controller != null) OnWeaponSwap?.Invoke(controller);
+        ShowActiveWeapon();
+    }
+
     public void ShowActiveWeapon()
     {
         activeWeapon.SetActive(true);
@@ -138,12 +161,35 @@ public class Unit : MonoBehaviour, ITargetable
 
         return null;
     }
-    public float GetHealthPercentage() => healthSystem.GetHealthPercentage();
+    public float GetHealthPercentage() => unitHealth.GetHealthPercentage();
     public int GetActionPoints() => currentActionPoints;
     public GridPosition GetGridPosition() => gridPosition;
     public Vector3 GetWorldPosition() => transform.position;
     public BaseAction[] GetActions() => actions;
     public bool IsEnemy() => isEnemy;
-    public bool CanBeTargeted(Unit attackingUnit) => isEnemy ^ attackingUnit.isEnemy;
+    public bool CanBeTargeted(Unit attackingUnit, bool isHealing)
+    {
+        bool differentFromTarget = isEnemy ^ attackingUnit.isEnemy;
+
+        if(isHealing)
+        {
+            return !differentFromTarget && GetHealthPercentage() < 1;
+        }
+        else
+        {
+            return differentFromTarget;
+        }
+    }
+    public Vector3 GetTargetPosition()
+    {
+        return transform.position + Vector3.up * 1.7f;
+    }
+    public int GetAccuracyMod()
+    {
+        float hpMissing = 1 - unitHealth.GetHealthPercentage();
+        int ticks = Mathf.RoundToInt(hpMissing / hpLossToDropAccuracy);
+        return -ticks * accuracyDropWithHP + accuracyMod;
+    }
+    public float GetDamageMod() => 1 + damageMod;
     #endregion
 }

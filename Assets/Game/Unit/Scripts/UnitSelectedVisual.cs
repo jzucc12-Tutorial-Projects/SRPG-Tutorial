@@ -6,12 +6,14 @@ public class UnitSelectedVisual : MonoBehaviour
     #region //Variables
     [SerializeField] private Unit unit = null;
     private MeshRenderer meshRenderer = null;
+    private UnitActionSystem unitActionSystem = null;
     #endregion
 
 
     #region //Monobehaviour
     private void Awake()
     {
+        unitActionSystem = FindObjectOfType<UnitActionSystem>();
         meshRenderer = GetComponent<MeshRenderer>();
         UpdateVisual(false);
     }

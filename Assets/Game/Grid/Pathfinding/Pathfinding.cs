@@ -117,7 +117,7 @@ public class Pathfinding : MonoBehaviour
         int xDistance = Mathf.Abs(gridDistance.x);
         int zDistance =  Mathf.Abs(gridDistance.z);
         int totalDistance = xDistance + zDistance;
-        int remainder = Mathf.Abs(xDistance - zDistance);
+        // int remainder = Mathf.Abs(xDistance - zDistance); //COUNTS DIAGONAL AS 1 UNIT
         // return DIAG_COST * Mathf.Min(xDistance, zDistance) + remainder * STRAIGHT_COST; //COUNTS DIAGONAL AS 1 UNIT
         return totalDistance * STRAIGHT_COST; //COUNTS DIAGONAL AS 2 UNITS
     }

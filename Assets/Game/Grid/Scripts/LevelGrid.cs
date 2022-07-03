@@ -87,5 +87,18 @@ public class LevelGrid : MonoBehaviour
     public ITargetable GetTargetableAtGridPosition(GridPosition gridPosition) => gridSystem.GetGridObject(gridPosition).GetTargetable();
     public int GetWidth() => width;
     public int GetHeight() => height;
+    public int GetGridDistance(GridPosition startPosition, GridPosition endPosition, bool ignoreDiagonals = true)
+    {
+        GridPosition gridDistance = startPosition - endPosition;
+        int xDistance = Mathf.Abs(gridDistance.x);
+        int zDistance =  Mathf.Abs(gridDistance.z);
+        if(ignoreDiagonals) 
+            return  xDistance + zDistance;
+        else
+        {
+            int remainder = Mathf.Abs(xDistance - zDistance);
+            return Mathf.Min(xDistance, zDistance) + remainder;
+        }
+    }
     #endregion
 }

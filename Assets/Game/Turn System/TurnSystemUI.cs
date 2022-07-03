@@ -10,17 +10,17 @@ public class TurnSystemUI : MonoBehaviour
 
     private void OnEnable()
     {
-        TurnSystem.instance.IncrementTurn += UpdateUI;
+        TurnSystem.IncrementTurn += UpdateUI;
     }
 
     private void OnDisable()
     {
-        TurnSystem.instance.IncrementTurn -= UpdateUI;
+        TurnSystem.IncrementTurn -= UpdateUI;
     }
 
-    private void UpdateUI()
+    private void UpdateUI(bool isPlayerTurn)
     {
-        nextTurnButton.gameObject.SetActive(TurnSystem.instance.IsPlayerTurn());
+        nextTurnButton.gameObject.SetActive(isPlayerTurn);
         turnNumberText.text = $"Turn Number: {TurnSystem.instance.GetTurnCount()}";
     }
 }

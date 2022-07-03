@@ -7,8 +7,8 @@ public class UnitHealth : MonoBehaviour
     [SerializeField] private int maxHealth = 100;
     private int currentHealth;
     public event Action OnDeath;
-    public event Action<float> OnDamage;
-    private Unit unit = null;
+    public event Action<float> OnHPChange;
+    public event Action OnDamage;
     #endregion
 
 
@@ -16,21 +16,28 @@ public class UnitHealth : MonoBehaviour
     private void Awake()
     {
         currentHealth = maxHealth;
-        unit = GetComponent<Unit>();
     }
     #endregion
 
-    #region //Damage and death
+    #region //Damage and healing
     public void Damage(int damage)
     {
         currentHealth -= damage;
-        OnDamage?.Invoke(GetHealthPercentage());
+        OnHPChange?.Invoke(GetHealthPercentage());
 
         if(currentHealth <= 0)
         {
             currentHealth = 0;
             Die();
         }
+        else
+            OnDamage?.Invoke();
+    }
+
+    public void Heal(int amount)
+    {
+        currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
+        OnHPChange?.Invoke(GetHealthPercentage());
     }
 
     private void Die()

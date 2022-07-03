@@ -6,18 +6,19 @@ using UnityEngine.InputSystem;
 public class UnitActionSystem : MonoBehaviour
 {
     public static UnitActionSystem instance { get; private set; }
-    public static event Action UpdateUI;
+    public static event Action<Unit, BaseAction> UpdateUI;
+    private bool allowInput = true;
 
     #region //Unit variables
+    private Unit selectedUnit = null;
     public static event Action<Unit> OnSelectedUnitChanged;
-    [SerializeField] private Unit selectedUnit = null;
     [SerializeField] private LayerMask unitMask = -1;
+    private Unit defaultUnit => UnitManager.instance.GetPlayerList()[0];
     #endregion
 
     #region //Action variables
     public static event Action actionTaken;
     public static event Action<bool> ChangeBusy;
-    public static event Action<BaseAction> OnSelectedActionChanged;
     private BaseAction selectedAction = null;
     private bool isBusy = false;
     #endregion
@@ -35,18 +36,20 @@ public class UnitActionSystem : MonoBehaviour
         InputManager.instance.mouseClick.started += HandleMouseClick;
         InputManager.instance.altAction.started += HandleAltClick;
         BaseAction.OnAnyActionEnded += CheckActiveAction;
+        TurnSystem.IncrementTurn += TurnChange;
     }
 
     private void OnDisable()
     {
         InputManager.instance.mouseClick.started -= HandleMouseClick;
         InputManager.instance.altAction.started -= HandleAltClick;
-        BaseAction.OnAnyActionEnded += CheckActiveAction;
+        BaseAction.OnAnyActionEnded -= CheckActiveAction;
+        TurnSystem.IncrementTurn -= TurnChange;
     }
 
     private void Start()
     {
-        SetSelectedUnit(selectedUnit);
+        SetSelectedUnit(defaultUnit);
         ClearBusy();
     }
     #endregion
@@ -68,9 +71,8 @@ public class UnitActionSystem : MonoBehaviour
     private bool AllowInput()
     {
         if(isBusy) return false;
-        if(!TurnSystem.instance.IsPlayerTurn()) return false;
-        if(EventSystem.current.IsPointerOverGameObject()) return false;
-        return true;
+        if(!allowInput) return false;
+        return !EventSystem.current.IsPointerOverGameObject();
     }
     #endregion
 
@@ -86,21 +88,27 @@ public class UnitActionSystem : MonoBehaviour
         return true;
     }
 
+    private void TurnChange(bool isPlayerTurn)
+    {
+        allowInput = isPlayerTurn;
+        Unit unit = isPlayerTurn ? defaultUnit : null;
+        SetSelectedUnit(unit);
+    }
+
     private void SetSelectedUnit(Unit newUnit)
     {
         selectedUnit = newUnit;
         OnSelectedUnitChanged?.Invoke(newUnit);
-        SetSelectedAction(newUnit.GetRootAction());
+        if(newUnit != null) SetSelectedAction(newUnit.GetRootAction());
+        else UpdateUI?.Invoke(selectedUnit, selectedAction);
     }
-
-    public Unit GetSelectedUnit() => selectedUnit;
     #endregion
 
     #region //Action selection
     public void SetSelectedAction(BaseAction action)
     {
         selectedAction = action;
-        OnSelectedActionChanged?.Invoke(action);
+        UpdateUI?.Invoke(selectedUnit, selectedAction);
     }
 
     private void HandleSelectedAction(bool isAltAction)
@@ -130,11 +138,10 @@ public class UnitActionSystem : MonoBehaviour
 
     public void CheckActiveAction(BaseAction _)
     {
-        UpdateUI?.Invoke();
-        if(selectedAction.CanSelectAction()) return;
-        SetSelectedAction(selectedUnit.GetRootAction());
+        if(!selectedAction.CanSelectAction())
+            SetSelectedAction(selectedUnit.GetRootAction());
+        else
+            UpdateUI?.Invoke(selectedUnit, selectedAction);
     }
-
-    public BaseAction GetSelectedAction() => selectedAction;
     #endregion
 }

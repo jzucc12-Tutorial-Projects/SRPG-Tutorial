@@ -13,9 +13,12 @@ public class UnitAnimator : MonoBehaviour
     #region //Monobehaviour
     private void OnEnable()
     {
+        unit.OnWeaponSwap += ChangeController;
+
         foreach(var animatedAction in unit.GetComponents<IAnimatedAction>())
         {
-            animatedAction.StartRotation += SetAnimatedAction;
+            animatedAction.SetAnimatedAction += SetAnimatedAction;
+            animatedAction.SetTrigger += SetTrigger;
         }
 
         if(unit.TryGetComponent<MoveAction>(out MoveAction moveAction))
@@ -23,19 +26,32 @@ public class UnitAnimator : MonoBehaviour
             moveAction.StartMoving += StartMoving;
             moveAction.StopMoving += StopMoving;
         }
+
+        if(unit.TryGetComponent<UnitHealth>(out UnitHealth unitHealth))
+        {
+            unitHealth.OnDamage += TakeDamage;
+        }
     }
 
     private void OnDisable()
     {
+        unit.OnWeaponSwap -= ChangeController;
+
         foreach(var animatedAction in unit.GetComponents<IAnimatedAction>())
         {
-            animatedAction.StartRotation -= SetAnimatedAction;
+            animatedAction.SetAnimatedAction -= SetAnimatedAction;
+            animatedAction.SetTrigger -= SetTrigger;
         }
 
         if(unit.TryGetComponent<MoveAction>(out MoveAction moveAction))
         {
             moveAction.StartMoving -= StartMoving;
             moveAction.StopMoving -= StopMoving;
+        }
+
+        if(unit.TryGetComponent<UnitHealth>(out UnitHealth unitHealth))
+        {
+            unitHealth.OnDamage -= TakeDamage;
         }
     }
     #endregion
@@ -50,37 +66,27 @@ public class UnitAnimator : MonoBehaviour
     {
         animator.SetBool("isWalking", false);
     }
+
+    private void TakeDamage() => SetTrigger("Injured");
+
+    private void SetTrigger(string triggerName)
+    {
+        animator.SetTrigger(triggerName);
+    }
+
+    private void ChangeController(AnimatorOverrideController controller)
+    {
+        animator.runtimeAnimatorController = controller;
+    }
     #endregion
 
     #region //Animated Actions
-    public IEnumerator ActionRotation(IAnimatedAction animAction)
-    {
-        var animData = animAction.GetAnimData();
-        Vector3 aimDir = (animData.target - unit.GetWorldPosition()).normalized;
-
-        float dT = 0;
-        while(!aimDir.AlmostFacing(transform.forward, animData.facingLimit))
-        {
-            yield return null;
-            unit.Rotate(aimDir);
-            dT += Time.deltaTime;
-        }
-
-        if(dT < animData.waitTime) yield return new WaitForSeconds(animData.waitTime - dT);
-        animAction.OnFacing();
-        animator.SetTrigger(animData.triggerName);
-
-        while(unit.Rotate(aimDir))
-            yield return null;
-    }
-
     public void CurrentAct() => currentAnimAction.AnimationAct();
     public void CurrentEnd() => currentAnimAction.AnimationEnd();
 
     private void SetAnimatedAction(IAnimatedAction animatedAction)
     {
         currentAnimAction = animatedAction;
-        StartCoroutine(ActionRotation(currentAnimAction));
     }
 
     private void ResetAnimatedAction()

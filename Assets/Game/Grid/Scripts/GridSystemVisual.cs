@@ -3,21 +3,20 @@ using UnityEngine;
 
 public class GridSystemVisual : MonoBehaviour
 {
-    public UnitActionSystem unitActionSystem;
     public static GridSystemVisual instance { get; private set; }
 
     #region //Grid variables
     [SerializeField] private GridSystemVisualSingle visualPrefab = null;
     private GridSystemVisualSingle[,] singles;
     [SerializeField] private List<GridVisualType> gridMaterials = new List<GridVisualType>();
+    private Unit currentUnit = null;
+    private BaseAction currentAction = null;
     #endregion
 
 
     #region //Monobehaviour
     private void Awake()
     {
-        unitActionSystem = FindObjectOfType<UnitActionSystem>();
-
         singles = new GridSystemVisualSingle[LevelGrid.instance.GetWidth(), LevelGrid.instance.GetHeight()];
         for(int x = 0; x < LevelGrid.instance.GetWidth(); x ++)
         {
@@ -37,40 +36,43 @@ public class GridSystemVisual : MonoBehaviour
     private void OnEnable()
     {
         LevelGrid.instance.OnAnyUnitMove += UpdateGridVisual;
+        UnitActionSystem.UpdateUI += UpdateGridVisual;
     }
 
     private void OnDisable()
     {
         LevelGrid.instance.OnAnyUnitMove -= UpdateGridVisual;
-    }
-
-    private void Start()
-    {
-        UpdateGridVisual();
+        UnitActionSystem.UpdateUI -= UpdateGridVisual;
     }
     #endregion
     
     #region //Showing visuals
-    private void HideAll()
+    private void UpdateGridVisual(Unit newUnit, BaseAction newAction)
     {
-        foreach(var single in singles)
-            single.Hide();
+        currentUnit = newUnit;
+        currentAction = newAction;
+        UpdateGridVisual();
     }
 
     public void UpdateGridVisual()
     {
         HideAll();
-        var unit = unitActionSystem.GetSelectedUnit();
-        var action = unitActionSystem.GetSelectedAction();
-        var targetedAction = action as TargetedAction;
+        if(currentUnit == null) return;
+        var targetedAction = currentAction as TargetedAction;
         
         if(targetedAction != null)
         {
-            var positions = targetedAction.GetRangePositions(unit.GetGridPosition());
-            ShowPositions(positions, action, GetGridMaterial(action, false)); 
+            var positions = targetedAction.GetRangePositions(currentUnit.GetGridPosition());
+            ShowPositions(positions, currentAction, GetGridMaterial(currentAction, false)); 
         }
 
-        ShowPositions(action.GetValidPositions(), action, GetGridMaterial(action, targetedAction != null));
+        ShowPositions(currentAction.GetValidPositions(), currentAction, GetGridMaterial(currentAction, targetedAction != null));
+    }
+
+    private void HideAll()
+    {
+        foreach(var single in singles)
+            single.Hide();
     }
 
     private void ShowPositions(List<GridPosition> positions, BaseAction action, Material material)

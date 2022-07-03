@@ -19,13 +19,13 @@ public class UnitUI : MonoBehaviour
     private void OnEnable()
     {
         unit.OnActionPointChange += UpdateActionPointsText;
-        healthSystem.OnDamage += OnDamage;
+        healthSystem.OnHPChange += OnDamage;
     }
 
     private void OnDisable()
     {
         unit.OnActionPointChange -= UpdateActionPointsText;
-        healthSystem.OnDamage -= OnDamage;
+        healthSystem.OnHPChange -= OnDamage;
     }
 
     private void Start()

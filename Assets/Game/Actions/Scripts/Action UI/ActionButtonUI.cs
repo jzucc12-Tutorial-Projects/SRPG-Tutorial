@@ -28,7 +28,7 @@ public class ActionButtonUI : MonoBehaviour
         this.action = action;
         button.onClick.AddListener(() => {
             UnitActionSystem.instance.SetSelectedAction(action);
-            GridSystemVisual.instance.UpdateGridVisual();
+            action.OnSelected();
         });
         UpdateUI(action);
     }

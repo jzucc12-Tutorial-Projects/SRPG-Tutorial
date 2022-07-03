@@ -7,16 +7,16 @@ public class EnemyTurnUI : MonoBehaviour
 
     private void OnEnable()
     {
-        TurnSystem.instance.IncrementTurn += UpdateUI;
+        TurnSystem.IncrementTurn += UpdateUI;
     }
 
     private void OnDisable()
     {
-        TurnSystem.instance.IncrementTurn -= UpdateUI;
+        TurnSystem.IncrementTurn -= UpdateUI;
     }
 
-    private void UpdateUI()
+    private void UpdateUI(bool isPlayerTurn)
     {
-        enemyTurnUI.SetActive(!TurnSystem.instance.IsPlayerTurn());
+        enemyTurnUI.SetActive(!isPlayerTurn);
     }
 }

@@ -27,4 +27,8 @@ public class LightSphere : MonoBehaviour, IInteractable
         this.isOn = isOn;
         mesh.material = isOn ? onMaterial : offMaterial;
     }
+
+    public Vector3 GetWorldPosition() => LevelGrid.instance.GetWorldPosition(GetGridPosition());
+
+    public GridPosition GetGridPosition() => LevelGrid.instance.GetGridPosition(transform.position);
 }

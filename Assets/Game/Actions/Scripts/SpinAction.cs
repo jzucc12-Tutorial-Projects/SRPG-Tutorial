@@ -8,6 +8,8 @@ public class SpinAction : BaseAction
     [Header("Spin Action")]
     [SerializeField] private float spinSpeed = 360f;
     [SerializeField] private float spinAmount = 360f;
+    [SerializeField, MinMax(0, 100)] private int accuracyDrop = 30;
+    [SerializeField, Min(0)] private float damageBoost = 0.5f;
     private bool startSpinning = false;
     private float currentAngle = 0;
     #endregion
@@ -34,8 +36,12 @@ public class SpinAction : BaseAction
         currentAngle = 0;
         startSpinning = true;
         ActionStart(onFinish);
+        unit.AddAccuracyMod(-accuracyDrop);
+        unit.AddDamageMod(damageBoost);
     }
+    #endregion
 
+    #region //Action selection
     public override List<GridPosition> GetValidPositions()
     {
         return new List<GridPosition>()  { unit.GetGridPosition() };

@@ -9,55 +9,44 @@ public class UnitActionSystemUI : MonoBehaviour
     [SerializeField] private Transform container = null;
     [SerializeField] private TextMeshProUGUI actionPointText = null;
     private List<ActionButtonUI> buttons = new List<ActionButtonUI>();
-    private Unit currentUnit = null;
-    private BaseAction currentAction = null;
     #endregion
 
 
     #region //Monobehaviour
     private void OnEnable()
     {
-        UnitActionSystem.OnSelectedUnitChanged += ChangeUnit;
-        UnitActionSystem.OnSelectedActionChanged += ChangeAction;
         UnitActionSystem.UpdateUI += UpdateUI;
-        TurnSystem.instance.IncrementTurn += UpdateUI;
+        UnitActionSystem.OnSelectedUnitChanged += CreateButtons;
     }
 
     private void OnDisable()
     {
-        UnitActionSystem.OnSelectedUnitChanged -= ChangeUnit;
-        UnitActionSystem.OnSelectedActionChanged -= ChangeAction;
         UnitActionSystem.UpdateUI -= UpdateUI;
-        TurnSystem.instance.IncrementTurn -= UpdateUI;
+        UnitActionSystem.OnSelectedUnitChanged -= CreateButtons;
     }
     #endregion
 
     #region //UI Updating
-    private void UpdateUI()
+    private void UpdateUI(Unit unit, BaseAction action)
     {
-        UpdateActionPoints();
-        UpdateActionButtons();
+        if(unit == null) return;
+        UpdateActionPoints(unit);
+        UpdateActionButtons(action);
     }
 
-    private void ChangeUnit(Unit newUnit)
+    private void UpdateActionPoints(Unit unit)
     {
-        currentUnit = newUnit;
-        UpdateActionPoints();
-        CreateButtons();
+        actionPointText.text = $"Action Points: {unit.GetActionPoints()}";
     }
 
-    private void UpdateActionPoints()
+    private void CreateButtons(Unit unit)
     {
-        actionPointText.text = $"Action Points: {currentUnit.GetActionPoints()}";
-    }
-
-    private void CreateButtons()
-    {
+        if(unit == null) return;
         buttons.Clear();
         foreach(Transform button in container)
             Destroy(button.gameObject);
 
-        foreach(var action in currentUnit.GetActions())
+        foreach(var action in unit.GetActions())
         {
             var button = Instantiate(buttonPrefab, container);
             button.SetAction(action);
@@ -65,16 +54,10 @@ public class UnitActionSystemUI : MonoBehaviour
         }
     }
 
-    private void ChangeAction(BaseAction newAction)
-    {
-        currentAction = newAction;
-        UpdateActionButtons();
-    }
-
-    public void UpdateActionButtons()
+    public void UpdateActionButtons(BaseAction action)
     {
         foreach(var button in buttons)
-            button.UpdateUI(currentAction);
+            button.UpdateUI(action);
     }
     #endregion
 }

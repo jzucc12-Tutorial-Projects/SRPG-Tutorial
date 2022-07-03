@@ -60,7 +60,7 @@ public class MoveAction : BaseAction
     }
     #endregion
 
-    #region //Validation
+    #region //Action selection
     public override bool IsValidAction(GridPosition gridPosition)
     {
         return GetValidPositions().Contains(gridPosition);

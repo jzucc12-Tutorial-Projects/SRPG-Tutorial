@@ -61,6 +61,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destroyedCratePrefab: {fileID: 5700086547262430292, guid: 1b2f43775e3b6dd4a8f154968b5583ca,
     type: 3}
+  maxHealth: 1
+  myCollider: {fileID: 5700086547262430293}
 --- !u!1001 &5700086548531123185
 PrefabInstance:
   m_ObjectHideFlags: 0

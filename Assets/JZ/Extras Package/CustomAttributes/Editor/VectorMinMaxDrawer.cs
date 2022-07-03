@@ -26,68 +26,47 @@ public class VectorMinMaxDrawer: PropertyDrawer
         if (property.propertyType == SerializedPropertyType.Vector2)
         {
             Vector2 vector = property.vector2Value;
-            vector.x = BringFloatInRange(vector.x, vmm.min, vmm.max);
-            vector.y = BringFloatInRange(vector.y, vmm.min, vmm.max);
+            vector.x = Mathf.Clamp(vector.x, vmm.min, vmm.max);
+            vector.y = Mathf.Clamp(vector.y, vmm.min, vmm.max);
             property.vector2Value = vector;
             return true;
         }
         else if (property.propertyType == SerializedPropertyType.Vector2Int)
         {
             Vector2Int vector = property.vector2IntValue;
-            vector.x = BringIntInRange(vector.x, vmm.min, vmm.max);
-            vector.y = BringIntInRange(vector.y, vmm.min, vmm.max);
+            vector.x = (int)Mathf.Clamp(vector.x, vmm.min, vmm.max);
+            vector.y = (int)Mathf.Clamp(vector.y, vmm.min, vmm.max);
             property.vector2IntValue = vector;
             return true;
         }
         else if (property.propertyType == SerializedPropertyType.Vector3)
         {
             Vector3 vector = property.vector3Value;
-            vector.x = BringFloatInRange(vector.x, vmm.min, vmm.max);
-            vector.y = BringFloatInRange(vector.y, vmm.min, vmm.max);
-            vector.z = BringFloatInRange(vector.z, vmm.min, vmm.max);
+            vector.x = Mathf.Clamp(vector.x, vmm.min, vmm.max);
+            vector.y = Mathf.Clamp(vector.y, vmm.min, vmm.max);
+            vector.z = Mathf.Clamp(vector.z, vmm.min, vmm.max);
             property.vector3Value = vector;
             return true;
         }
         else if (property.propertyType == SerializedPropertyType.Vector3Int)
         {
             Vector3Int vector = property.vector3IntValue;
-            vector.x = BringIntInRange(vector.x, vmm.min, vmm.max);
-            vector.y = BringIntInRange(vector.y, vmm.min, vmm.max);
-            vector.z = BringIntInRange(vector.z, vmm.min, vmm.max);
+            vector.x = (int)Mathf.Clamp(vector.x, vmm.min, vmm.max);
+            vector.y = (int)Mathf.Clamp(vector.y, vmm.min, vmm.max);
+            vector.z = (int)Mathf.Clamp(vector.z, vmm.min, vmm.max);
             property.vector3IntValue = vector;
             return true;
         }
         else if (property.propertyType == SerializedPropertyType.Vector4)
         {
             Vector4 vector = property.vector4Value;
-            vector.x = BringFloatInRange(vector.x, vmm.min, vmm.max);
-            vector.y = BringFloatInRange(vector.y, vmm.min, vmm.max);
-            vector.z = BringFloatInRange(vector.z, vmm.min, vmm.max);
-            vector.w = BringFloatInRange(vector.w, vmm.min, vmm.max);
+            vector.x = Mathf.Clamp(vector.x, vmm.min, vmm.max);
+            vector.y = Mathf.Clamp(vector.y, vmm.min, vmm.max);
+            vector.z = Mathf.Clamp(vector.z, vmm.min, vmm.max);
+            vector.w = Mathf.Clamp(vector.w, vmm.min, vmm.max);
             property.vector4Value = vector;
             return true;
         }
         return false;
     }
-
-    #region //Vector checking
-
-    #endregion
-
-    #region //Bringing values into range
-    private float BringFloatInRange(float number, float min, float max)
-    {
-        if(number < min) return min;
-        if(number > max) return max;
-        return number;
-    }
-
-    private int BringIntInRange(int number, float min, float max)
-    {
-        if(number < min) return (int)min;
-        if(number > max) return (int)max;
-        return number;
-    }
-    #endregion
 }
-

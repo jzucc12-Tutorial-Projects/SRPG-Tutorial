@@ -10,6 +10,7 @@ public class EnemyAI : MonoBehaviour
     #endregion
 
     #region //State
+    private bool isPlayerTurn = true;
     private enum State
     {
         WaitingForTurn,
@@ -23,12 +24,12 @@ public class EnemyAI : MonoBehaviour
     #region //Monobehaviour
     private void OnEnable()
     {
-        TurnSystem.instance.IncrementTurn += OnTurnChange;
+        TurnSystem.IncrementTurn += OnTurnChange;
     }
 
     private void OnDisable()
     {
-        TurnSystem.instance.IncrementTurn += OnTurnChange;
+        TurnSystem.IncrementTurn += OnTurnChange;
     }
 
     private void Start()
@@ -38,7 +39,7 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
-        if(TurnSystem.instance.IsPlayerTurn()) return;
+        if(isPlayerTurn) return;
 
         switch(currentState)
         {
@@ -61,9 +62,10 @@ public class EnemyAI : MonoBehaviour
     #endregion
 
     #region //Turns
-    private void OnTurnChange()
+    private void OnTurnChange(bool isPlayerTurn)
     {
-        if(TurnSystem.instance.IsPlayerTurn()) return;
+        this.isPlayerTurn = isPlayerTurn;
+        if(isPlayerTurn) return;
         currentState = State.TakingTurn;
         timer = maxTime;
     }
