@@ -3,12 +3,11 @@ using UnityEngine;
 
 public class MeleeAction : TargetedAction, IAnimatedAction
 {
-    #region //State
+    #region //Variables
+    [Header("Melee Action")]
+    private int damage = 70;
     private ITargetable target = null;
     public static event Action OnMeleeStatic;
-    #endregion
-
-    #region //Animated Actions
     public event Action<IAnimatedAction> SetAnimatedAction;
     public event Action<string> SetTrigger;
     #endregion
@@ -40,7 +39,8 @@ public class MeleeAction : TargetedAction, IAnimatedAction
     public void AnimationAct()
     {
         OnMeleeStatic?.Invoke();
-        target.Damage(100);
+        CallLog($"{unit.GetName()} struck {target.GetTargetName()} for {damage} damage");
+        target.Damage(damage);
     }
 
     public void AnimationEnd()

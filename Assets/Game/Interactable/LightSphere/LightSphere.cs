@@ -16,10 +16,15 @@ public class LightSphere : MonoBehaviour, IInteractable
         LevelGrid.instance.SetInteractableAtGridPosition(gridPosition, this);
     }
 
-    public void Interact(Action OnComplete)
+    public void Interact(Unit actor, Action OnComplete)
     {
+        string log;
         SwitchOn(!isOn);
-        OnComplete(); 
+        if(isOn) log = $"{actor.GetName()} turned on a light";
+        else log = $"{actor.GetName()} turned off a light";
+        OnComplete();
+
+        ActionLogListener.Publish(log); 
     }
 
     private void SwitchOn(bool isOn)

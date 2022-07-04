@@ -4,18 +4,16 @@ using UnityEngine;
 
 public abstract class BaseAction : MonoBehaviour
 {
-    #region //Variables
+    #region //Base variables
+    [Header("Base Action")]
+    [SerializeField] private int apCost = 1;
+    [SerializeField] protected bool circularRange = true;
+    [SerializeField] protected bool includeSelf  = false;
     protected Unit unit = null;
     protected bool isActive = false;
     protected Action OnActionFinish;
     public static event Action<BaseAction> OnAnyActionStarted;
     public static event Action<BaseAction> OnAnyActionEnded;
-    #endregion
-
-    #region //Position variables
-    [Header("Base Action")]
-    [SerializeField] protected bool circularRange = true;
-    [SerializeField] protected bool includeSelf  = false;
     #endregion
 
 
@@ -47,16 +45,22 @@ public abstract class BaseAction : MonoBehaviour
         OnActionFinish?.Invoke();
         OnAnyActionEnded?.Invoke(this);
     }
+
+    public void CallLog(string text)
+    {
+        ActionLogListener.Publish(text);
+    }
     #endregion
 
     #region //Action Selection
     public virtual void OnSelected() { }
+    public virtual void OnUnSelected() { }
     public abstract List<GridPosition> GetValidPositions();
     public virtual bool IsValidAction(GridPosition gridPosition)
     {
         return CanSelectAction() && GetValidPositions().Contains(gridPosition);
     }
-    public virtual bool CanSelectAction() => true;
+    public virtual bool CanSelectAction() => unit.GetActionPoints() >= GetPointCost();
     public virtual bool CanTakeAltAction() => false;
     #endregion
 
@@ -82,7 +86,7 @@ public abstract class BaseAction : MonoBehaviour
     #region //Getters
     public virtual int GetQuantity() => -1; //Leave at -1 for an infinite amount
     public abstract string GetActionName();
-    public virtual int GetPointCost() => 1;
+    public virtual int GetPointCost() => apCost;
     public bool HasCircularRange() => circularRange;
     public bool IncludeSelf() => includeSelf;
     #endregion

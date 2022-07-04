@@ -16,7 +16,7 @@ public class InteractAction : TargetedAction
 
     protected override void OnFacing()
     {
-        target.Interact(ActionFinish);
+        target.Interact(unit, ActionFinish);
         target = null;
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ShootAction : TargetedAction, IAnimatedAction
@@ -15,9 +16,13 @@ public class ShootAction : TargetedAction, IAnimatedAction
     #region //Firing info
     [Header("Firing Info")]
     [Tooltip("Shots before a reload is needed")] [SerializeField] private int maxClip = 6;
+    [SerializeField] private int reloadAPCost = 2;
     [SerializeField] private int damage = 40;
     [SerializeField] private AccuracySO accuracySO = null;
+    private bool useReloadAPCost = false;
     public static event Action OnShootStatic;
+    public static event Action<List<(ITargetable, int, int)>> Targeting;
+    public static event Action StopTargeting;
     #endregion
 
     #region //Weapon state
@@ -60,14 +65,26 @@ public class ShootAction : TargetedAction, IAnimatedAction
 
         int accuracy = accuracySO.CalculateAccuracy(bulletOrigin.position, target, circularRange);
         accuracy += unit.GetAccuracyMod();
-        float damageDealt = damage * accuracySO.ShotHits(accuracy) * unit.GetDamageMod();
-        target.Damage((int)damageDealt);
+        float hitModifier = accuracySO.ShotHits(accuracy);
+        int damageDealt = (int)(damage * hitModifier * unit.GetDamageMod());
+
+        if(hitModifier == 0) CallLog($"{unit.GetName()} missed {target.GetTargetName()}");
+        else 
+        {
+            string hitType;
+            if(hitModifier == 1) hitType = "hit";
+            else hitType = "crit"; 
+
+            CallLog($"{unit.GetName()} {hitType} {target.GetTargetName()} for {damageDealt} damage");
+        }
+        target.Damage(damageDealt);
     }
 
     public override void TakeAltAction(Action onFinish)
     {
         currentClip = maxClip;
         OnActionFinish = onFinish;
+        CallLog($"{unit.GetName()} reloaded their {weaponName}");
         ActionFinish();
     }
     #endregion
@@ -75,16 +92,36 @@ public class ShootAction : TargetedAction, IAnimatedAction
     #region //Action selection
     public override void OnSelected()
     {
+        List<(ITargetable, int, int)> targets = new List<(ITargetable, int, int)>();
         unit.SetActiveWeapon(weaponGO, animController);
+        foreach(var position in GetTargetedPositions(unit.GetGridPosition()))
+        {
+            ITargetable target = LevelGrid.instance.GetTargetableAtGridPosition(position);
+            int accuracy = accuracySO.CalculateAccuracy(unit.GetTargetPosition(), target, circularRange);
+            accuracy += unit.GetAccuracyMod();
+            int crit = accuracySO.CaclulateCritChance(accuracy);
+            targets.Add((target, accuracy, crit));
+        }
+        if(targets.Count > 0) Targeting?.Invoke(targets);
+    }
+
+    public override void OnUnSelected()
+    {
+        StopTargeting?.Invoke();
     }
 
     public override bool IsValidAction(GridPosition gridPosition)
     {
+        useReloadAPCost = false;
         if(currentClip <= 0) return false;
         return base.IsValidAction(gridPosition);
     }
 
-    public override bool CanTakeAltAction() => currentClip < maxClip;
+    public override bool CanTakeAltAction()
+    {
+        useReloadAPCost = true;
+        return currentClip < maxClip;
+    }
     #endregion
 
     #region //Enemy action
@@ -112,6 +149,11 @@ public class ShootAction : TargetedAction, IAnimatedAction
     #region //Getters
     public override int GetQuantity() => currentClip;
     public override string GetActionName() => currentClip > 0 ? weaponName : $"Reload {weaponName}";
+    public override int GetPointCost()
+    {
+        if(useReloadAPCost || currentClip <= 0) return reloadAPCost;
+        else return base.GetPointCost();
+    }
     public Unit GetUnit() => unit;
     public ITargetable GetTarget() => target;
     protected override Vector3 GetTargetPosition() => target.GetWorldPosition();

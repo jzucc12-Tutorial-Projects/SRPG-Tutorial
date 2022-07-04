@@ -10,6 +10,7 @@ public class UnitUI : MonoBehaviour
     #endregion
 
     #region //UI components
+    [SerializeField] private TextMeshProUGUI nameText = null;
     [SerializeField] private TextMeshProUGUI actionPointsText = null;
     [SerializeField] private Image healthBar = null;
     #endregion
@@ -31,6 +32,7 @@ public class UnitUI : MonoBehaviour
     private void Start()
     {
         UpdateActionPointsText();
+        nameText.text = unit.GetName();
     }
     #endregion
 

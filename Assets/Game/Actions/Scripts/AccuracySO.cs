@@ -25,7 +25,7 @@ public class AccuracySO : ScriptableObject
     public float ShotHits(int accuracy)
     {
         int roll = UnityEngine.Random.Range(0, 101);
-        if(roll < Mathf.Min(critChance, accuracy)) return critMult;
+        if(roll < CaclulateCritChance(accuracy)) return critMult;
 
         int fudgeFactor = 0;
         if(accuracy > 0) fudgeFactor = 12 - (accuracy / 10);
@@ -50,6 +50,11 @@ public class AccuracySO : ScriptableObject
         var hits = Physics.OverlapCapsule(attackerPosition, target.GetTargetPosition(), 0.01f, accuracyObstacleLayer);
         accuracy -= drop * Mathf.Max(0, hits.Length - 2); //Subtract one for the weapon AND the target
         return accuracy;
+    }
+
+    public int CaclulateCritChance(int accuracy)
+    {
+        return Mathf.Min(critChance, accuracy);
     }
     #endregion
 }

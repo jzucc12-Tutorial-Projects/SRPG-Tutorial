@@ -12,6 +12,14 @@ public class MedPackAction : TargetedAction
     #endregion
 
 
+    #region //Monobehaviour
+    protected override void Awake()
+    {
+        base.Awake();
+        currentQuantity = maxQuantity;
+    }
+    #endregion
+
     #region //Action performing
     public override void TakeAction(GridPosition gridPosition, Action onFinish)
     {
@@ -22,14 +30,18 @@ public class MedPackAction : TargetedAction
     protected override void OnFacing()
     {
         currentQuantity--;
-        target.Heal(healingAmount);
+        int healAmount = target.Heal(healingAmount);
+        if(target == unit) CallLog($"{unit.GetName()} healed themselves for {healAmount} health");
         target = null;
         ActionFinish();
     }
     #endregion
 
     #region //Action selection
-    public override bool CanSelectAction() => currentQuantity > 0;
+    public override bool CanSelectAction()
+    {
+        return currentQuantity > 0 && base.CanSelectAction();
+    }
     #endregion
 
     #region //Enemy action

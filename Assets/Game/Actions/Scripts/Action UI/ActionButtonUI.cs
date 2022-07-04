@@ -10,6 +10,7 @@ public class ActionButtonUI : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI actionText = null;
     [SerializeField] private TextMeshProUGUI quantityText = null;
+    [SerializeField] private TextMeshProUGUI apText = null;
     [SerializeField] private Button button = null;
     [SerializeField] private Image border = null;
     [SerializeField] private Image disabledLayer = null;
@@ -28,7 +29,6 @@ public class ActionButtonUI : MonoBehaviour
         this.action = action;
         button.onClick.AddListener(() => {
             UnitActionSystem.instance.SetSelectedAction(action);
-            action.OnSelected();
         });
         UpdateUI(action);
     }
@@ -38,6 +38,7 @@ public class ActionButtonUI : MonoBehaviour
         actionText.text = action.GetActionName().ToUpper();
         quantityText.enabled = action.GetQuantity() != -1;
         quantityText.text = $"x{action.GetQuantity()}";
+        apText.text = $"{action.GetPointCost()} AP";
 
         if(action.CanSelectAction())
         {

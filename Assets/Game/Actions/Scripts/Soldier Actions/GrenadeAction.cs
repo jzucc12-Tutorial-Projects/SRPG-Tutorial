@@ -37,12 +37,16 @@ public class GrenadeAction : TargetedAction, IAnimatedAction
     protected override void OnFacing()
     {
         SetTrigger?.Invoke("Grenade Throw");
+        CallLog($"{unit.GetName()} threw a grenade");
         unit.HideActiveWeapon();
     }
     #endregion
 
     #region //Action selection
-    public override bool CanSelectAction() => currentQuantity > 0;
+    public override bool CanSelectAction()
+    {
+        return currentQuantity > 0 && base.CanSelectAction();
+    }
     #endregion
 
     #region //Enemy action

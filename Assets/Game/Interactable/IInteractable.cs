@@ -3,8 +3,7 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    void Interact(Action onComplete);
-
-    public Vector3 GetWorldPosition();
-    public GridPosition GetGridPosition();
+    void Interact(Unit actor, Action onComplete);
+    Vector3 GetWorldPosition();
+    GridPosition GetGridPosition();
 }

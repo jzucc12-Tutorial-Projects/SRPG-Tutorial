@@ -107,7 +107,9 @@ public class UnitActionSystem : MonoBehaviour
     #region //Action selection
     public void SetSelectedAction(BaseAction action)
     {
+        if(selectedAction != null) selectedAction.OnUnSelected();
         selectedAction = action;
+        if(selectedAction != null) selectedAction.OnSelected();
         UpdateUI?.Invoke(selectedUnit, selectedAction);
     }
 

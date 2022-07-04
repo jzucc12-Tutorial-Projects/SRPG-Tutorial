@@ -4,8 +4,11 @@ using UnityEngine;
 public class Unit : MonoBehaviour, ITargetable
 {
     #region //Unit base variables
+    [Header("Base variables")]
+    [SerializeField] private string unitName = "Unit";
     [SerializeField] private bool isEnemy = false;
     [SerializeField] private float rotateSpeed = 5;
+    [SerializeField] private int priority = 0;
     private GridPosition gridPosition;
     private UnitHealth unitHealth = null;
     public static event Action<Unit> UnitSpawned;
@@ -17,22 +20,24 @@ public class Unit : MonoBehaviour, ITargetable
     [SerializeField] private int maxActionPoints = 2;
     public event Action OnActionPointChange;
     private int currentActionPoints = 0;
+    #endregion
+
+    #region //Weapons and attacks
+    [Header("Weapons and attacks")]
+    [SerializeField] private GameObject defaultWeapon = null;
+    private GameObject activeWeapon = null;
+    public event Action<AnimatorOverrideController> OnWeaponSwap;
     [Tooltip("HP% loss increment that drops accuracy")] [SerializeField, MinMax(0, 1)] private float hpLossToDropAccuracy = 0.1f;
     [Tooltip("Accuracy drop with above HP loss.")] [SerializeField, MinMax(0, 100)] private int accuracyDropWithHP = 10;
     private int accuracyMod = 0;
     private float damageMod = 0;
     #endregion
 
-    #region //Weapons
-    private GameObject activeWeapon = null;
-    [SerializeField] private GameObject defaultWeapon = null;
-    public event Action<AnimatorOverrideController> OnWeaponSwap;
-    #endregion
-
 
     #region //Monobehaviour
     private void Awake()
     {
+        currentActionPoints = maxActionPoints;
         actions = GetComponents<BaseAction>();
         unitHealth = GetComponent<UnitHealth>();
         activeWeapon = defaultWeapon;
@@ -53,14 +58,14 @@ public class Unit : MonoBehaviour, ITargetable
 
     private void Start()
     {
-        gridPosition = LevelGrid.instance.GetGridPosition(transform.position);
+        gridPosition = GetGridPosition();
         LevelGrid.instance.AddUnitAtGridPosition(gridPosition, this);
         LevelGrid.instance.SetTargetableAtGridPosition(GetGridPosition(), this);
     }
 
     private void Update()
     {
-        GridPosition newPosition = LevelGrid.instance.GetGridPosition(transform.position);
+        GridPosition newPosition = GetGridPosition();
         if(newPosition == gridPosition) return;
         var oldPosition = gridPosition;
         gridPosition = newPosition;
@@ -109,13 +114,14 @@ public class Unit : MonoBehaviour, ITargetable
         unitHealth.Damage(damage);
     }
 
-    public void Heal(int amount)
+    public int Heal(int amount)
     {
-        unitHealth.Heal(amount);
+        return unitHealth.Heal(amount);
     }
 
     private void OnDeath()
     {
+        ActionLogListener.Publish($"{GetName()} has died");
         UnitDead?.Invoke(this);
         LevelGrid.instance.SetTargetableAtGridPosition(GetGridPosition(), null);
         LevelGrid.instance.RemoveUnitAtGridPosition(gridPosition, this);
@@ -163,7 +169,7 @@ public class Unit : MonoBehaviour, ITargetable
     }
     public float GetHealthPercentage() => unitHealth.GetHealthPercentage();
     public int GetActionPoints() => currentActionPoints;
-    public GridPosition GetGridPosition() => gridPosition;
+    public GridPosition GetGridPosition() => LevelGrid.instance.GetGridPosition(transform.position);
     public Vector3 GetWorldPosition() => transform.position;
     public BaseAction[] GetActions() => actions;
     public bool IsEnemy() => isEnemy;
@@ -172,13 +178,9 @@ public class Unit : MonoBehaviour, ITargetable
         bool differentFromTarget = isEnemy ^ attackingUnit.isEnemy;
 
         if(isHealing)
-        {
             return !differentFromTarget && GetHealthPercentage() < 1;
-        }
         else
-        {
             return differentFromTarget;
-        }
     }
     public Vector3 GetTargetPosition()
     {
@@ -191,5 +193,8 @@ public class Unit : MonoBehaviour, ITargetable
         return -ticks * accuracyDropWithHP + accuracyMod;
     }
     public float GetDamageMod() => 1 + damageMod;
+    public int GetPriority() => priority;
+    public string GetName() => unitName;
+    public string GetTargetName() => GetName();
     #endregion
 }

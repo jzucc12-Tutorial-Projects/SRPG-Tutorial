@@ -35,13 +35,24 @@ public class Door : MonoBehaviour, IInteractable
     #endregion
 
     #region //Interactions
-    public void Interact(Action OnComplete)
+    public void Interact(Unit actor, Action OnComplete)
     {
-        if(isOpen) CloseDoor();
-        else OpenDoor();
+        string log;
+        if(isOpen) 
+        {
+            log = $"{actor.GetName()} closed a door";
+            CloseDoor();
+        }
+        else 
+        {
+            log = $"{actor.GetName()} opened a door";
+            OpenDoor();
+        }
         isActive = true;
         timer = 0.5f;
         this.OnComplete = OnComplete;
+
+        ActionLogListener.Publish(log);
     }
 
     private void OpenDoor()
@@ -57,7 +68,9 @@ public class Door : MonoBehaviour, IInteractable
         animator.SetBool("isOpen", false);
         Pathfinding.instance.SetIsWalkable(gridPosition, false);
     }
+    #endregion
 
+    #region //Getters
     public Vector3 GetWorldPosition() => LevelGrid.instance.GetWorldPosition(GetGridPosition());
     public GridPosition GetGridPosition() => LevelGrid.instance.GetGridPosition(transform.position);
     #endregion

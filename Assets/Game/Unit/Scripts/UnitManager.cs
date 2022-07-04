@@ -36,15 +36,41 @@ public class UnitManager : MonoBehaviour
     private void AddUnit(Unit unit)
     {
         unitList.Add(unit);
-        if(unit.IsEnemy()) enemyList.Add(unit);
-        else playerList.Add(unit);
+        if(unit.IsEnemy()) 
+        {
+            enemyList.Add(unit);
+            SortList(enemyList);
+        }
+        else
+        {
+            playerList.Add(unit);
+            SortList(playerList);
+        }
     }
 
     private void RemoveUnit(Unit unit)
     {
         unitList.Remove(unit);
-        if(unit.IsEnemy()) enemyList.Remove(unit);
-        else playerList.Remove(unit);
+        if(unit.IsEnemy()) 
+        {
+            enemyList.Remove(unit);
+            SortList(enemyList);
+        }
+        else 
+        {
+            playerList.Remove(unit);
+            SortList(playerList);
+        }
+    }
+
+    private void SortList(List<Unit> list)
+    {
+        list.Sort((Unit x, Unit y) =>
+        {
+            if(x.GetPriority() > y.GetPriority()) return 1;
+            else if(x.GetPriority() < y.GetPriority()) return -1;
+            return 0;
+        });
     }
     #endregion
 

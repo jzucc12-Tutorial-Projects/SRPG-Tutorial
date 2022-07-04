@@ -30,14 +30,16 @@ public class UnitHealth : MonoBehaviour
             currentHealth = 0;
             Die();
         }
-        else
+        else if(damage > 0)
             OnDamage?.Invoke();
     }
 
-    public void Heal(int amount)
+    public int Heal(int amount)
     {
-        currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
+        int healAmount = Mathf.Min(maxHealth, currentHealth + amount);
+        currentHealth += healAmount;
         OnHPChange?.Invoke(GetHealthPercentage());
+        return healAmount;
     }
 
     private void Die()

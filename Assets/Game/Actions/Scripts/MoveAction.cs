@@ -83,6 +83,8 @@ public class MoveAction : BaseAction
 
         return validGridPositionList;
     }
+
+    public override bool CanSelectAction() => true;
     #endregion
 
     #region //Enemy Action

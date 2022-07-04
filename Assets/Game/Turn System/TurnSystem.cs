@@ -25,6 +25,9 @@ public class TurnSystem : MonoBehaviour
         turnNumber++;
         isPlayerTurn = !isPlayerTurn;
         IncrementTurn?.Invoke(isPlayerTurn);
+
+        string turnText = isPlayerTurn ? "Player" : "Enemy";
+        ActionLogListener.Publish($"It's now the {turnText}'s turn");
     }
 
     public int GetTurnCount() => turnNumber;

@@ -38,6 +38,7 @@ public class SpinAction : BaseAction
         ActionStart(onFinish);
         unit.AddAccuracyMod(-accuracyDrop);
         unit.AddDamageMod(damageBoost);
+        CallLog($"{unit.GetName()} did a 360");
     }
     #endregion
 
@@ -45,6 +46,11 @@ public class SpinAction : BaseAction
     public override List<GridPosition> GetValidPositions()
     {
         return new List<GridPosition>()  { unit.GetGridPosition() };
+    }
+
+    public override bool CanSelectAction()
+    {
+        return unit.GetActionPoints() > 1;
     }
     #endregion
 
@@ -57,5 +63,9 @@ public class SpinAction : BaseAction
 
     #region //Getters
     public override string GetActionName() => "Spin";
+    public override int GetPointCost()
+    {
+        return Mathf.Max(1, unit.GetActionPoints() - 1);
+    }
     #endregion
 }
