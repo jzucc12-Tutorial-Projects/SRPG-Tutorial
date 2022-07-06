@@ -1,6 +1,9 @@
 using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// Shows debug info for a given grid cell
+/// </summary>
 public class PathfindingDebugObject : GridDebugObject
 {
     private PathNode pathNode = null;

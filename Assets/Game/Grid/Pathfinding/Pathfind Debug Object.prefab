@@ -611,6 +611,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6222297194036254263}
   - component: {fileID: 3561538452092053011}
+  - component: {fileID: -5129202239213163522}
   m_Layer: 0
   m_Name: Pathfind Debug Object
   m_TagString: Untagged
@@ -655,6 +656,23 @@ MonoBehaviour:
   gCostText: {fileID: 9157785586875603108}
   hCostText: {fileID: 7654926964799652394}
   isWalkable: {fileID: 305348351448448961}
+--- !u!114 &-5129202239213163522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8336974148201469694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c8da398e8dd54c46b7f3ada7195435e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position: {fileID: 0}
+  fCostText: {fileID: 0}
+  gCostText: {fileID: 0}
+  hCostText: {fileID: 0}
+  isWalkable: {fileID: 0}
 --- !u!1 &9172597867797626844
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 642008498672032320}
-  - component: {fileID: 642008498672032383}
   - component: {fileID: 1948232404978133322}
+  - component: {fileID: 642008498672032383}
   - component: {fileID: 6208183024560329706}
+  - component: {fileID: 4329673137153643020}
   - component: {fileID: 7930978741787514549}
   - component: {fileID: 864355669238106471}
   - component: {fileID: 7907523317165694775}
@@ -46,6 +47,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1948232404978133322
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642008498672032321}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.47378245, y: 1.8383349, z: 0.4564625}
+  m_Center: {x: 0.015567914, y: 0.90084153, z: -0.008809708}
 --- !u!114 &642008498672032383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,25 +74,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Unit
   isEnemy: 0
-  rotateSpeed: 10
   priority: 0
+  rotateSpeed: 10
+  shoulderHeight: 1.7
   maxActionPoints: 4
-  defaultWeapon: {fileID: 642920246809004147}
   hpLossToDropAccuracy: 0.1
   accuracyDropWithHP: 10
---- !u!65 &1948232404978133322
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 642008498672032321}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.47378245, y: 1.8383349, z: 0.4564625}
-  m_Center: {x: 0.015567914, y: 0.90084153, z: -0.008809708}
 --- !u!114 &6208183024560329706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,6 +93,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+--- !u!114 &4329673137153643020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642008498672032321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10ffa41e6f447c94ebaf43de2572776f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultWeapon: {fileID: 642920246809004147}
 --- !u!114 &7930978741787514549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,7 +174,7 @@ MonoBehaviour:
   circularRange: 1
   includeSelf: 0
   requiresTargetable: 1
-  isHealing: 0
+  targetAllies: 0
   actionRange: 5
   facingLimit: 0.993
   waitTime: 0.5
@@ -193,7 +207,7 @@ MonoBehaviour:
   circularRange: 1
   includeSelf: 0
   requiresTargetable: 1
-  isHealing: 0
+  targetAllies: 0
   actionRange: 9
   facingLimit: 0.993
   waitTime: 0.5
@@ -224,9 +238,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   apCost: 1
   circularRange: 1
-  includeSelf: 1
+  includeSelf: 0
   requiresTargetable: 0
-  isHealing: 0
+  targetAllies: 0
   actionRange: 5
   facingLimit: 0.993
   waitTime: 0.25
@@ -253,7 +267,7 @@ MonoBehaviour:
   circularRange: 0
   includeSelf: 0
   requiresTargetable: 1
-  isHealing: 0
+  targetAllies: 0
   actionRange: 1
   facingLimit: 0.9
   waitTime: 0
@@ -276,7 +290,7 @@ MonoBehaviour:
   circularRange: 1
   includeSelf: 1
   requiresTargetable: 1
-  isHealing: 1
+  targetAllies: 1
   actionRange: 0
   facingLimit: 0.9
   waitTime: 0
@@ -301,7 +315,7 @@ MonoBehaviour:
   circularRange: 1
   includeSelf: 0
   requiresTargetable: 0
-  isHealing: 0
+  targetAllies: 0
   actionRange: 1
   facingLimit: 0.97
   waitTime: 0
@@ -1715,7 +1729,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7979fe83d33b0e5488508c0482ea0adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unit: {fileID: 642008498672032383}
+  unitWeapon: {fileID: 4329673137153643020}
   animator: {fileID: 4404485303077618263}
 --- !u!4 &646293137683347450 stripped
 Transform:

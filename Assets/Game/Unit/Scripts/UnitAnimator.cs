@@ -1,10 +1,12 @@
-using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Controls the animator for a given unit
+/// </summary>
 public class UnitAnimator : MonoBehaviour
 {
     #region //Variables
-    [SerializeField] private Unit unit = null;
+    [SerializeField] private UnitWeapon unitWeapon = null;
     [SerializeField] private Animator animator = null;
     private IAnimatedAction currentAnimAction = null;
     #endregion
@@ -13,21 +15,21 @@ public class UnitAnimator : MonoBehaviour
     #region //Monobehaviour
     private void OnEnable()
     {
-        unit.OnWeaponSwap += ChangeController;
+        unitWeapon.OnWeaponSwap += ChangeController;
 
-        foreach(var animatedAction in unit.GetComponents<IAnimatedAction>())
+        foreach(var animatedAction in unitWeapon.GetComponents<IAnimatedAction>())
         {
             animatedAction.SetAnimatedAction += SetAnimatedAction;
             animatedAction.SetTrigger += SetTrigger;
         }
 
-        if(unit.TryGetComponent<MoveAction>(out MoveAction moveAction))
+        if(unitWeapon.TryGetComponent<MoveAction>(out MoveAction moveAction))
         {
             moveAction.StartMoving += StartMoving;
             moveAction.StopMoving += StopMoving;
         }
 
-        if(unit.TryGetComponent<UnitHealth>(out UnitHealth unitHealth))
+        if(unitWeapon.TryGetComponent<UnitHealth>(out UnitHealth unitHealth))
         {
             unitHealth.OnDamage += TakeDamage;
         }
@@ -35,21 +37,21 @@ public class UnitAnimator : MonoBehaviour
 
     private void OnDisable()
     {
-        unit.OnWeaponSwap -= ChangeController;
+        unitWeapon.OnWeaponSwap -= ChangeController;
 
-        foreach(var animatedAction in unit.GetComponents<IAnimatedAction>())
+        foreach(var animatedAction in unitWeapon.GetComponents<IAnimatedAction>())
         {
             animatedAction.SetAnimatedAction -= SetAnimatedAction;
             animatedAction.SetTrigger -= SetTrigger;
         }
 
-        if(unit.TryGetComponent<MoveAction>(out MoveAction moveAction))
+        if(unitWeapon.TryGetComponent<MoveAction>(out MoveAction moveAction))
         {
             moveAction.StartMoving -= StartMoving;
             moveAction.StopMoving -= StopMoving;
         }
 
-        if(unit.TryGetComponent<UnitHealth>(out UnitHealth unitHealth))
+        if(unitWeapon.TryGetComponent<UnitHealth>(out UnitHealth unitHealth))
         {
             unitHealth.OnDamage -= TakeDamage;
         }
@@ -81,7 +83,10 @@ public class UnitAnimator : MonoBehaviour
     #endregion
 
     #region //Animated Actions
-    public void CurrentAct() => currentAnimAction.AnimationAct();
+    //Called from animation events. Call when you want the action's effect to take place, like as a sword hits its target
+    public void CurrentAct() => currentAnimAction.AnimationAct(); 
+
+    //Called from  the animation events. Call at the end of the animation.
     public void CurrentEnd() => currentAnimAction.AnimationEnd();
 
     private void SetAnimatedAction(IAnimatedAction animatedAction)

@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Keeps track of unit health and death
+/// </summary>
 public class UnitHealth : MonoBehaviour
 {
     #region //Variables
@@ -34,6 +37,7 @@ public class UnitHealth : MonoBehaviour
             OnDamage?.Invoke();
     }
 
+    //Returns the amount of health healed
     public int Heal(int amount)
     {
         int healAmount = Mathf.Min(maxHealth, currentHealth + amount);

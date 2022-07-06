@@ -1,12 +1,14 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Interactable door
+/// </summary>
 public class Door : MonoBehaviour, IInteractable
 {
     #region //Variables
     [SerializeField] private bool isOpen = false;
     [SerializeField] private Animator animator = null;
-    private GridPosition gridPosition;
     private bool isActive = false;
     private float timer;
     private Action OnComplete;
@@ -16,8 +18,6 @@ public class Door : MonoBehaviour, IInteractable
     #region //Monobehavior
     private void Start()
     {
-        gridPosition = LevelGrid.instance.GetGridPosition(transform.position);
-        LevelGrid.instance.SetInteractableAtGridPosition(gridPosition, this);
         if(isOpen) OpenDoor();
         else CloseDoor();
     }
@@ -59,19 +59,17 @@ public class Door : MonoBehaviour, IInteractable
     {
         isOpen = true;
         animator.SetBool("isOpen", true);
-        Pathfinding.instance.SetIsWalkable(gridPosition, true);
     }
 
     private void CloseDoor()
     {
         isOpen = false;
         animator.SetBool("isOpen", false);
-        Pathfinding.instance.SetIsWalkable(gridPosition, false);
     }
     #endregion
 
     #region //Getters
-    public Vector3 GetWorldPosition() => LevelGrid.instance.GetWorldPosition(GetGridPosition());
-    public GridPosition GetGridPosition() => LevelGrid.instance.GetGridPosition(transform.position);
+    public Vector3 GetWorldPosition() => transform.position.PlaceOnGrid();
+    public GridCell GetGridCell() => transform.position.GetGridCell();
     #endregion
 }

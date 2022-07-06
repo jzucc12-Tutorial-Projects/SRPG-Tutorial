@@ -2,6 +2,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Shows unit specific UI such as name and health
+/// </summary>
 public class UnitUI : MonoBehaviour
 {
     #region //Unit components

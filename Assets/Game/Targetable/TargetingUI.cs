@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// UI displayed when a targetable is subject to an attack that relies on accuracy
+/// </summary>
 public class TargetingUI : MonoBehaviour
 {
     #region //Variables
@@ -33,15 +36,13 @@ public class TargetingUI : MonoBehaviour
     #endregion
 
     #region //Updating UI
-    private void ShowUI(List<(ITargetable, int, int)> targets)
+    private void ShowUI(Dictionary<ITargetable, (int, int)> targets)
     {
-        foreach(var target in targets)
+        if(targets.TryGetValue(targetable, out (int, int) values))
         {
-            if(target.Item1 != targetable) continue;
             uiContainer.SetActive(true);
-            accuracyText.text = $"{target.Item2}%";
-            critText.text = $"{target.Item3}%";
-            return;
+            accuracyText.text = $"{values.Item1}%";
+            critText.text = $"{values.Item2}%";
         }
     }
 

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Keeps track of all living units.
+/// </summary>
 public class UnitManager : MonoBehaviour
 {
-    public static UnitManager instance = null;
-
     #region //Unit lists
     private List<Unit> unitList = new List<Unit>();
     private List<Unit> playerList = new List<Unit>();
@@ -13,12 +14,6 @@ public class UnitManager : MonoBehaviour
 
 
     #region //Monobehaviour
-    private void Awake()
-    {
-        if(instance == null) instance = this;
-        else Destroy(gameObject);
-    }
-
     private void OnEnable()
     {
         Unit.UnitSpawned += AddUnit;
@@ -78,5 +73,6 @@ public class UnitManager : MonoBehaviour
     public List<Unit> GetUnitList() => unitList;
     public List<Unit> GetPlayerList() => playerList;
     public List<Unit> GetEnemyList() => enemyList;
+    public Unit GetRootPlayer() => playerList.Count > 0 ? playerList[0] : null;
     #endregion
 }

@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Changes the active camera depending on game state
+/// </summary>
 public class CameraManager : MonoBehaviour
 {
     [SerializeField] private GameObject actionCameraGameObject = null;
@@ -27,21 +30,19 @@ public class CameraManager : MonoBehaviour
             case ShootAction shootAction:
                 Unit shooterUnit = shootAction.GetUnit();
                 ITargetable target = shootAction.GetTarget();
-                Vector3 cameraCharacterHeight = Vector3.up * 1.7f;
                 Vector3 shootDir = (target.GetWorldPosition() - shooterUnit.GetWorldPosition()).normalized;
                 Vector3 shoulderOffset = Quaternion.Euler(0, 90, 0) * shootDir * 0.5f;
-                Vector3 cameraPosition = shooterUnit.GetWorldPosition() + cameraCharacterHeight + shoulderOffset + (shootDir * -1);
+                Vector3 cameraPosition = shooterUnit.GetWorldPosition() + shoulderOffset + (shootDir * -1);
                 actionCameraGameObject.transform.position = cameraPosition;
-                actionCameraGameObject.transform.LookAt(target.GetWorldPosition() + cameraCharacterHeight);
+                actionCameraGameObject.transform.LookAt(target.GetWorldPosition());
                 ShowActionCamera();
                 break;
         }
-
     }
 
-    private void OnActionEnded(BaseAction action)
+    private void OnActionEnded()
     {
-        if(!(action is ShootAction)) return;
+        if(!actionCameraGameObject.activeInHierarchy) return;
         HideActionCamera();
     }
 

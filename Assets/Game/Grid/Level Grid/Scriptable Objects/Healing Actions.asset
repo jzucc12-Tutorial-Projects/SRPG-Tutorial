@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7610a629916b9e4f98fe1016f38ef75, type: 3}
+  m_Name: Healing Actions
+  m_EditorClassIdentifier: 
+  actionNames:
+  - MedPackAction
+  baseMaterial: {fileID: 2100000, guid: d5d249c7209c0534fa6b6478c8a00767, type: 2}
+  mouseMaterial: {fileID: 2100000, guid: 6328e590815320642b979339136edb05, type: 2}
+  targetedMaterial: {fileID: 2100000, guid: 13f0ff4392bbbd04fac60fc4606b1d8e, type: 2}
+  targetedMouseMaterial: {fileID: 2100000, guid: 502707f666df165418575ad665c2581d,
+    type: 2}

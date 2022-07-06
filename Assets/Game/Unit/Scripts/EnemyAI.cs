@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
@@ -8,6 +7,9 @@ public class EnemyAI : MonoBehaviour
     private float maxTime = 1;
     private float timer = 0;
     #endregion
+
+    private TurnSystem turnSystem = null;
+    private UnitManager unitManager = null;
 
     #region //State
     private bool isPlayerTurn = true;
@@ -22,6 +24,12 @@ public class EnemyAI : MonoBehaviour
 
 
     #region //Monobehaviour
+    private void Awake()
+    {
+        turnSystem = FindObjectOfType<TurnSystem>();
+        unitManager = FindObjectOfType<UnitManager>();
+    }
+
     private void OnEnable()
     {
         TurnSystem.IncrementTurn += OnTurnChange;
@@ -52,7 +60,7 @@ public class EnemyAI : MonoBehaviour
                     if(TryEnemyActions(SetStateTakingTurn))
                         currentState = State.Busy;
                     else
-                        TurnSystem.instance.NextTurn();
+                        turnSystem.NextTurn();
                 }
                 break;
             case State.Busy:
@@ -81,7 +89,7 @@ public class EnemyAI : MonoBehaviour
     #region //Action taking
     private bool TryEnemyActions(Action onActionComplete)
     {
-        foreach(var enemy in UnitManager.instance.GetEnemyList())
+        foreach(var enemy in unitManager.GetEnemyList())
         {
             if(!TryTakeAction(enemy, onActionComplete)) continue;
             return true;
@@ -115,7 +123,7 @@ public class EnemyAI : MonoBehaviour
 
         if(selectedAction == null) return false;
         if(!enemy.TryTakeAction(selectedAction)) return false;
-        selectedAction.TakeAction(enemyAction.gridPosition, onActionComplete);
+        selectedAction.TakeAction(enemyAction.gridCell, onActionComplete);
         return true;
     }
     #endregion

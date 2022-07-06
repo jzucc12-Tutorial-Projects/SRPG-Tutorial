@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Ragdoll for a given unit. Typically is spawned at unit death.
+/// </summary>
 public class UnitRagdoll : MonoBehaviour
 {
     [SerializeField] private Transform ragdollRootBone = null;

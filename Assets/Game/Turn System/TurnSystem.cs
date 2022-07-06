@@ -1,19 +1,15 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Keeps track of the current turn and changing the turn
+/// </summary>
 public class TurnSystem : MonoBehaviour
 {
-    public static TurnSystem instance { get; private set; }
     private int turnNumber = 1;
     public static event Action<bool> IncrementTurn;
     private bool isPlayerTurn = true;
 
-    
-    private void Awake()
-    {
-        if(instance == null) instance = this;
-        else Destroy(gameObject);
-    }
 
     private void Start()
     {

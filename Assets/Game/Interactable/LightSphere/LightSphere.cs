@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Interactable light switch. Used for debugging
+/// </summary>
 public class LightSphere : MonoBehaviour, IInteractable
 {
     [SerializeField] private Material onMaterial = null;
@@ -12,8 +15,6 @@ public class LightSphere : MonoBehaviour, IInteractable
     private void Start()
     {
         SwitchOn(isOn);
-        var gridPosition = LevelGrid.instance.GetGridPosition(transform.position);
-        LevelGrid.instance.SetInteractableAtGridPosition(gridPosition, this);
     }
 
     public void Interact(Unit actor, Action OnComplete)
@@ -33,7 +34,7 @@ public class LightSphere : MonoBehaviour, IInteractable
         mesh.material = isOn ? onMaterial : offMaterial;
     }
 
-    public Vector3 GetWorldPosition() => LevelGrid.instance.GetWorldPosition(GetGridPosition());
+    public Vector3 GetWorldPosition() => transform.position.PlaceOnGrid();
 
-    public GridPosition GetGridPosition() => LevelGrid.instance.GetGridPosition(transform.position);
+    public GridCell GetGridCell() => transform.position.GetGridCell();
 }

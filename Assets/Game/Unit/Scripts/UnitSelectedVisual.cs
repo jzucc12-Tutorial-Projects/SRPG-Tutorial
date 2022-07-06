@@ -1,6 +1,8 @@
-using System;
 using UnityEngine;
 
+/// <summary>
+/// Handles UI for showing if a unit is currently selected by the player
+/// </summary>
 public class UnitSelectedVisual : MonoBehaviour
 {
     #region //Variables

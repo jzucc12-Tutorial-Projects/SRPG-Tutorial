@@ -1,6 +1,8 @@
-using System;
 using UnityEngine;
 
+/// <summary>
+/// Creates a ragdoll for a given unit. Typically at unit death.
+/// </summary>
 public class UnitRagdollSpawner : MonoBehaviour
 {
     [SerializeField] private UnitRagdoll ragdollPrefab = null;

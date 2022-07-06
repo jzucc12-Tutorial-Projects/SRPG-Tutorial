@@ -2,9 +2,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Handles player input
+/// </summary>
 public class InputManager : MonoBehaviour
 {
-    public static InputManager instance = null;
     private PlayerInputs inputs = null;
     public InputAction mouseClick => inputs.Player.MouseClick;
     public InputAction altAction => inputs.Player.AltAction;
@@ -13,8 +15,6 @@ public class InputManager : MonoBehaviour
     #region //Monobehaviour
     private void Awake()
     {
-        if(instance == null) instance = this;
-        else Destroy(instance);
         inputs = new PlayerInputs();
     }
 
