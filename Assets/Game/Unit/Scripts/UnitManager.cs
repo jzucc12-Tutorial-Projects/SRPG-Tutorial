@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ public class UnitManager : MonoBehaviour
     private List<Unit> unitList = new List<Unit>();
     private List<Unit> playerList = new List<Unit>();
     private List<Unit> enemyList = new List<Unit>();
+    public static event Action<bool> GameOverSided; //True if players win
+    public static event Action GameOver;
     #endregion
 
 
@@ -47,15 +50,19 @@ public class UnitManager : MonoBehaviour
     {
         unitList.Remove(unit);
         if(unit.IsEnemy()) 
-        {
-            enemyList.Remove(unit);
-            SortList(enemyList);
-        }
+            RemoveFromList(enemyList, unit);
         else 
-        {
-            playerList.Remove(unit);
-            SortList(playerList);
-        }
+            RemoveFromList(playerList, unit);
+    }
+
+    private void RemoveFromList(List<Unit> list, Unit unit)
+    {
+        list.Remove(unit);
+        SortList(enemyList);
+        if(list.Count > 0) return;
+        GameOver?.Invoke();
+        GameOverSided?.Invoke(unit.IsEnemy());
+        Time.timeScale = 0.2f;
     }
 
     private void SortList(List<Unit> list)

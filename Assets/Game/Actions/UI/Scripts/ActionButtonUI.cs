@@ -1,11 +1,12 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
 /// UI for an action selection button
 /// </summary>
-public class ActionButtonUI : MonoBehaviour
+public class ActionButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     private BaseAction action = null;
 
@@ -17,6 +18,7 @@ public class ActionButtonUI : MonoBehaviour
     [SerializeField] private Button button = null;
     [SerializeField] private Image border = null;
     [SerializeField] private Image disabledLayer = null;
+    [SerializeField] private ActionButtonTooltip toolTip = null;
     #endregion
 
     #region //Colors
@@ -27,6 +29,13 @@ public class ActionButtonUI : MonoBehaviour
     #endregion
 
 
+    #region //Monobehaviour
+    private void Awake()
+    {
+        OnPointerExit(null);
+    }
+    #endregion
+
     #region //UI Updating
     public void SetAction(UnitActionSystem uaSystem, BaseAction action)
     {
@@ -34,6 +43,8 @@ public class ActionButtonUI : MonoBehaviour
         button.onClick.AddListener(() => {
             uaSystem.SetSelectedAction(action);
         });
+
+        toolTip.SetUp(action.GetToolTip());
         UpdateUI(action);
     }
 
@@ -59,5 +70,17 @@ public class ActionButtonUI : MonoBehaviour
     }
 
     public BaseAction GetAction() => action;
+    #endregion
+
+    #region //Tooltip
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        toolTip.gameObject.SetActive(true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        toolTip.gameObject.SetActive(false);
+    }
     #endregion
 }

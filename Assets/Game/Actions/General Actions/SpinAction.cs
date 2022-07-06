@@ -60,6 +60,16 @@ public class SpinAction : BaseAction
     }
     #endregion
 
+    #region //Tooltip
+    protected override void SetUpToolTip()
+    {
+        toolTip.effectText = "Do a 360 for style!";
+        toolTip.costText = "All but 1 AP";
+        toolTip.damageText = $"+{(damageBoost*100).ToString()}% damage";
+        toolTip.accuracyText = $"-{accuracyDrop.ToString()}% accuracy";
+    }
+    #endregion
+
     #region //Getters
     public override string GetActionName() => "Spin";
     public override int GetPointCost()

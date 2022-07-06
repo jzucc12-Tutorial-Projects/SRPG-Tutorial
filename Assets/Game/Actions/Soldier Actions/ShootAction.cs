@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Unit can use fire arms
 /// </summary>
-public class ShootAction : TargetedAction, IAnimatedAction
+public class ShootAction : TargetedAction, IAnimatedAction, ISupply
 {
     #region //Weapon info
     [Header("Weapon Info")]
@@ -40,7 +40,7 @@ public class ShootAction : TargetedAction, IAnimatedAction
     protected override void Awake()
     {
         base.Awake();
-        currentClip = maxClip;
+        Resupply();
     }
     #endregion
 
@@ -89,10 +89,15 @@ public class ShootAction : TargetedAction, IAnimatedAction
     //Reloading
     public override void TakeAltAction(Action onFinish)
     {
-        currentClip = maxClip;
+        Resupply();
         OnActionFinish = onFinish;
         CallLog($"{unit.GetName()} reloaded their {weaponName}");
         ActionFinish();
+    }
+
+    public void Resupply()
+    {
+        currentClip = maxClip;
     }
     #endregion
 
@@ -107,7 +112,7 @@ public class ShootAction : TargetedAction, IAnimatedAction
             ITargetable target = gridCell.GetTargetable();
             int accuracy = accuracySO.CalculateAccuracy(unit.GetWorldPosition(), target, circularRange);
             accuracy += unit.GetAccuracyMod();
-            int crit = accuracySO.GetCritChance(accuracy);
+            int crit = accuracySO.CalculateCritChance(accuracy);
             targets.Add(target, (accuracy, crit));
         }
         if(targets.Count > 0) Targeting?.Invoke(targets);
@@ -151,6 +156,18 @@ public class ShootAction : TargetedAction, IAnimatedAction
     public void AnimationEnd()
     {
         ActionFinish();
+    }
+    #endregion
+
+    #region //Tooltip
+    protected override void SetUpToolTip()
+    {
+        base.SetUpToolTip();
+        toolTip.costText += $", {reloadAPCost} to reload";
+        toolTip.effectText = "Shoot a target in range";
+        toolTip.altText = "Reload this weapon"; 
+        toolTip.damageText = $"{damage} on hit, {damage*accuracySO.GetCritMult()} on crit";
+        toolTip.accuracyText = $"{accuracySO.GetBaseAccuracy()} to hit, {accuracySO.GetCritChance()} to crit";
     }
     #endregion
 

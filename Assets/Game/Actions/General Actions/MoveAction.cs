@@ -98,6 +98,15 @@ public class MoveAction : BaseAction
     }
     #endregion
 
+    #region //Tooltip
+    protected override void SetUpToolTip()
+    {
+        base.SetUpToolTip();
+        toolTip.effectText = "Move the selected unit";
+        toolTip.rangeText = moveSpeed.ToString();
+    }
+    #endregion
+
     #region //Getters
     public override string GetActionName() => "Move";
     #endregion

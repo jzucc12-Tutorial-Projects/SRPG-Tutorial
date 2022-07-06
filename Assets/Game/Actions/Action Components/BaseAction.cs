@@ -11,6 +11,7 @@ public abstract class BaseAction : MonoBehaviour
     protected Unit unit = null;
     protected UnitWeapon unitWeapon = null;
     protected LevelGrid levelGrid = null;
+    protected ActionTooltip toolTip = new ActionTooltip();
     #endregion
 
     #region //Action state
@@ -33,6 +34,7 @@ public abstract class BaseAction : MonoBehaviour
         unit = GetComponent<Unit>();
         unitWeapon = GetComponent<UnitWeapon>();
         levelGrid = FindObjectOfType<LevelGrid>();
+        SetUpToolTip();
     }
 
     protected virtual void Start() { }
@@ -91,6 +93,14 @@ public abstract class BaseAction : MonoBehaviour
     }
 
     public abstract EnemyAIAction GetEnemyAIAction(GridCell cell);
+    #endregion
+
+    #region //Tooltip
+    protected virtual void SetUpToolTip()
+    {
+        toolTip.costText = $"{apCost}AP";
+    }
+    public ActionTooltip GetToolTip() => toolTip;
     #endregion
 
     #region //Getters

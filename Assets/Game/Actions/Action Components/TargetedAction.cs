@@ -23,7 +23,10 @@ public abstract class TargetedAction : BaseAction
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
         ActionStart(onFinish);
-        StartCoroutine(FaceTarget(GetTargetPosition(), OnFacing));
+        if(GetTargetPosition() == unit.GetWorldPosition())
+            OnFacing();
+        else
+            StartCoroutine(FaceTarget(GetTargetPosition(), OnFacing));
     }
     
     //Rotation to face the target
@@ -49,6 +52,17 @@ public abstract class TargetedAction : BaseAction
             yield return null;
     }
     protected abstract void OnFacing();
+    #endregion
+
+    #region //Tooltip
+    protected override void SetUpToolTip()
+    {
+        base.SetUpToolTip();
+        string rangeText;
+        if(actionRange > 0) rangeText = actionRange.ToString();
+        else rangeText = "Self";
+        toolTip.rangeText = rangeText;
+    }
     #endregion
 
     #region //Getters

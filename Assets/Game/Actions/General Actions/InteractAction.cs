@@ -43,6 +43,14 @@ public class InteractAction : TargetedAction
     }
     #endregion
 
+    #region //Tooltip
+    protected override void SetUpToolTip()
+    {
+        base.SetUpToolTip();
+        toolTip.effectText = "Interact with select objects";
+    }
+    #endregion
+
     #region //Getters
     public override string GetActionName() => "Interact";
     protected override Vector3 GetTargetPosition() => target.GetWorldPosition();

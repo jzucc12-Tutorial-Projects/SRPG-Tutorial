@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Unit can heal damage
 /// </summary>
-public class MedPackAction : TargetedAction
+public class MedPackAction : TargetedAction, ISupply
 {
     #region //Variables
     [Header("Med Pack Action")]
@@ -19,7 +19,7 @@ public class MedPackAction : TargetedAction
     protected override void Awake()
     {
         base.Awake();
-        currentQuantity = maxQuantity;
+        Resupply();
     }
     #endregion
 
@@ -34,10 +34,15 @@ public class MedPackAction : TargetedAction
     {
         currentQuantity--;
         int healAmount = target.Heal(healingAmount);
-        if(target == unit) CallLog($"{unit.GetName()} healed themselves for {healAmount} health");
-        else CallLog($"{unit.GetName()} healed {target.GetName()} for {healAmount} health");
+        if(target == unit) CallLog($"{unit.GetName()} healed themself for {healAmount} hp");
+        else CallLog($"{unit.GetName()} healed {target.GetName()} for {healAmount} hp");
         target = null;
         ActionFinish();
+    }
+
+    public void Resupply()
+    {
+        currentQuantity = maxQuantity;
     }
     #endregion
 
@@ -52,6 +57,14 @@ public class MedPackAction : TargetedAction
     public override EnemyAIAction GetEnemyAIAction(GridCell cell)
     {
         return new EnemyAIAction(cell, 0);
+    }
+    #endregion
+
+    #region //Tooltip
+    protected override void SetUpToolTip()
+    {
+        base.SetUpToolTip();
+        toolTip.effectText = $"Heal yourself for {healingAmount.ToString()} hp";
     }
     #endregion
 

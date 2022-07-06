@@ -52,6 +52,15 @@ public class MeleeAction : TargetedAction, IAnimatedAction
     }
     #endregion
 
+    #region //Tooltip
+    protected override void SetUpToolTip()
+    {
+        base.SetUpToolTip();
+        toolTip.effectText = "Strike a nearby target";
+        toolTip.damageText = $"{damage}";
+    }
+    #endregion
+
     #region //Getters
     public override string GetActionName() => "Melee";
     protected override Vector3 GetTargetPosition() => target.GetWorldPosition().PlaceOnGrid();

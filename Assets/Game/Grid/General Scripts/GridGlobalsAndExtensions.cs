@@ -7,7 +7,7 @@ using UnityEngine;
 public static class GridGlobals
 {
     public const int cellSize = 2; //Multiplier for grid cell conversion into world space
-    public const float raycastLength = 1.5f; //Used to finding objects on the grid
+    public const float raycastLength = 3.1f; //Used to finding objects on the grid
     public static readonly LayerMask unitMask = 1 << 7; //Unit collider
     public static readonly LayerMask targetableMask = 1 << 7 | 1 << 9; //Unit collider or level object
     public static readonly LayerMask interactableMask = 1 << 9; //Level object

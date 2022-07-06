@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Unit can throw grenades
 /// </summary>
-public class GrenadeAction : TargetedAction, IAnimatedAction
+public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply
 {
     #region //Variables
     [Header("Grenade Action")]
@@ -26,7 +26,7 @@ public class GrenadeAction : TargetedAction, IAnimatedAction
     protected override void Awake()
     {
         base.Awake();
-        currentQuantity = maxQuantity;
+        Resupply();
         mouseWorld = FindObjectOfType<MouseWorld>();
     }
     #endregion
@@ -44,6 +44,11 @@ public class GrenadeAction : TargetedAction, IAnimatedAction
         SetTrigger?.Invoke("Grenade Throw");
         CallLog($"{unit.GetName()} threw a grenade");
         unitWeapon.HideActiveWeapon();
+    }
+
+    public void Resupply()
+    {
+        currentQuantity = maxQuantity;
     }
     #endregion
 
@@ -83,6 +88,15 @@ public class GrenadeAction : TargetedAction, IAnimatedAction
     {
         unitWeapon.ShowActiveWeapon();
         ActionFinish();
+    }
+    #endregion
+
+    #region //Tooltip
+    protected override void SetUpToolTip()
+    {
+        base.SetUpToolTip();
+        toolTip.effectText = "Throw a grenade that damages \nanything close enough";
+        toolTip.damageText = $"{grenadePrefab.GetDamage(true)} on target. {grenadePrefab.GetDamage(false)} in AOE";
     }
     #endregion
 
