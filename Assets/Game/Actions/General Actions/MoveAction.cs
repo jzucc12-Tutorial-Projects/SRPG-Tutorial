@@ -13,6 +13,8 @@ public class MoveAction : BaseAction
     [SerializeField] private int maxMoveDistance = 4;
     [SerializeField] private float moveSpeed = 4;
     [SerializeField] private float threshold = 0.025f;
+    [Tooltip("True if you don't want to count diagonals in range")] [SerializeField] protected bool circularRange = true;
+    [Tooltip("True if the unit can target itself")] [SerializeField] protected bool includeSelf  = false;
     private List<Vector3> positionList = new List<Vector3>();
     private int positionIndex = 0;
     private Pathfinding pathfinder = null;
@@ -72,10 +74,9 @@ public class MoveAction : BaseAction
         return GetValidCells().Contains(gridCell);
     }
 
-    public override List<GridCell> GetValidCells()
+    public override List<GridCell> GetValidCells(GridCell unitCell)
     {
         List<GridCell> validCellList = new List<GridCell>();
-        GridCell unitCell = unit.GetGridCell();
 
         foreach(var cell in levelGrid.CheckGridRange(unit.GetGridCell(), maxMoveDistance, circularRange, includeSelf))
         {
@@ -94,7 +95,7 @@ public class MoveAction : BaseAction
     public override EnemyAIAction GetEnemyAIAction(GridCell cell)
     {
         var count = 0;
-        return new EnemyAIAction(cell, count * 10 + 1);
+        return new EnemyAIAction(this, cell, count * 10 + 1);
     }
     #endregion
 
@@ -103,7 +104,7 @@ public class MoveAction : BaseAction
     {
         base.SetUpToolTip();
         toolTip.effectText = "Move the selected unit";
-        toolTip.rangeText = moveSpeed.ToString();
+        toolTip.rangeText = maxMoveDistance.ToString();
     }
     #endregion
 

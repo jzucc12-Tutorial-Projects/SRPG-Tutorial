@@ -1,11 +1,12 @@
 using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// Tooltip to appear after you hover over an action button
+/// </summary>
 public class ActionButtonTooltip : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI textPrefab = null;
-    [SerializeField] private int minWidth = 200;
-    [SerializeField] private int maxWidth = 300;
     [SerializeField] private Color headerColor = Color.white;
 
 

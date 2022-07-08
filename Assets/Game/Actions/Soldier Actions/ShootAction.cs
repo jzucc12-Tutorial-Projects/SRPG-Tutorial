@@ -19,10 +19,8 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
     #region //Firing info
     [Header("Firing Info")]
     [Tooltip("Shots before a reload is needed")] [SerializeField] private int maxClip = 6;
-    [SerializeField] private int reloadAPCost = 2;
     [SerializeField] private int damage = 40;
     [SerializeField] private AccuracySO accuracySO = null;
-    private bool useReloadAPCost = false;
     public static event Action OnShootStatic;
     public static event Action<Dictionary<ITargetable, (int, int)>> Targeting;
     public static event Action StopTargeting;
@@ -87,14 +85,6 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
     }
 
     //Reloading
-    public override void TakeAltAction(Action onFinish)
-    {
-        Resupply();
-        OnActionFinish = onFinish;
-        CallLog($"{unit.GetName()} reloaded their {weaponName}");
-        ActionFinish();
-    }
-
     public void Resupply()
     {
         currentClip = maxClip;
@@ -102,11 +92,18 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
     #endregion
 
     #region //Action selection
+    public override bool CanSelectAction()
+    {
+        return currentClip > 0 && base.CanSelectAction();
+    }
+
     //Shows accuracy UI and sets unit weapon
     public override void OnSelected()
     {
-        Dictionary<ITargetable, (int, int)> targets = new Dictionary<ITargetable, (int, int)>();
         unitWeapon.SetActiveWeapon(weaponGO, animController);
+
+        if(unit.IsEnemy()) return;
+        Dictionary<ITargetable, (int, int)> targets = new Dictionary<ITargetable, (int, int)>();
         foreach(var gridCell in GetTargetedCells(unit.GetGridCell()))
         {
             ITargetable target = gridCell.GetTargetable();
@@ -120,20 +117,14 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
 
     public override void OnUnSelected()
     {
+        if(unit.IsEnemy()) return;
         StopTargeting?.Invoke();
     }
 
     public override bool CanTakeAction(GridCell gridCell)
     {
-        useReloadAPCost = false;
         if(currentClip <= 0) return false;
         return base.CanTakeAction(gridCell);
-    }
-
-    public override bool CanTakeAltAction()
-    {
-        useReloadAPCost = true;
-        return currentClip < maxClip;
     }
     #endregion
 
@@ -142,8 +133,8 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
     {
         ITargetable target = cell.GetUnit();
         Unit targetUnit = (Unit)target;
-        if(targetUnit == null) return new EnemyAIAction(cell, Mathf.RoundToInt(10));
-        else return new EnemyAIAction(cell, Mathf.RoundToInt(100f - 1f * targetUnit.GetHealthPercentage()));
+        if(targetUnit == null) return new EnemyAIAction(this, cell, Mathf.RoundToInt(10));
+        else return new EnemyAIAction(this, cell, Mathf.RoundToInt(100f - 1f * targetUnit.GetHealthPercentage()));
     }
     #endregion
 
@@ -163,9 +154,8 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
     protected override void SetUpToolTip()
     {
         base.SetUpToolTip();
-        toolTip.costText += $", {reloadAPCost} to reload";
         toolTip.effectText = "Shoot a target in range";
-        toolTip.altText = "Reload this weapon"; 
+        toolTip.altText = "Switch to reload action"; 
         toolTip.damageText = $"{damage} on hit, {damage*accuracySO.GetCritMult()} on crit";
         toolTip.accuracyText = $"{accuracySO.GetBaseAccuracy()} to hit, {accuracySO.GetCritChance()} to crit";
     }
@@ -173,12 +163,8 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
 
     #region //Getters
     public override int GetQuantity() => currentClip;
-    public override string GetActionName() => currentClip > 0 ? weaponName : $"Reload {weaponName}";
-    public override int GetPointCost()
-    {
-        if(useReloadAPCost || currentClip <= 0) return reloadAPCost;
-        else return base.GetPointCost();
-    }
+    public float GetClipPercent() => (float)currentClip / maxClip;
+    public override string GetActionName() => weaponName;
     public Unit GetUnit() => unit;
     public ITargetable GetTarget() => target;
     protected override Vector3 GetTargetPosition() => target.GetWorldPosition().PlaceOnGrid();

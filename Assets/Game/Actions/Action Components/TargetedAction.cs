@@ -10,6 +10,8 @@ public abstract class TargetedAction : BaseAction
 {
     #region //Variables
     [Header("Targeted Actions")]
+    [Tooltip("True if you don't want to count diagonals in range")] [SerializeField] protected bool circularRange = true;
+    [Tooltip("True if the unit can target itself")] [SerializeField] protected bool includeSelf  = false;
     [SerializeField] private bool requiresTargetable = true;
     [SerializeField] private bool targetAllies = false;
     [SerializeField] protected int actionRange = 1;
@@ -68,9 +70,9 @@ public abstract class TargetedAction : BaseAction
     #region //Getters
     protected abstract Vector3 GetTargetPosition();
 
-    public override List<GridCell> GetValidCells()
+    public override List<GridCell> GetValidCells(GridCell unitCell)
     {
-        return GetTargetedCells(unit.GetGridCell());
+        return GetTargetedCells(unitCell);
     }
 
     public int GetTargetsAtCell(GridCell cell)

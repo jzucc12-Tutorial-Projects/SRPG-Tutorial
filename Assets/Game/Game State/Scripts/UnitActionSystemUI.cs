@@ -45,7 +45,7 @@ public class UnitActionSystemUI : MonoBehaviour
 
     private void UpdateActionPoints(Unit unit)
     {
-        actionPointText.text = $"Action Points: {unit.GetActionPoints()}";
+        actionPointText.text = $"Action Points: {unit.GetAP()}";
     }
 
     private void CreateButtons(Unit unit)
@@ -58,8 +58,8 @@ public class UnitActionSystemUI : MonoBehaviour
         foreach(var action in unit.GetActions())
         {
             var button = Instantiate(buttonPrefab, container);
-            button.SetAction(unitActionSystem, action);
             buttons.Add(button);
+            button.SetAction(unitActionSystem, action);
         }
     }
 

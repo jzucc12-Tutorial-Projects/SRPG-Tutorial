@@ -93,19 +93,14 @@ public class Unit : MonoBehaviour, ITargetable
     #endregion
 
     #region //Action
-    public bool TryTakeAction(BaseAction action)
+    public bool TryTakeAction(BaseAction action, GridCell targetCell)
     {
-        if(CanTakeAction(action))
+        if(action.CanTakeAction(targetCell))
         {
-            SpendActionPoints(action.GetPointCost());
+            SpendActionPoints(action.GetAPCost());
             return true;
         }
         return false;
-    }
-
-    public bool CanTakeAction(BaseAction action)
-    {
-        return currentActionPoints >= action.GetPointCost();
     }
 
     private void SpendActionPoints(int amount)
@@ -133,6 +128,7 @@ public class Unit : MonoBehaviour, ITargetable
     public string GetName() => unitName;
     public bool IsEnemy() => isEnemy;
     public float GetHealthPercentage() => unitHealth.GetHealthPercentage();
+    public bool IsAlive() => unitHealth.GetHealthPercentage() > 0;
     public GridCell GetGridCell() => transform.position.GetGridCell();
     public Vector3 GetWorldPosition() => ConvertToShoulderHeight(transform.position);
     public Vector3 ConvertToShoulderHeight(GridCell cell) => ConvertToShoulderHeight(cell.GetWorldPosition());
@@ -146,7 +142,7 @@ public class Unit : MonoBehaviour, ITargetable
         }
         return null;
     }
-    public int GetActionPoints() => currentActionPoints;
+    public int GetAP() => currentActionPoints;
     public BaseAction[] GetActions() => actions;
     public bool CanBeTargeted(Unit attackingUnit, bool isHealing)
     {

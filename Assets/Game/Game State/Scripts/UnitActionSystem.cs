@@ -43,22 +43,20 @@ public class UnitActionSystem : MonoBehaviour
     private void OnEnable()
     {
         inputManager.mouseClick.started += HandleMouseClick;
-        inputManager.altAction.started += HandleAltClick;
-        BaseAction.OnAnyActionEnded += CheckActiveAction;
+        BaseAction.OnAnyActionEnded += OnActionFinish;
         Unit.UnitDead += OnPlayerDeath;
         UnitManager.GameOver += GameOver;
-        TurnSystem.IncrementTurn += TurnChange;
+        TurnSystem.IncrementTurnLate += TurnChange;
         Pause.OnPause += Halt;
     }
 
     private void OnDisable()
     {
         inputManager.mouseClick.started -= HandleMouseClick;
-        inputManager.altAction.started -= HandleAltClick;
-        BaseAction.OnAnyActionEnded -= CheckActiveAction;
+        BaseAction.OnAnyActionEnded -= OnActionFinish;
         Unit.UnitDead -= OnPlayerDeath;
         UnitManager.GameOver -= GameOver;
-        TurnSystem.IncrementTurn -= TurnChange;
+        TurnSystem.IncrementTurnLate -= TurnChange;
         Pause.OnPause -= Halt;
     }
 
@@ -74,13 +72,7 @@ public class UnitActionSystem : MonoBehaviour
     {
         if(!AllowInput()) return;
         if(TrySelectUnit()) return;
-        HandleSelectedAction(false);
-    }
-
-    private void HandleAltClick(InputAction.CallbackContext context)
-    {
-        if(!AllowInput()) return;
-        HandleSelectedAction(true);
+        HandleSelectedAction();
     }
 
     private bool AllowInput()
@@ -108,6 +100,7 @@ public class UnitActionSystem : MonoBehaviour
         allowInput = isPlayerTurn;
         Unit unit = isPlayerTurn ? defaultUnit : null;
         SetSelectedUnit(unit);
+        UIChange();
     }
 
     private void OnPlayerDeath(Unit unit)
@@ -136,19 +129,17 @@ public class UnitActionSystem : MonoBehaviour
         selectedAction = action;
         if(selectedAction != null) selectedAction.OnSelected();
         UIChange();
+        IsSelectedValid();
     }
 
-    private void HandleSelectedAction(bool isAltAction)
+    private void HandleSelectedAction()
     {
         if(selectedAction == null) return;
-        GridCell mouseGridCell = mouseWorld.GetGridCell();
-        if(!isAltAction && !selectedAction.CanTakeAction(mouseGridCell)) return;
-        if(isAltAction && !selectedAction.CanTakeAltAction()) return;
-        if(!selectedUnit.TryTakeAction(selectedAction)) return;
+        GridCell targetCell = mouseWorld.GetGridCell();
+        if(!selectedUnit.TryTakeAction(selectedAction, targetCell)) return;
 
         SetBusy();
-        if(isAltAction) selectedAction.TakeAltAction(ClearBusy);
-        else selectedAction.TakeAction(mouseGridCell, ClearBusy);
+        selectedAction.TakeAction(targetCell, ClearBusy);
         actionTaken?.Invoke();
     }
 
@@ -164,12 +155,21 @@ public class UnitActionSystem : MonoBehaviour
         ChangeBusy?.Invoke(false);
     }
 
-    private void CheckActiveAction()
+    private void OnActionFinish()
     {
-        if(!selectedAction.CanSelectAction())
-            SetSelectedAction(selectedUnit.GetRootAction());
-        else
+        if(IsSelectedValid())
             UIChange();
+    }
+
+    private bool IsSelectedValid()
+    {
+        if(selectedAction == null) return true;
+        if(!selectedAction.CanSelectAction())
+        {
+            SetSelectedAction(selectedUnit.GetRootAction());
+            return false;
+        }
+        return true;
     }
 
     private void UIChange()

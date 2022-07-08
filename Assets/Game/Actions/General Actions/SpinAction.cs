@@ -42,21 +42,21 @@ public class SpinAction : BaseAction
     #endregion
 
     #region //Action selection
-    public override List<GridCell> GetValidCells()
+    public override List<GridCell> GetValidCells(GridCell unitCell)
     {
-        return new List<GridCell>()  { unit.GetGridCell() };
+        return new List<GridCell>()  { unitCell };
     }
 
     public override bool CanSelectAction()
     {
-        return unit.GetActionPoints() > 1;
+        return unit.GetAP() > 1;
     }
     #endregion
 
     #region //Enemy Action
     public override EnemyAIAction GetEnemyAIAction(GridCell cell)
     {
-        return new EnemyAIAction(cell, 0);
+        return new EnemyAIAction(this, cell, 0);
     }
     #endregion
 
@@ -64,7 +64,7 @@ public class SpinAction : BaseAction
     protected override void SetUpToolTip()
     {
         toolTip.effectText = "Do a 360 for style!";
-        toolTip.costText = "All but 1 AP";
+        toolTip.costText = "All but 1AP";
         toolTip.damageText = $"+{(damageBoost*100).ToString()}% damage";
         toolTip.accuracyText = $"-{accuracyDrop.ToString()}% accuracy";
     }
@@ -72,9 +72,9 @@ public class SpinAction : BaseAction
 
     #region //Getters
     public override string GetActionName() => "Spin";
-    public override int GetPointCost()
+    public override int GetAPCost()
     {
-        return Mathf.Max(1, unit.GetActionPoints() - 1);
+        return Mathf.Max(1, unit.GetAP() - 1);
     }
     #endregion
 }

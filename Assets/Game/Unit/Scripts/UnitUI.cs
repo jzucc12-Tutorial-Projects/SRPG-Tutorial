@@ -42,7 +42,7 @@ public class UnitUI : MonoBehaviour
     #region //Update UI
     private void UpdateActionPointsText()
     {
-        actionPointsText.text = unit.GetActionPoints().ToString();
+        actionPointsText.text = unit.GetAP().ToString();
     }
 
     private void OnDamage(float percentageLeft)

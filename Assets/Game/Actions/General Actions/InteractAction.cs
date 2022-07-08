@@ -25,14 +25,14 @@ public class InteractAction : TargetedAction
 
     public override EnemyAIAction GetEnemyAIAction(GridCell cell)
     {
-        return new EnemyAIAction(cell, 10);
+        return new EnemyAIAction(this, cell, 10);
     }
 
-    public override List<GridCell> GetValidCells()
+    public override List<GridCell> GetValidCells(GridCell unitCell)
     {
         List<GridCell> validCells = new List<GridCell>();
         
-        foreach(var cell in GetRangeCells(unit.GetGridCell()))
+        foreach(var cell in GetRangeCells(unitCell))
         {
             var interactable = cell.GetInteractable();
             if(interactable == null) continue;

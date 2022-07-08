@@ -33,7 +33,7 @@ public class MeleeAction : TargetedAction, IAnimatedAction
     #region //Enemy action
     public override EnemyAIAction GetEnemyAIAction(GridCell cell)
     {
-        return new EnemyAIAction(cell, 150);
+        return new EnemyAIAction(this, cell, 150);
     }
     #endregion
 

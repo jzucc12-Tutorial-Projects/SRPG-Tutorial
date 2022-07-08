@@ -1,3 +1,6 @@
+/// <summary>
+/// Tooltip data for action buttons
+/// </summary>
 public struct ActionTooltip
 {
     public string effectText;

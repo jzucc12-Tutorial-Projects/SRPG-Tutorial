@@ -56,7 +56,7 @@ public class MedPackAction : TargetedAction, ISupply
     #region //Enemy action
     public override EnemyAIAction GetEnemyAIAction(GridCell cell)
     {
-        return new EnemyAIAction(cell, 0);
+        return new EnemyAIAction(this, cell, 0);
     }
     #endregion
 

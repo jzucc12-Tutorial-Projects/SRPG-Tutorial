@@ -17,7 +17,9 @@ GameObject:
   - component: {fileID: 864355669238106471}
   - component: {fileID: 7907523317165694775}
   - component: {fileID: 8702508500721394068}
+  - component: {fileID: 2506461736046759198}
   - component: {fileID: 765520939608658656}
+  - component: {fileID: 8338768807532290615}
   - component: {fileID: 1211421786331489146}
   - component: {fileID: 6195961165147845301}
   - component: {fileID: 8189987462403833938}
@@ -136,6 +138,8 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
+  hasAltAction: 0
+  altAction: {fileID: 0}
   maxMoveDistance: 4
   moveSpeed: 4
   threshold: 0.025
@@ -154,6 +158,8 @@ MonoBehaviour:
   apCost: 1
   circularRange: 0
   includeSelf: 1
+  hasAltAction: 0
+  altAction: {fileID: 0}
   spinSpeed: 360
   spinAmount: 360
   accuracyDrop: 30
@@ -173,6 +179,8 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
+  hasAltAction: 1
+  altAction: {fileID: 2506461736046759198}
   requiresTargetable: 1
   targetAllies: 0
   actionRange: 5
@@ -191,6 +199,25 @@ MonoBehaviour:
   reloadAPCost: 2
   damage: 30
   accuracySO: {fileID: 11400000, guid: ea9e9ea0aa7946c4e850396dd66588b4, type: 2}
+--- !u!114 &2506461736046759198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642008498672032321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a20e3f9e40592b4496dcc5789608543, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  apCost: 1
+  circularRange: 0
+  includeSelf: 1
+  hasAltAction: 0
+  altAction: {fileID: 0}
+  shootAction: {fileID: 8702508500721394068}
+  displayText: Reload Rifle
 --- !u!114 &765520939608658656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,6 +233,8 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
+  hasAltAction: 1
+  altAction: {fileID: 8338768807532290615}
   requiresTargetable: 1
   targetAllies: 0
   actionRange: 9
@@ -224,6 +253,25 @@ MonoBehaviour:
   reloadAPCost: 2
   damage: 15
   accuracySO: {fileID: 11400000, guid: e8d6d181983f17d48864284eea71603c, type: 2}
+--- !u!114 &8338768807532290615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642008498672032321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a20e3f9e40592b4496dcc5789608543, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  apCost: 1
+  circularRange: 0
+  includeSelf: 1
+  hasAltAction: 0
+  altAction: {fileID: 0}
+  shootAction: {fileID: 765520939608658656}
+  displayText: Reload Pistol
 --- !u!114 &1211421786331489146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,6 +287,8 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
+  hasAltAction: 0
+  altAction: {fileID: 0}
   requiresTargetable: 0
   targetAllies: 0
   actionRange: 5
@@ -266,6 +316,8 @@ MonoBehaviour:
   apCost: 2
   circularRange: 0
   includeSelf: 0
+  hasAltAction: 0
+  altAction: {fileID: 0}
   requiresTargetable: 1
   targetAllies: 0
   actionRange: 1
@@ -290,6 +342,8 @@ MonoBehaviour:
   apCost: 2
   circularRange: 1
   includeSelf: 1
+  hasAltAction: 0
+  altAction: {fileID: 0}
   requiresTargetable: 1
   targetAllies: 1
   actionRange: 0
@@ -315,6 +369,8 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
+  hasAltAction: 0
+  altAction: {fileID: 0}
   requiresTargetable: 0
   targetAllies: 0
   actionRange: 1

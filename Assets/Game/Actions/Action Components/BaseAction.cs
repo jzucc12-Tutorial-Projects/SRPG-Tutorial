@@ -17,8 +17,7 @@ public abstract class BaseAction : MonoBehaviour
     #region //Action state
     [Header("Base Action")]
     [SerializeField] private int apCost = 1;
-    [Tooltip("True if you don't want to count diagonals in range")] [SerializeField] protected bool circularRange = true;
-    [Tooltip("True if the unit can target itself")] [SerializeField] protected bool includeSelf  = false;
+    private BaseAction altAction = null;
     #endregion
 
     #region //Events
@@ -43,9 +42,6 @@ public abstract class BaseAction : MonoBehaviour
     #region //Action performing
     public abstract void TakeAction(GridCell gridCell, Action onFinish);
 
-    //Not needed for all actions. Reloading a weapon is an example of an alt action.
-    public virtual void TakeAltAction(Action onFinish) { } 
-
     protected void ActionStart(Action onFinish)
     {
         OnActionFinish = onFinish;
@@ -56,39 +52,62 @@ public abstract class BaseAction : MonoBehaviour
     {
         OnActionFinish?.Invoke();
         OnAnyActionEnded?.Invoke();
+        OnActionFinish = null;
     }
 
     protected void CallLog(string text)
     {
         ActionLogListener.Publish(text);
     }
+    
+    public void SetAltAction(BaseAction altAction) => this.altAction = altAction;
     #endregion
 
     #region //Action Selection
     public virtual void OnSelected() { }
     public virtual void OnUnSelected() { }
-    public abstract List<GridCell> GetValidCells(); //Cells that the action can be performed in
+    /// <summary>
+    /// Cells the action can be performed in from current cell
+    /// </summary>
+    /// <returns></returns>
+    public List<GridCell> GetValidCells() => GetValidCells(unit.GetGridCell());
+    /// <summary>
+    /// Cells that the action can be performed in from reference cell
+    /// </summary>
+    /// <param name="unitCell"></param>
+    /// <returns></returns>
+    public abstract List<GridCell> GetValidCells(GridCell unitCell);
+
+    /// <summary>
+    /// If the unit is allowed to take the action at the given location
+    /// </summary>
+    /// <param name="gridCell"></param>
+    /// <returns></returns>
     public virtual bool CanTakeAction(GridCell gridCell)
     {
         return CanSelectAction() && GetValidCells().Contains(gridCell);
     }
-    public virtual bool CanSelectAction() => unit.GetActionPoints() >= GetPointCost();
-    public virtual bool CanTakeAltAction() => false;
+
+    /// <summary>
+    /// If the action button is allowed to be clicked on
+    /// </summary>
+    /// <returns></returns>
+    public virtual bool CanSelectAction() => unit.GetAP() >= GetAPCost();
     #endregion
 
     #region //Enemy action
-    public EnemyAIAction GetBestAIAction()
+    public EnemyAIAction GetBestAIAction(GridCell referenceCell)
     {
         List<EnemyAIAction> actionList = new List<EnemyAIAction>();
 
-        foreach(var cell in GetValidCells())
+        foreach(var targetCell in GetValidCells(referenceCell))
         {
-            EnemyAIAction enemyAction = GetEnemyAIAction(cell);
+            EnemyAIAction enemyAction = GetEnemyAIAction(targetCell);
             actionList.Add(enemyAction);
         }
 
         if(actionList.Count <= 0) return null;
-        actionList.Sort((EnemyAIAction a, EnemyAIAction b) => b.actionValue - a.actionValue);
+        actionList.Sort((EnemyAIAction a, EnemyAIAction b) => b.score - a.score);
         return actionList[0];
     }
 
@@ -106,8 +125,8 @@ public abstract class BaseAction : MonoBehaviour
     #region //Getters
     public virtual int GetQuantity() => -1; //Leave at -1 for an infinite amount
     public abstract string GetActionName();
-    public virtual int GetPointCost() => apCost;
-    public bool HasCircularRange() => circularRange;
-    public bool IncludeSelf() => includeSelf;
+    public virtual int GetAPCost() => apCost;
+    public bool HasAltAction() => altAction != null;
+    public BaseAction GetAltAction() => altAction;
     #endregion
 }
