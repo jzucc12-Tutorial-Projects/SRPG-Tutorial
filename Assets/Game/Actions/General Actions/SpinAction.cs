@@ -54,9 +54,16 @@ public class SpinAction : BaseAction
     #endregion
 
     #region //Enemy Action
-    public override EnemyAIAction GetEnemyAIAction(GridCell cell)
+    /// <summary>
+    /// It's random baby!
+    /// </summary>
+    /// <param name="unitCell"></param>
+    /// <param name="targetCell"></param>
+    /// <returns></returns>
+    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
     {
-        return new EnemyAIAction(this, cell, 0);
+        if(unit.GetAP() == 2) new EnemyAIAction(this, targetCell, UnityEngine.Random.Range(50, 151));
+        return new EnemyAIAction(this, targetCell, UnityEngine.Random.Range(50, 76));
     }
     #endregion
 

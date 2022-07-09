@@ -22,12 +22,9 @@ public class InteractAction : TargetedAction
         target.Interact(unit, ActionFinish);
         target = null;
     }
+    #endregion
 
-    public override EnemyAIAction GetEnemyAIAction(GridCell cell)
-    {
-        return new EnemyAIAction(this, cell, 10);
-    }
-
+    #region //Action selection
     public override List<GridCell> GetValidCells(GridCell unitCell)
     {
         List<GridCell> validCells = new List<GridCell>();
@@ -40,6 +37,19 @@ public class InteractAction : TargetedAction
         }
         
         return validCells;
+    }
+    #endregion
+
+    #region //Enemy action
+    /// <summary>
+    /// No interacting. ONLY DESTRUCTION!!!
+    /// </summary>
+    /// <param name="unitCell"></param>
+    /// <param name="targetCell"></param>
+    /// <returns></returns>
+    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
+    {
+        return new EnemyAIAction(this, targetCell, 0);
     }
     #endregion
 

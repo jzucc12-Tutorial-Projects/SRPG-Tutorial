@@ -54,9 +54,20 @@ public class MedPackAction : TargetedAction, ISupply
     #endregion
 
     #region //Enemy action
-    public override EnemyAIAction GetEnemyAIAction(GridCell cell)
+    /// <summary>
+    /// Highly prioritzes as HP drops. Currently doesn't take nearby allies into account because
+    /// you can't heal others.
+    /// </summary>
+    /// <param name="unitCell"></param>
+    /// <param name="targetCell"></param>
+    /// <returns></returns>
+    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
     {
-        return new EnemyAIAction(this, cell, 0);
+        float hpPercent = unit.GetHealthPercentage();
+        if(hpPercent > 0.7f) return new EnemyAIAction(this, targetCell, 0);
+        else if(hpPercent > 0.5f) return new EnemyAIAction(this, unitCell, Mathf.RoundToInt(1 / hpPercent));
+        else if(hpPercent > 0.25f) return new EnemyAIAction(this, targetCell, Mathf.RoundToInt(45/hpPercent));
+        else return new EnemyAIAction(this, targetCell, 500);
     }
     #endregion
 

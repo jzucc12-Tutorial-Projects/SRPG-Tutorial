@@ -128,6 +128,7 @@ public class Unit : MonoBehaviour, ITargetable
     public string GetName() => unitName;
     public bool IsEnemy() => isEnemy;
     public float GetHealthPercentage() => unitHealth.GetHealthPercentage();
+    public int GetHealth() => unitHealth.GetHealth();
     public bool IsAlive() => unitHealth.GetHealthPercentage() > 0;
     public GridCell GetGridCell() => transform.position.GetGridCell();
     public Vector3 GetWorldPosition() => ConvertToShoulderHeight(transform.position);

@@ -66,9 +66,8 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
         bullet.SetUp(bulletTarget);
 
         //Calculate damage
-        int accuracy = accuracySO.CalculateAccuracy(bulletOrigin.position, target, circularRange);
-        accuracy += unit.GetAccuracyMod();
-        float hitModifier = accuracySO.DamageMult(accuracy);
+
+        float hitModifier = accuracySO.DamageMult(CalculateAccuracy(bulletOrigin.position, target));
         int damageDealt = (int)(damage * hitModifier * unit.GetDamageMod());
 
         //Damage infliction
@@ -84,7 +83,13 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
         target.Damage(damageDealt);
     }
 
-    //Reloading
+    private int CalculateAccuracy(Vector3 origin, ITargetable target)
+    {
+        int accuracy = accuracySO.CalculateAccuracy(origin, target, circularRange);
+        accuracy += unit.GetAccuracyMod();
+        return accuracy;
+    }
+
     public void Resupply()
     {
         currentClip = maxClip;
@@ -107,8 +112,7 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
         foreach(var gridCell in GetTargetedCells(unit.GetGridCell()))
         {
             ITargetable target = gridCell.GetTargetable();
-            int accuracy = accuracySO.CalculateAccuracy(unit.GetWorldPosition(), target, circularRange);
-            accuracy += unit.GetAccuracyMod();
+            int accuracy = CalculateAccuracy(unit.GetWorldPosition(), target);
             int crit = accuracySO.CalculateCritChance(accuracy);
             targets.Add(target, (accuracy, crit));
         }
@@ -129,12 +133,37 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
     #endregion
 
     #region //Enemy action
-    public override EnemyAIAction GetEnemyAIAction(GridCell cell)
+    /// <summary>
+    /// Prioritizes units over other targets. Highly prioritizes if it kills.
+    /// Drops priority with accuracy and increases with lower target hp.
+    /// Aggressively destroys supply crates
+    /// </summary>
+    /// <param name="unitCell"></param>
+    /// <param name="targetCell"></param>
+    /// <returns></returns>
+    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
     {
-        ITargetable target = cell.GetUnit();
-        Unit targetUnit = (Unit)target;
-        if(targetUnit == null) return new EnemyAIAction(this, cell, Mathf.RoundToInt(10));
-        else return new EnemyAIAction(this, cell, Mathf.RoundToInt(100f - 1f * targetUnit.GetHealthPercentage()));
+        //Set up
+        int score = 0;
+        ITargetable target = targetCell.GetTargetable();
+
+        //Accuracy score
+        int accuracy = CalculateAccuracy(unitCell.GetWorldPosition(), target);
+        score += accuracy - 100;
+
+        //Target score
+        Unit targetUnit = target as Unit;
+        SupplyCrate crate = target as SupplyCrate;
+        if(crate != null) score += 100;
+        else if(targetUnit == null) score += 25;
+        else
+        {
+            int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - damage * unit.GetDamageMod());
+            score += 100 - hpDiff/2;
+            if(hpDiff <= 0)
+                score += 120;
+        }
+        return new EnemyAIAction(this, targetCell, score);
     }
     #endregion
 

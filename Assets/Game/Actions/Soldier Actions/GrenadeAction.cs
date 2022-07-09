@@ -70,9 +70,37 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply
     #endregion
 
     #region //Enemy action
-    public override EnemyAIAction GetEnemyAIAction(GridCell cell)
+    /// <summary>
+    /// Priotizes hitting more targets. Extra points for it being an enemy unit.
+    /// Less points if friendly. Even less if it is itself
+    /// Likes hitting supply crates
+    /// </summary>
+    /// <param name="unitCell"></param>
+    /// <param name="targetCell"></param>
+    /// <returns></returns>
+    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
     {
-        return new EnemyAIAction(this, cell, 10);
+        int score = 0;
+
+        foreach(var targetable in grenadePrefab.GetTargets(targetCell))
+        {
+            if(targetable is SupplyCrate)
+                score += 25;
+            else if(!(targetable is Unit))
+                score += 10;
+            else
+            {
+                Unit targetUnit = targetable as Unit;
+                bool onTarget = targetUnit.GetGridCell() == targetCell;
+                int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - grenadePrefab.GetDamage(onTarget));
+                score += 50 - hpDiff/3;
+                if(targetUnit.IsEnemy()) score *= -1;
+                if(targetUnit == unit) score -= 50;
+            }
+        }
+        float quantityMod = 0.9f * currentQuantity / maxQuantity + 0.1f;
+        score = Mathf.RoundToInt(score * quantityMod);
+        return new EnemyAIAction(this, targetCell, score);
     }
     #endregion
 

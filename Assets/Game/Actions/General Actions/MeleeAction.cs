@@ -31,9 +31,33 @@ public class MeleeAction : TargetedAction, IAnimatedAction
     #endregion
     
     #region //Enemy action
-    public override EnemyAIAction GetEnemyAIAction(GridCell cell)
+    /// <summary>
+    /// Prioritizes units of other targetables. Highly prioritizes if the attack kills
+    /// Aggressively targets supply crates
+    /// </summary>
+    /// <param name="unitCell"></param>
+    /// <param name="targetCell"></param>
+    /// <returns></returns>
+    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
     {
-        return new EnemyAIAction(this, cell, 150);
+        //Set up
+        int score = 0;
+        ITargetable target = targetCell.GetTargetable();
+
+        //Target score
+        Unit targetUnit = target as Unit;
+        SupplyCrate crate = target as SupplyCrate;
+        if(crate != null) score += 99;
+        if(targetUnit == null) score += 50;
+        else
+        {
+            int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - damage * unit.GetDamageMod());
+            score += 100 - hpDiff/2;
+            if(hpDiff <= 0)
+                score += 100;
+        }
+
+        return new EnemyAIAction(this, targetCell, score);
     }
     #endregion
 

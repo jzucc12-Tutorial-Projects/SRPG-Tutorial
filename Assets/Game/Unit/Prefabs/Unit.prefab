@@ -81,7 +81,7 @@ MonoBehaviour:
   shoulderHeight: 1.7
   maxActionPoints: 4
   hpLossToDropAccuracy: 0.1
-  accuracyDropWithHP: 10
+  accuracyDropWithHP: 2
 --- !u!114 &6208183024560329706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,13 +136,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apCost: 1
-  circularRange: 1
-  includeSelf: 0
-  hasAltAction: 0
-  altAction: {fileID: 0}
   maxMoveDistance: 4
   moveSpeed: 4
   threshold: 0.025
+  circularRange: 1
+  includeSelf: 0
 --- !u!114 &7907523317165694775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,10 +154,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apCost: 1
-  circularRange: 0
-  includeSelf: 1
-  hasAltAction: 0
-  altAction: {fileID: 0}
   spinSpeed: 360
   spinAmount: 360
   accuracyDrop: 30
@@ -179,8 +173,6 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
-  hasAltAction: 1
-  altAction: {fileID: 2506461736046759198}
   requiresTargetable: 1
   targetAllies: 0
   actionRange: 5
@@ -196,7 +188,6 @@ MonoBehaviour:
   bulletOrigin: {fileID: 4166919180323647920}
   animController: {fileID: 22100000, guid: 07dc407fa6e39f44687b586da6ec8abb, type: 2}
   maxClip: 3
-  reloadAPCost: 2
   damage: 30
   accuracySO: {fileID: 11400000, guid: ea9e9ea0aa7946c4e850396dd66588b4, type: 2}
 --- !u!114 &2506461736046759198
@@ -212,10 +203,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apCost: 1
-  circularRange: 0
-  includeSelf: 1
-  hasAltAction: 0
-  altAction: {fileID: 0}
   shootAction: {fileID: 8702508500721394068}
   displayText: Reload Rifle
 --- !u!114 &765520939608658656
@@ -233,8 +220,6 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
-  hasAltAction: 1
-  altAction: {fileID: 8338768807532290615}
   requiresTargetable: 1
   targetAllies: 0
   actionRange: 9
@@ -250,7 +235,6 @@ MonoBehaviour:
   bulletOrigin: {fileID: 3468950159327434495}
   animController: {fileID: 22100000, guid: d6ee3152b6a3c3344844385c027bd68e, type: 2}
   maxClip: 6
-  reloadAPCost: 2
   damage: 15
   accuracySO: {fileID: 11400000, guid: e8d6d181983f17d48864284eea71603c, type: 2}
 --- !u!114 &8338768807532290615
@@ -266,10 +250,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apCost: 1
-  circularRange: 0
-  includeSelf: 1
-  hasAltAction: 0
-  altAction: {fileID: 0}
   shootAction: {fileID: 765520939608658656}
   displayText: Reload Pistol
 --- !u!114 &1211421786331489146
@@ -287,8 +267,6 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
-  hasAltAction: 0
-  altAction: {fileID: 0}
   requiresTargetable: 0
   targetAllies: 0
   actionRange: 5
@@ -316,8 +294,6 @@ MonoBehaviour:
   apCost: 2
   circularRange: 0
   includeSelf: 0
-  hasAltAction: 0
-  altAction: {fileID: 0}
   requiresTargetable: 1
   targetAllies: 0
   actionRange: 1
@@ -342,8 +318,6 @@ MonoBehaviour:
   apCost: 2
   circularRange: 1
   includeSelf: 1
-  hasAltAction: 0
-  altAction: {fileID: 0}
   requiresTargetable: 1
   targetAllies: 1
   actionRange: 0
@@ -369,8 +343,6 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
-  hasAltAction: 0
-  altAction: {fileID: 0}
   requiresTargetable: 0
   targetAllies: 0
   actionRange: 1

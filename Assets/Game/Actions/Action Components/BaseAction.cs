@@ -102,7 +102,7 @@ public abstract class BaseAction : MonoBehaviour
 
         foreach(var targetCell in GetValidCells(referenceCell))
         {
-            EnemyAIAction enemyAction = GetEnemyAIAction(targetCell);
+            EnemyAIAction enemyAction = GetEnemyAIAction(referenceCell, targetCell);
             actionList.Add(enemyAction);
         }
 
@@ -111,7 +111,7 @@ public abstract class BaseAction : MonoBehaviour
         return actionList[0];
     }
 
-    public abstract EnemyAIAction GetEnemyAIAction(GridCell cell);
+    public abstract EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell cell);
     #endregion
 
     #region //Tooltip

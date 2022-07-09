@@ -18,6 +18,7 @@ public class MoveAction : BaseAction
     private List<Vector3> positionList = new List<Vector3>();
     private int positionIndex = 0;
     private Pathfinding pathfinder = null;
+    private UnitManager unitManager = null;
     #endregion
 
     #region //Events
@@ -31,6 +32,7 @@ public class MoveAction : BaseAction
     {
         base.Awake();
         pathfinder = FindObjectOfType<Pathfinding>();
+        unitManager = FindObjectOfType<UnitManager>();
     }
     #endregion
 
@@ -92,10 +94,24 @@ public class MoveAction : BaseAction
     #endregion
 
     #region //Enemy Action
-    public override EnemyAIAction GetEnemyAIAction(GridCell cell)
+    /// <summary>
+    /// Prioritizes not being seen by enemies and being further away
+    /// </summary>
+    /// <param name="unitCell"></param>
+    /// <param name="targetCell"></param>
+    /// <returns></returns>
+    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
     {
-        var count = 0;
-        return new EnemyAIAction(this, cell, count * 10 + 1);
+        int score = 0;
+        Vector3 newPosition = targetCell.GetWorldPosition();
+        foreach(var player in unitManager.GetPlayerList())
+        {
+            var dir = (player.GetWorldPosition() - newPosition);
+            if(Physics.Raycast(newPosition, dir, dir.magnitude, GridGlobals.obstacleMask))
+                score += 25;
+            score += targetCell.GetGridDistance(player.GetGridCell()); 
+        }
+        return new EnemyAIAction(this, targetCell, score);
     }
     #endregion
 

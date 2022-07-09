@@ -7,6 +7,8 @@ using UnityEngine;
 /// LIMITATIONS:
 /// The AI will either move first, last, or not at all. It won't act, move, and then act
 /// The AI will not move multiple times in a given turn
+/// Currently the AI favors movements that place it further away from enemies. Playing passively.
+/// AI can't track current ammo, stock, etc when choosing an action
 /// If a chosen action is no longer valid (like if attack 1 kills its target leaving no target for attack 2)
 ///     it will either choose a new target, try the alt action, or do nothing. It won't consider other options.
 
@@ -41,22 +43,24 @@ public class EnemyAI : MonoBehaviour
 
         foreach(var aiAction in actionList.GetAIActions())
         {
+            waiting = true;
             if (enemy.TryTakeAction(aiAction.action, aiAction.targetCell))
                 aiAction.PerformAction(ActionComplete);
             else
             {
                 var redo = aiAction.action.GetBestAIAction(enemy.GetGridCell());
-                if (enemy.TryTakeAction(redo.action, redo.targetCell))
+                if (redo != null && enemy.TryTakeAction(redo.action, redo.targetCell))
                     redo.PerformAction(ActionComplete);
                 else if(aiAction.TryAlt())
                 {
                     var alt = aiAction.GetAltAction().GetBestAIAction(enemy.GetGridCell());
-                    if(enemy.TryTakeAction(alt.action, alt.targetCell))
+                    if(alt != null && enemy.TryTakeAction(alt.action, alt.targetCell))
                         alt.PerformAction(ActionComplete);
                 }
             }
 
             yield return new WaitUntil(doneWaiting);
+            if(!enemy.IsAlive()) yield break;
             yield return new WaitForSeconds(waitTime);
         }
 
@@ -81,7 +85,7 @@ public class EnemyAI : MonoBehaviour
             //Handle moving first
             if(enemy.GetGridCell() != cell)
             {
-                list.AddAIAction(moveAction.GetEnemyAIAction(cell));
+                list.AddAIAction(moveAction.GetEnemyAIAction(enemy.GetGridCell(), cell));
                 currentAP--;
             }
 
