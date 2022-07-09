@@ -33,4 +33,6 @@ public class UnitWeapon : MonoBehaviour
     {
         activeWeapon.SetActive(false);
     }
+
+    public GameObject GetActiveWeapon() => activeWeapon;
 }

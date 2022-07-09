@@ -38,6 +38,12 @@ public class Unit : MonoBehaviour, ITargetable
 
 
     #region //Monobehaviour
+    private void OnValidate()
+    {
+        if(!string.IsNullOrEmpty(unitName))
+            gameObject.name = unitName;
+    }
+
     private void Awake()
     {
         currentActionPoints = maxActionPoints;

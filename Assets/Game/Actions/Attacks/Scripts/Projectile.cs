@@ -10,7 +10,6 @@ public abstract class Projectile : MonoBehaviour
     [SerializeField] private float moveSpeed = 15f;
     [SerializeField] private float collisionDistance = 0.1f;
     protected Vector3 target = Vector3.zero;
-    public Action OnCollision;
 
     [Header("Effects")]
     [SerializeField] private bool hasCollisionParticles = false;
@@ -31,7 +30,6 @@ public abstract class Projectile : MonoBehaviour
         {
             Collision();
             transform.position = target;
-            OnCollision?.Invoke();
             if (hasCollisionParticles) Instantiate(collisionParticles, target + Vector3.up, Quaternion.identity);
             if (hasTrail) trail.transform.parent = null;
             Destroy(gameObject);
@@ -53,12 +51,6 @@ public abstract class Projectile : MonoBehaviour
     }
 
     protected abstract void Collision();
-
-    public void SetUp(Vector3 target, Action OnCollision)
-    {
-        this.OnCollision = OnCollision;
-        SetUp(target);
-    }
 
     public virtual void SetUp(Vector3 target)
     {

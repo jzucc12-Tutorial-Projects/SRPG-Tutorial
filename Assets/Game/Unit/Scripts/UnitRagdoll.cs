@@ -8,11 +8,12 @@ public class UnitRagdoll : MonoBehaviour
     [SerializeField] private Transform ragdollRootBone = null;
 
 
-    public void SetUp(Transform rootBone)
+    public void SetUp(Transform rootBone, GameObject unitWeapon)
     {
         MatchAllChildTransforms(rootBone, ragdollRootBone);
         Vector3 randomDir = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
         ragdollRootBone.ApplyExplosionToRBChildren(300f, transform.position + randomDir, 10f);
+        SetUpWeapon(unitWeapon);
     }
 
     private void MatchAllChildTransforms(Transform root, Transform clone)
@@ -27,5 +28,14 @@ public class UnitRagdoll : MonoBehaviour
                 MatchAllChildTransforms(child, cloneChild);
             }
         }
+    }
+
+    private void SetUpWeapon(GameObject unitWeapon)
+    {
+        var parent = transform.FindDeepChild(unitWeapon.transform.parent.name);
+        var weapon = Instantiate(unitWeapon, parent);
+        weapon.transform.localPosition = unitWeapon.transform.localPosition;
+        weapon.transform.rotation = unitWeapon.transform.rotation;
+        weapon.transform.localScale = unitWeapon.transform.localScale;
     }
 }

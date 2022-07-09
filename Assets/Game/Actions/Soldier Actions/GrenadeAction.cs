@@ -93,12 +93,12 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply
                 Unit targetUnit = targetable as Unit;
                 bool onTarget = targetUnit.GetGridCell() == targetCell;
                 int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - grenadePrefab.GetDamage(onTarget));
-                score += 50 - hpDiff/3;
+                score += 60 - hpDiff/3;
                 if(targetUnit.IsEnemy()) score *= -1;
                 if(targetUnit == unit) score -= 50;
             }
         }
-        float quantityMod = 0.9f * currentQuantity / maxQuantity + 0.1f;
+        float quantityMod = currentQuantity / maxQuantity;
         score = Mathf.RoundToInt(score * quantityMod);
         return new EnemyAIAction(this, targetCell, score);
     }
