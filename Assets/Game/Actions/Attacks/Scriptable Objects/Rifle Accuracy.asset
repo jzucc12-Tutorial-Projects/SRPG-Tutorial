@@ -12,12 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd8abb7d1809244eadeb85428c35588, type: 3}
   m_Name: Rifle Accuracy
   m_EditorClassIdentifier: 
-  nearRange: 2
   baseAccuracy: 100
-  accuracyDrop: 7
-  accuracyObstacleLayer:
+  nonUnitDrop: 0.75
+  dropWithDistance: 1
+  distanceDrop: 5
+  nearRange: 2
+  dropWithBlocking: 1
+  blockingDrop: 5
+  accuracyBlockingLayer:
     serializedVersion: 2
-    m_Bits: 640
+    m_Bits: 0
+  dropWithHealth: 1
+  healthTick: 0.1
+  healthDrop: 2
   critChance: 5
-  damage: 30
   critMult: 1.5

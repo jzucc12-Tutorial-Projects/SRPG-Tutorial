@@ -20,7 +20,7 @@ public class SpinAction : BaseAction
     #region //Action performing
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
-        ActionStart(onFinish);
+        ActionStart(onFinish, gridCell);
         unit.AddAccuracyMod(-accuracyDrop);
         unit.AddDamageMod(damageBoost);
         StartCoroutine(Spin());
@@ -68,12 +68,12 @@ public class SpinAction : BaseAction
     #endregion
 
     #region //Tooltip
-    protected override void SetUpToolTip()
+    protected override void SpecificTooltipSetup()
     {
-        toolTip.effectText = "Do a 360 for style!";
-        toolTip.costText = "All but 1AP";
-        toolTip.damageText = $"+{(damageBoost*100).ToString()}% damage";
-        toolTip.accuracyText = $"-{accuracyDrop.ToString()}% accuracy";
+        tooltip.effectText = "Do a 360 for style!";
+        tooltip.costText = "All but 1AP";
+        tooltip.damageText = $"+{(damageBoost*100).ToString()}% damage";
+        tooltip.accuracyText = $"-{accuracyDrop.ToString()}% accuracy";
     }
     #endregion
 

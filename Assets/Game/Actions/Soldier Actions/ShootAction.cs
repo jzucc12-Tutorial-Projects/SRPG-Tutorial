@@ -1,18 +1,17 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// Unit can use fire arms
 /// </summary>
-public class ShootAction : TargetedAction, IAnimatedAction, ISupply
+public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAction
 {
     #region //Weapon info
     [Header("Weapon Info")]
     [SerializeField] private string weaponName = "Rifle";
-    [SerializeField] private GameObject weaponGO = null;
     [SerializeField] private Bullet bulletPrefab = null;
     [SerializeField] private Transform bulletOrigin = null;
+    [SerializeField] private GameObject weaponGO = null;
     [SerializeField] private AnimatorOverrideController animController = null;
     #endregion
 
@@ -22,8 +21,6 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
     [SerializeField] private int damage = 40;
     [SerializeField] private AccuracySO accuracySO = null;
     public static event Action OnShootStatic;
-    public static event Action<Dictionary<ITargetable, (int, int)>> Targeting;
-    public static event Action StopTargeting;
     #endregion
 
     #region //Weapon state
@@ -56,40 +53,6 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
         OnShootStatic?.Invoke();
     }
 
-    private void Shoot()
-    {
-        //Spawn bullet
-        currentClip--;
-        var bullet = Instantiate(bulletPrefab, bulletOrigin.position, Quaternion.identity);
-        var bulletTarget = target.GetWorldPosition();
-        bulletTarget.y = bullet.transform.position.y;
-        bullet.SetUp(bulletTarget);
-
-        //Calculate damage
-
-        float hitModifier = accuracySO.DamageMult(CalculateAccuracy(bulletOrigin.position, target));
-        int damageDealt = (int)(damage * hitModifier * unit.GetDamageMod());
-
-        //Damage infliction
-        if(hitModifier == 0) CallLog($"{unit.GetName()} missed {target.GetName()}");
-        else 
-        {
-            string hitType;
-            if(hitModifier == 1) hitType = "hit";
-            else hitType = "crit"; 
-
-            CallLog($"{unit.GetName()} {hitType} {target.GetName()} for {damageDealt} damage");
-        }
-        target.Damage(damageDealt);
-    }
-
-    private int CalculateAccuracy(Vector3 origin, ITargetable target)
-    {
-        int accuracy = accuracySO.CalculateAccuracy(origin, target, circularRange);
-        accuracy += unit.GetAccuracyMod();
-        return accuracy;
-    }
-
     public void Resupply()
     {
         currentClip = maxClip;
@@ -103,32 +66,18 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
     }
 
     //Shows accuracy UI and sets unit weapon
-    public override void OnSelected()
+    public void OnSelected()
     {
         unitWeapon.SetActiveWeapon(weaponGO, animController);
 
         if(unit.IsEnemy()) return;
-        Dictionary<ITargetable, (int, int)> targets = new Dictionary<ITargetable, (int, int)>();
-        foreach(var gridCell in GetTargetedCells(unit.GetGridCell()))
-        {
-            ITargetable target = gridCell.GetTargetable();
-            int accuracy = CalculateAccuracy(unit.GetWorldPosition(), target);
-            int crit = accuracySO.CalculateCritChance(accuracy);
-            targets.Add(target, (accuracy, crit));
-        }
-        if(targets.Count > 0) Targeting?.Invoke(targets);
+        AccuracyHub.ShowAccuracyUI(unit, GetTargetedCells(unit.GetGridCell()), accuracySO);
     }
 
-    public override void OnUnSelected()
+    public void OnUnSelected()
     {
         if(unit.IsEnemy()) return;
-        StopTargeting?.Invoke();
-    }
-
-    public override bool CanTakeAction(GridCell gridCell)
-    {
-        if(currentClip <= 0) return false;
-        return base.CanTakeAction(gridCell);
+        AccuracyHub.HideAccuracyUI();
     }
     #endregion
 
@@ -148,7 +97,7 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
         ITargetable target = targetCell.GetTargetable();
 
         //Accuracy score
-        int accuracy = CalculateAccuracy(unitCell.GetWorldPosition(), target);
+        int accuracy = accuracySO.CalculateAccuracy(unit, unitCell.GetWorldPosition(), target);
         score += accuracy - 100;
 
         //Target score
@@ -170,7 +119,28 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
     #region //Animated Action
     public void AnimationAct()
     {
-        Shoot();
+        //Spawn bullet
+        currentClip--;
+        var bullet = Instantiate(bulletPrefab, bulletOrigin.position, Quaternion.identity);
+        var bulletTarget = target.GetWorldPosition();
+        bulletTarget.y = bullet.transform.position.y;
+        bullet.SetUp(bulletTarget);
+
+        //Calculate damage
+        float hitModifier = accuracySO.DamageMult(unit, bulletOrigin.position, target);
+        int damageDealt = (int)(damage * hitModifier * unit.GetDamageMod());
+
+        //Damage infliction
+        if(hitModifier == 0) CallLog($"{unit.GetName()} missed {target.GetName()}");
+        else 
+        {
+            string hitType;
+            if(hitModifier == 1) hitType = "hit";
+            else hitType = "crit"; 
+
+            CallLog($"{unit.GetName()} {hitType} {target.GetName()} for {damageDealt} damage");
+        }
+        target.Damage(damageDealt);
     }
 
     public void AnimationEnd()
@@ -180,13 +150,13 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
     #endregion
 
     #region //Tooltip
-    protected override void SetUpToolTip()
+    protected override void SpecificTooltipSetup()
     {
-        base.SetUpToolTip();
-        toolTip.effectText = "Shoot a target in range";
-        toolTip.altText = "Switch to reload action"; 
-        toolTip.damageText = $"{damage} on hit, {damage*accuracySO.GetCritMult()} on crit";
-        toolTip.accuracyText = $"{accuracySO.GetBaseAccuracy()} to hit, {accuracySO.GetCritChance()} to crit";
+        base.SpecificTooltipSetup();
+        tooltip.effectText = "Shoot a target in range";
+        tooltip.altText = "Switch to reload action"; 
+        tooltip.damageText = $"{damage} on hit, {damage*accuracySO.GetCritMult()} on crit";
+        tooltip.accuracyText = $"{accuracySO.GetBaseAccuracy()} to hit, {accuracySO.GetCritChance()} to crit";
     }
     #endregion
 
@@ -194,8 +164,7 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply
     public override int GetQuantity() => currentClip;
     public float GetClipPercent() => (float)currentClip / maxClip;
     public override string GetActionName() => weaponName;
-    public Unit GetUnit() => unit;
     public ITargetable GetTarget() => target;
-    protected override Vector3 GetTargetPosition() => target.GetWorldPosition().PlaceOnGrid();
+    public override Vector3 GetTargetPosition() => target.GetWorldPosition().PlaceOnGrid();
     #endregion
 }

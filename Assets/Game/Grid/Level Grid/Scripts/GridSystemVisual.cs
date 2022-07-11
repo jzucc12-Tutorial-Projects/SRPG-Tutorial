@@ -10,7 +10,6 @@ public class GridSystemVisual : MonoBehaviour
     [SerializeField] private GridSystemVisualSingle visualPrefab = null;
 
     [SerializeField] private List<GridVisualType> gridMaterials = new List<GridVisualType>();
-    [SerializeField] private Material defaultMouseMaterial = null;
     private LevelGrid levelGrid = null;
     private GridSystemVisualSingle[,] singles;
     #endregion
@@ -21,6 +20,11 @@ public class GridSystemVisual : MonoBehaviour
     private TargetedAction targetedAction => currentAction != null ? currentAction as TargetedAction : null;
     private bool isTargetedAction => targetedAction != null;
     private List<GridCell> currentCells = new List<GridCell>();
+    #endregion
+
+    #region //Mouse effects
+    [SerializeField] private Material defaultMouseMaterial = null;
+    private Material activeMouseMaterial = null;
     #endregion
 
 
@@ -48,6 +52,8 @@ public class GridSystemVisual : MonoBehaviour
         UnitActionSystem.UpdateUI += UpdateGridVisual;
         MouseWorld.LeaveGridCell += MouseLeave;
         MouseWorld.EnterGridCell += MouseEnter;
+        MouseWorld.EnterCellAOE += MouseEnterAOE;
+        MouseWorld.EnterCellLine += MouseEnterLine;
     }
 
     private void OnDisable()
@@ -56,6 +62,8 @@ public class GridSystemVisual : MonoBehaviour
         UnitActionSystem.UpdateUI -= UpdateGridVisual;
         MouseWorld.LeaveGridCell -= MouseLeave;
         MouseWorld.EnterGridCell -= MouseEnter;
+        MouseWorld.EnterCellAOE -= MouseEnterAOE;
+        MouseWorld.EnterCellLine -= MouseEnterLine;
     }
 
     private void Start()
@@ -98,30 +106,46 @@ public class GridSystemVisual : MonoBehaviour
         foreach(var single in singles)
             single.Hide();
     }
+    #endregion
 
-    private void MouseLeave(GridCell centerPoint, int aoeSize)
-    {
-        foreach(var cells in levelGrid.CheckGridRange(centerPoint, aoeSize, false, true))
-            GetSingle(cells).Restore();
-    }
-
-    private void MouseEnter(GridCell centerPoint, int aoeSize)
+    #region //Mouse effects
+    private void MouseEnter(GridCell gridCell)
     {
         //Show center point
-        Material material;
-        if(currentAction == null) material = defaultMouseMaterial;
-        else if(!GetSingle(centerPoint).IsShowing()) material = defaultMouseMaterial;
-        else material = GetMouseMaterial(currentAction, isTargetedAction && currentCells.Contains(centerPoint));
-        ShowCell(centerPoint, material, false);
+        if(currentAction == null) activeMouseMaterial = defaultMouseMaterial;
+        else if(!GetSingle(gridCell).IsShowing()) activeMouseMaterial = defaultMouseMaterial;
+        else activeMouseMaterial = GetMouseMaterial(currentAction, isTargetedAction && currentCells.Contains(gridCell));
+        ShowCell(gridCell, activeMouseMaterial, false);
+    }
+
+    private void MouseEnterAOE(GridCell centerPoint, int aoeSize, bool targetOnly)
+    {
+        if(targetOnly && activeMouseMaterial == defaultMouseMaterial) return;
 
         //Only show AOE if the mouse is on a valid cell
-        if(Physics.Raycast(centerPoint.GetWorldPosition() + Vector3.down, Vector3.up, 1, GridGlobals.obstacleMask)) return;
+        if(centerPoint.HasObstacle()) return;
         foreach(var cell in levelGrid.CheckGridRange(centerPoint, aoeSize))
         {
             Vector3 dir = (cell - centerPoint).GetWorldPosition();
             if(Physics.Raycast(centerPoint.GetWorldPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
-            ShowCell(cell, material, false);
+            ShowCell(cell, activeMouseMaterial, false);
         }
+    }
+
+    private void MouseEnterLine(GridCell origin)
+    {
+        if(activeMouseMaterial == defaultMouseMaterial) return;
+
+        GridCell offset = origin - currentUnit.GetGridCell();
+        foreach(var cell in levelGrid.GetLine(origin, offset))
+            ShowCell(cell, activeMouseMaterial, false);
+    }
+
+    private void MouseLeave(GridCell centerPoint)
+    {
+        foreach(var cell in levelGrid.GetAllCells())
+            GetSingle(cell).Restore();
+
     }
     #endregion
 

@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Unit can throw grenades
 /// </summary>
-public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply
+public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAction
 {
     #region //Variables
     [Header("Grenade Action")]
@@ -58,14 +58,16 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply
         return currentQuantity > 0 && base.CanSelectAction();
     }
 
-    public override void OnSelected()
+    public void OnSelected()
     {
-        mouseWorld.SetAOESize(grenadePrefab.GetExplosionRadius());
+        if(unit.IsEnemy()) return;
+        mouseWorld.SetAOESize(grenadePrefab.GetExplosionRadius(), false);
     }
 
-    public override void OnUnSelected()
+    public void OnUnSelected()
     {
-        mouseWorld.SetAOESize(0);
+        if(unit.IsEnemy()) return;
+        mouseWorld.ResetAOE();
     }
     #endregion
 
@@ -120,17 +122,17 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply
     #endregion
 
     #region //Tooltip
-    protected override void SetUpToolTip()
+    protected override void SpecificTooltipSetup()
     {
-        base.SetUpToolTip();
-        toolTip.effectText = "Throw a grenade that damages \nanything close enough";
-        toolTip.damageText = $"{grenadePrefab.GetDamage(true)} on target. {grenadePrefab.GetDamage(false)} in AOE";
+        base.SpecificTooltipSetup();
+        tooltip.effectText = "Throw a grenade that damages \nanything close enough";
+        tooltip.damageText = $"{grenadePrefab.GetDamage(true)} on target. {grenadePrefab.GetDamage(false)} in AOE";
     }
     #endregion
 
     #region //Getters
     public override int GetQuantity() => currentQuantity;
     public override string GetActionName() => "Grenade";
-    protected override Vector3 GetTargetPosition() => target;
+    public override Vector3 GetTargetPosition() => target;
     #endregion
 }

@@ -72,16 +72,16 @@ public class MedPackAction : TargetedAction, ISupply
     #endregion
 
     #region //Tooltip
-    protected override void SetUpToolTip()
+    protected override void SpecificTooltipSetup()
     {
-        base.SetUpToolTip();
-        toolTip.effectText = $"Heal yourself for {healingAmount.ToString()} hp";
+        base.SpecificTooltipSetup();
+        tooltip.effectText = $"Heal you or an ally for up to {healingAmount.ToString()} hp";
     }
     #endregion
 
     #region //Getters
     public override int GetQuantity() => currentQuantity;
     public override string GetActionName() => "Bandages";
-    protected override Vector3 GetTargetPosition() => target.GetWorldPosition();
+    public override Vector3 GetTargetPosition() => target.GetWorldPosition();
     #endregion
 }

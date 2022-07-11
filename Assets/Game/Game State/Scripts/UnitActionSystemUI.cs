@@ -55,11 +55,22 @@ public class UnitActionSystemUI : MonoBehaviour
         foreach(Transform button in container)
             Destroy(button.gameObject);
 
-        foreach(var action in unit.GetActions())
+        var actions = unit.GetActions();
+        bool lastIsAlt = actions[actions.Length - 1] is IAltAction;
+        for(int ii = 0; ii < actions.Length; ii++)
         {
+            //Figure out tooltip positioning
+            int tooltipPos = 0;
+            if(ii > 0)
+            {
+                bool secondLast = ii == actions.Length - 2;
+                bool isLast = ii == actions.Length - 1;
+                tooltipPos = (lastIsAlt && secondLast) || isLast ? 2 : 1;
+            }
+
             var button = Instantiate(buttonPrefab, container);
             buttons.Add(button);
-            button.SetAction(unitActionSystem, action);
+            button.SetAction(unitActionSystem, actions[ii], tooltipPos);
         }
     }
 

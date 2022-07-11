@@ -9,5 +9,5 @@ public struct ActionTooltip
     public string rangeText;
     public string damageText;
     public string accuracyText;
-    public string coolDownText;
+    public string cooldownText;
 }

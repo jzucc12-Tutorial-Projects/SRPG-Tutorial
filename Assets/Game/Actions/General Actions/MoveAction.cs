@@ -45,7 +45,7 @@ public class MoveAction : BaseAction
             positionList.Add(gp.GetWorldPosition());
             
         StartCoroutine(Move());
-        ActionStart(onFinish);
+        ActionStart(onFinish, gridCell);
     }
 
     private IEnumerator Move()
@@ -116,11 +116,10 @@ public class MoveAction : BaseAction
     #endregion
 
     #region //Tooltip
-    protected override void SetUpToolTip()
+    protected override void SpecificTooltipSetup()
     {
-        base.SetUpToolTip();
-        toolTip.effectText = "Move the selected unit";
-        toolTip.rangeText = maxMoveDistance.ToString();
+        tooltip.effectText = "Move the selected unit";
+        tooltip.rangeText = maxMoveDistance.ToString();
     }
     #endregion
 

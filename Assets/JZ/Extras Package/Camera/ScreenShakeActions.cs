@@ -5,7 +5,8 @@ using UnityEngine;
 /// </summary>
 public class ScreenShakeActions : MonoBehaviour
 {
-    [SerializeField] private ScreenShake screenShake = null;
+    [SerializeField] private ScreenShake shortShake = null;
+    [SerializeField] private ScreenShake longShake = null;
 
 
     private void OnEnable()
@@ -13,6 +14,7 @@ public class ScreenShakeActions : MonoBehaviour
         ShootAction.OnShootStatic += Shake;
         Grenade.OnCollisionStatic += BigShake;
         MeleeAction.OnMeleeStatic += Shake;
+        TremorAction.TremorStarted += TremorShake;
     }
 
     private void OnDisable()
@@ -20,15 +22,21 @@ public class ScreenShakeActions : MonoBehaviour
         ShootAction.OnShootStatic -= Shake;
         Grenade.OnCollisionStatic -= BigShake;
         MeleeAction.OnMeleeStatic -= Shake;
+        TremorAction.TremorStarted -= TremorShake;
     }
 
     private void Shake()
     {
-        screenShake.Shake();
+        shortShake.ImpulseShake();
     }
 
     private void BigShake()
     {
-        screenShake.Shake(5);
+        shortShake.ImpulseShake(5);
+    }
+
+    private void TremorShake()
+    {
+        longShake.ImpulseShake(3);
     }
 }

@@ -15,10 +15,10 @@ public class ActionButtonTooltip : MonoBehaviour
         SetText(so.effectText, "Effect:");
         SetText(so.altText, "Alt:");
         SetText(so.costText, "Cost:");
+        SetText(so.cooldownText, "Cooldown:");
         SetText(so.rangeText, "Range:");
         SetText(so.damageText, "Damage:");
         SetText(so.accuracyText, "Accuracy:");
-        SetText(so.coolDownText, "Cooldown:");
     }
 
     private void SetText(TextMeshProUGUI tmp, string text, string prefix)

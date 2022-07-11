@@ -27,9 +27,10 @@ public class EnemyAIAction
 
     public void PerformAction(Action onComplete)
     {
-        action.OnSelected();
+        var select = action as IOnSelectAction;
+        if(select != null) select.OnSelected();
         action.TakeAction(targetCell, onComplete);
-        action.OnUnSelected();
+        if(select != null) select.OnUnSelected();
     }
 
     public bool TryAlt()

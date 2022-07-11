@@ -15,6 +15,8 @@ MonoBehaviour:
   actionNames:
   - MedPackAction
   - ReloadAction
+  - FocusAction
+  - HealingWindAction
   baseMaterial: {fileID: 2100000, guid: d5d249c7209c0534fa6b6478c8a00767, type: 2}
   mouseMaterial: {fileID: 2100000, guid: 6328e590815320642b979339136edb05, type: 2}
   targetedMaterial: {fileID: 2100000, guid: 13f0ff4392bbbd04fac60fc4606b1d8e, type: 2}

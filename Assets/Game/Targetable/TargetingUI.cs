@@ -24,14 +24,14 @@ public class TargetingUI : MonoBehaviour
 
     private void OnEnable()
     {
-        ShootAction.Targeting += ShowUI;
-        ShootAction.StopTargeting += HideUI;
+        AccuracyHub.Targeting += ShowUI;
+        AccuracyHub.StopTargeting += HideUI;
     }
 
     private void OnDisable()
     {
-        ShootAction.Targeting -= ShowUI;
-        ShootAction.StopTargeting -= HideUI;
+        AccuracyHub.Targeting -= ShowUI;
+        AccuracyHub.StopTargeting -= HideUI;
     }
     #endregion
 

@@ -47,7 +47,7 @@ public class UnitActionSystem : MonoBehaviour
         Unit.UnitDead += OnPlayerDeath;
         UnitManager.GameOver += GameOver;
         TurnSystem.IncrementTurnLate += TurnChange;
-        Pause.OnPause += Halt;
+        global::Pause.OnPause += Pause;
     }
 
     private void OnDisable()
@@ -57,7 +57,7 @@ public class UnitActionSystem : MonoBehaviour
         Unit.UnitDead -= OnPlayerDeath;
         UnitManager.GameOver -= GameOver;
         TurnSystem.IncrementTurnLate -= TurnChange;
-        Pause.OnPause -= Halt;
+        global::Pause.OnPause -= Pause;
     }
 
     private void Start()
@@ -125,9 +125,11 @@ public class UnitActionSystem : MonoBehaviour
     #region //Action selection
     public void SetSelectedAction(BaseAction action)
     {
-        if(selectedAction != null) selectedAction.OnUnSelected();
+        var select = selectedAction as IOnSelectAction;
+        if(select != null) select.OnUnSelected();
         selectedAction = action;
-        if(selectedAction != null) selectedAction.OnSelected();
+        select = selectedAction as IOnSelectAction;
+        if(select != null) select.OnSelected();
         UIChange();
         IsSelectedValid();
     }
@@ -182,13 +184,13 @@ public class UnitActionSystem : MonoBehaviour
     #region //Halting
     private void GameOver()
     {
-        Halt(true);
+        UpdateUI?.Invoke(null, null);
+        Pause(true);
     }
 
-    private void Halt(bool halt)
+    private void Pause(bool pause)
     {
-        allowInput = !halt;
-        if(halt) UpdateUI?.Invoke(null, null);
+        allowInput = !pause;
     }
     #endregion
 }

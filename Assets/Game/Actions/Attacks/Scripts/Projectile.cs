@@ -10,6 +10,7 @@ public abstract class Projectile : MonoBehaviour
     [SerializeField] private float moveSpeed = 15f;
     [SerializeField] private float collisionDistance = 0.1f;
     protected Vector3 target = Vector3.zero;
+    private event Action OnCollision = null;
 
     [Header("Effects")]
     [SerializeField] private bool hasCollisionParticles = false;
@@ -29,6 +30,7 @@ public abstract class Projectile : MonoBehaviour
         if ((target - transform.position).InRange(collisionDistance))
         {
             Collision();
+            OnCollision?.Invoke();
             transform.position = target;
             if (hasCollisionParticles) Instantiate(collisionParticles, target + Vector3.up, Quaternion.identity);
             if (hasTrail) trail.transform.parent = null;
@@ -52,9 +54,10 @@ public abstract class Projectile : MonoBehaviour
 
     protected abstract void Collision();
 
-    public virtual void SetUp(Vector3 target)
+    public virtual void SetUp(Vector3 target, Action OnCollision = null)
     {
         this.target = target;
+        this.OnCollision += OnCollision;
         totalDistance = Vector3.Distance(transform.position, target);
     }
 }

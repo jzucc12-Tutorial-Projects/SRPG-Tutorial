@@ -5,11 +5,10 @@ using UnityEngine;
 /// <summary>
 /// Alt action that reloads a given weapon
 /// </summary>
-public class ReloadAction : BaseAction, IAltAction
+public class ReloadAction : BaseAction, IAltAction, IOnSelectAction
 {
     #region //Variables
     [SerializeField] private ShootAction shootAction = null;
-    [SerializeField] private string displayText = "";
     #endregion
 
 
@@ -24,7 +23,7 @@ public class ReloadAction : BaseAction, IAltAction
     #region //Action performing
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
-        ActionStart(onFinish);
+        ActionStart(onFinish, gridCell);
         shootAction.Resupply();
         CallLog($"{unit.GetName()} reloaded their {shootAction.GetActionName()}");
         ActionFinish();
@@ -32,12 +31,12 @@ public class ReloadAction : BaseAction, IAltAction
     #endregion
 
     #region //Action selection
-    public override void OnSelected()
+    public void OnSelected()
     {
         shootAction.OnSelected();
     }
 
-    public override void OnUnSelected()
+    public void OnUnSelected()
     {
         shootAction.OnUnSelected();
     }
@@ -67,16 +66,15 @@ public class ReloadAction : BaseAction, IAltAction
     #endregion
 
     #region //Tooltip
-    protected override void SetUpToolTip()
+    protected override void SpecificTooltipSetup()
     {
-        base.SetUpToolTip();
-        toolTip.effectText = "Reload your weapon";
-        toolTip.altText = "Switch back to firing";
+        tooltip.effectText = "Reload your weapon";
+        tooltip.altText = "Switch back to firing";
     }
     #endregion
 
     #region //Getters
-    public override string GetActionName() => displayText;
+    public override string GetActionName() => $"Reload {shootAction.GetActionName()}";
     public BaseAction GetRootAction() => shootAction;
     #endregion
 }

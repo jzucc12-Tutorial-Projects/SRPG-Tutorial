@@ -11,7 +11,7 @@ public abstract class BaseAction : MonoBehaviour
     protected Unit unit = null;
     protected UnitWeapon unitWeapon = null;
     protected LevelGrid levelGrid = null;
-    protected ActionTooltip toolTip = new ActionTooltip();
+    protected ActionTooltip tooltip = new ActionTooltip();
     #endregion
 
     #region //Action state
@@ -22,7 +22,7 @@ public abstract class BaseAction : MonoBehaviour
 
     #region //Events
     protected Action OnActionFinish;
-    public static event Action<BaseAction> OnAnyActionStarted;
+    public static event Action<BaseAction, GridCell> OnAnyActionStarted;
     public static event Action OnAnyActionEnded;
     #endregion
 
@@ -33,19 +33,20 @@ public abstract class BaseAction : MonoBehaviour
         unit = GetComponent<Unit>();
         unitWeapon = GetComponent<UnitWeapon>();
         levelGrid = FindObjectOfType<LevelGrid>();
-        SetUpToolTip();
+        SpecificTooltipSetup();
     }
-
+    protected virtual void OnEnable() { }
+    protected virtual void OnDisable() { }
     protected virtual void Start() { }
     #endregion
 
     #region //Action performing
     public abstract void TakeAction(GridCell gridCell, Action onFinish);
 
-    protected void ActionStart(Action onFinish)
+    protected void ActionStart(Action onFinish, GridCell gridCell)
     {
         OnActionFinish = onFinish;
-        OnAnyActionStarted?.Invoke(this);
+        OnAnyActionStarted?.Invoke(this, gridCell);
     }
 
     protected void ActionFinish()
@@ -64,8 +65,6 @@ public abstract class BaseAction : MonoBehaviour
     #endregion
 
     #region //Action Selection
-    public virtual void OnSelected() { }
-    public virtual void OnUnSelected() { }
     /// <summary>
     /// Cells the action can be performed in from current cell
     /// </summary>
@@ -115,14 +114,17 @@ public abstract class BaseAction : MonoBehaviour
     #endregion
 
     #region //Tooltip
-    protected virtual void SetUpToolTip()
+    private void SetupTooltip()
     {
-        toolTip.costText = $"{apCost}AP";
+        tooltip.costText = $"{apCost}AP";
+        SpecificTooltipSetup();
     }
-    public ActionTooltip GetToolTip() => toolTip;
+    protected abstract void SpecificTooltipSetup();
+    public ActionTooltip GetToolTip() => tooltip;
     #endregion
 
     #region //Getters
+    public Unit GetUnit() => unit;
     public virtual int GetQuantity() => -1; //Leave at -1 for an infinite amount
     public abstract string GetActionName();
     public virtual int GetAPCost() => apCost;

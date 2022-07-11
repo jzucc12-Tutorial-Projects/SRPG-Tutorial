@@ -27,8 +27,6 @@ public class Unit : MonoBehaviour, ITargetable
 
     #region //Action
     [SerializeField] private int maxActionPoints = 2;
-    [Tooltip("HP% loss increment that drops accuracy")] [SerializeField, MinMax(0, 1)] private float hpLossToDropAccuracy = 0.1f;
-    [Tooltip("Accuracy drop with above HP loss.")] [SerializeField, MinMax(0, 100)] private int accuracyDropWithHP = 10;
     private BaseAction[] actions = new BaseAction[0];
     public event Action OnActionPointChange;
     private int currentActionPoints = 0;
@@ -93,7 +91,7 @@ public class Unit : MonoBehaviour, ITargetable
     //Returns true if the unit is still rotating
     public bool Rotate(Vector3 targetDirection)
     {
-        transform.forward = Vector3.RotateTowards(transform.forward, targetDirection, rotateSpeed * Time.deltaTime, 0);
+        transform.forward = Vector3.Lerp(transform.forward, targetDirection, rotateSpeed * Time.deltaTime);
         return transform.forward != targetDirection;
     }
     #endregion
@@ -160,12 +158,7 @@ public class Unit : MonoBehaviour, ITargetable
         else
             return differentFromTarget;
     }
-    public int GetAccuracyMod() //Combines native accuracy modifier with drop from hp loss
-    {
-        float hpMissing = 1 - unitHealth.GetHealthPercentage();
-        int ticks = Mathf.RoundToInt(hpMissing / hpLossToDropAccuracy);
-        return -ticks * accuracyDropWithHP + accuracyMod;
-    }
+    public int GetAccuracyMod() => accuracyMod;
     public float GetDamageMod() => 1 + damageMod;
     #endregion
 }

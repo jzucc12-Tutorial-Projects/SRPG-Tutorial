@@ -73,9 +73,7 @@ MonoBehaviour:
   priority: 0
   rotateSpeed: 10
   shoulderHeight: 1.7
-  maxActionPoints: 4
-  hpLossToDropAccuracy: 0.1
-  accuracyDropWithHP: 2
+  maxActionPoints: 2
 --- !u!114 &6208183024560329706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,7 +130,7 @@ MonoBehaviour:
   apCost: 1
   maxMoveDistance: 4
   moveSpeed: 4
-  threshold: 0.025
+  threshold: 0.03
   circularRange: 1
   includeSelf: 0
 --- !u!114 &2650283597064394310
@@ -493,7 +491,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: George
+  m_text: Unit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}

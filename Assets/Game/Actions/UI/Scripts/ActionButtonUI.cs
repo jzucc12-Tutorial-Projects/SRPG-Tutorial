@@ -15,11 +15,13 @@ public class ActionButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI actionText = null;
     [SerializeField] private TextMeshProUGUI quantityText = null;
+    [SerializeField] private Image cooldownImage = null;
     [SerializeField] private TextMeshProUGUI apText = null;
     [SerializeField] private Button button = null;
     [SerializeField] private Image border = null;
     [SerializeField] private Image disabledLayer = null;
-    [SerializeField] private ActionButtonTooltip toolTip = null;
+    [SerializeField] private ActionButtonTooltip[] tooltips = new ActionButtonTooltip[3]; //Left, center, and then right
+    private ActionButtonTooltip tooltip = null;
     #endregion
 
     #region //Colors
@@ -38,11 +40,13 @@ public class ActionButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     #endregion
 
     #region //UI Updating
-    public void SetAction(UnitActionSystem uaSystem, BaseAction action)
+    public void SetAction(UnitActionSystem uaSystem, BaseAction action, int pos)
     {
         this.action = action;
         this.uaSystem = uaSystem;
-        toolTip.SetUp(action.GetToolTip());
+        pos = Mathf.Clamp(pos, 0, 2);
+        tooltip = tooltips[pos];
+        tooltip.SetUp(action.GetToolTip());
         UpdateUI(action);
         if(action is IAltAction) gameObject.SetActive(false);
     }
@@ -51,6 +55,7 @@ public class ActionButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         actionText.text = action.GetActionName().ToUpper();
         quantityText.enabled = action.GetQuantity() != -1;
+        cooldownImage.enabled = quantityText.enabled && action is CooldownAction;
         quantityText.text = $"x{action.GetQuantity()}";
         apText.text = $"{action.GetAPCost()} AP";
 
@@ -77,12 +82,14 @@ public class ActionButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     #region //Pointer events
     public void OnPointerEnter(PointerEventData eventData)
     {
-        toolTip.gameObject.SetActive(true);
+        if(tooltip == null) return;
+        tooltip.gameObject.SetActive(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        toolTip.gameObject.SetActive(false);
+        if(tooltip == null) return;
+        tooltip.gameObject.SetActive(false);
     }
 
     public void OnPointerClick(PointerEventData eventData)

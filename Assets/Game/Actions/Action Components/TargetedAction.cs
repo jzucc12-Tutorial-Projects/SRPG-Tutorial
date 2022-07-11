@@ -24,7 +24,7 @@ public abstract class TargetedAction : BaseAction
     #region //Action performing
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
-        ActionStart(onFinish);
+        ActionStart(onFinish, gridCell);
         if(GetTargetPosition() == unit.GetWorldPosition())
             OnFacing();
         else
@@ -40,6 +40,7 @@ public abstract class TargetedAction : BaseAction
         //Rotate close enough to initiate action
         while(!aimDir.AlmostFacing(transform.forward, facingLimit))
         {
+            if(target.GetGridCell() == unit.GetGridCell()) break;
             yield return null;
             unit.Rotate(aimDir);
             dT += Time.deltaTime;
@@ -57,18 +58,17 @@ public abstract class TargetedAction : BaseAction
     #endregion
 
     #region //Tooltip
-    protected override void SetUpToolTip()
+    protected override void SpecificTooltipSetup()
     {
-        base.SetUpToolTip();
         string rangeText;
         if(actionRange > 0) rangeText = actionRange.ToString();
         else rangeText = "Self";
-        toolTip.rangeText = rangeText;
+        tooltip.rangeText = rangeText;
     }
     #endregion
 
     #region //Getters
-    protected abstract Vector3 GetTargetPosition();
+    public abstract Vector3 GetTargetPosition();
 
     public override List<GridCell> GetValidCells(GridCell unitCell)
     {
@@ -114,6 +114,7 @@ public abstract class TargetedAction : BaseAction
                             Vector3.Distance(attackerWorldPosition, targetPosition),
                             obstacleLayer);
             if(hit) continue;
+            if(cell.HasObstacle()) continue;
 
             bool hitDown = Physics.Raycast(targetPosition, Vector3.down, 2f, obstacleLayer);
             if(hitDown) continue;

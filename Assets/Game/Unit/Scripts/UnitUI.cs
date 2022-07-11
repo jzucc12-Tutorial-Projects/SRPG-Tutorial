@@ -20,6 +20,12 @@ public class UnitUI : MonoBehaviour
 
 
     #region //Monobehaviour
+    private void OnValidate()
+    {
+        if(!string.IsNullOrEmpty(unit.GetName()))
+            nameText.text = unit.GetName();
+    }
+
     private void OnEnable()
     {
         unit.OnActionPointChange += UpdateActionPointsText;

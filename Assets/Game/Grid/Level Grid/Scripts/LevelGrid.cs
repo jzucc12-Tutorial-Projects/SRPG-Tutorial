@@ -46,5 +46,19 @@ public class LevelGrid : MonoBehaviour
     #region //Getters
     public int GetWidth() => gridSystem.GetWidth();
     public int GetHeight() => gridSystem.GetHeight();
+    public IEnumerable<GridCell> GetAllCells()
+    {
+        return gridSystem.GetGridCells();
+    }
+
+    public IEnumerable<GridCell> GetLine(GridCell origin, GridCell offset)
+    {
+        GridCell nextCell = origin;
+        while(IsValidCell(nextCell) && !nextCell.HasHighObstacle())
+        {
+            if(!nextCell.HasObstacle()) yield return nextCell;
+            nextCell += offset;
+        }
+    }
     #endregion
 }

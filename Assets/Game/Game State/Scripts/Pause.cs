@@ -34,7 +34,7 @@ public class Pause : MonoBehaviour
     #endregion
 
     #region //Change Pause
-    private void TogglePause()
+    public void TogglePause()
     {
         isPaused = !isPaused;
         pauseUI.SetActive(isPaused);
