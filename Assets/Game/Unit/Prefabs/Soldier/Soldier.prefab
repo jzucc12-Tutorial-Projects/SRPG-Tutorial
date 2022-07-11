@@ -380,7 +380,7 @@ MonoBehaviour:
   includeSelf: 1
   requiresTargetable: 1
   targetAllies: 1
-  actionRange: 0
+  actionRange: 1
   facingLimit: 0.9
   waitTime: 0
   obstacleLayer:

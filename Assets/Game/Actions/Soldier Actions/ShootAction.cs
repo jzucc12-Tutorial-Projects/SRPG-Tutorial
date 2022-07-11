@@ -60,9 +60,9 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
     #endregion
 
     #region //Action selection
-    public override bool CanSelectAction()
+    public override bool CanSelectAction(int currentAP)
     {
-        return currentClip > 0 && base.CanSelectAction();
+        return currentClip > 0 && base.CanSelectAction(currentAP);
     }
 
     //Shows accuracy UI and sets unit weapon

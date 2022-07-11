@@ -31,8 +31,7 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
 
     protected override void OnFacing()
     {
-        SetTrigger?.Invoke("isShooting");
-        // SetTrigger?.Invoke("Mana bolt");
+        SetTrigger?.Invoke("Mana Bolt");
     }
 
     private void BoltHit()

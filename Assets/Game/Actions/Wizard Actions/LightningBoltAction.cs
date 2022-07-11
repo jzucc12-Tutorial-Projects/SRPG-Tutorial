@@ -39,8 +39,7 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
 
     protected override void OnFacing()
     {
-        SetTrigger?.Invoke("isShooting");
-        //SetTrigger?.Invoke("Lightning bolt");
+        SetTrigger?.Invoke("Lightning Bolt");
     }
 
     private void Damage(GameObject target)

@@ -46,9 +46,9 @@ public class FocusAction : BaseAction, IAltAction
         selected.OnUnSelected();
     }
 
-    public override bool CanSelectAction()
+    public override bool CanSelectAction(int currentAP)
     {
-        return cooldownAction.GetQuantity() > 0 && unit.GetAP() > 0 && base.CanSelectAction();
+        return cooldownAction.GetQuantity() > 0 && currentAP > 0 && base.CanSelectAction(currentAP);
     }
 
     public override List<GridCell> GetValidCells(GridCell unitCell)
@@ -75,6 +75,6 @@ public class FocusAction : BaseAction, IAltAction
     #region //Getters
     public BaseAction GetRootAction() => cooldownAction;
     public override string GetActionName() => $"Focus {cooldownAction.GetActionName()}";
-    public override int GetAPCost() => unit.GetAP();
+    public override int GetAPCost(int currentAP) => currentAP;
     #endregion
 }

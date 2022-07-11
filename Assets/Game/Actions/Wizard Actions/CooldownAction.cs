@@ -52,9 +52,9 @@ public abstract class CooldownAction : TargetedAction, ISupply
     #endregion
 
     #region //Action selection
-    public override bool CanSelectAction()
+    public override bool CanSelectAction(int currentAP)
     {
-        return currentCooldown == 0 && base.CanSelectAction();
+        return currentCooldown == 0 && base.CanSelectAction(currentAP);
     }
     #endregion
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -29,6 +30,7 @@ public class UnitActionSystem : MonoBehaviour
     public static event Action<bool> ChangeBusy;
     private BaseAction selectedAction = null;
     private bool isBusy = false;
+    private bool doubleClick = false;
     #endregion
 
 
@@ -42,22 +44,25 @@ public class UnitActionSystem : MonoBehaviour
 
     private void OnEnable()
     {
-        inputManager.mouseClick.started += HandleMouseClick;
+        inputManager.mouseClick.performed += HandleMouseClick;
+        inputManager.changeTeammates.started += HandleTeamChange;
+        inputManager.doubleClick.performed += Double;
         BaseAction.OnAnyActionEnded += OnActionFinish;
         Unit.UnitDead += OnPlayerDeath;
         UnitManager.GameOver += GameOver;
         TurnSystem.IncrementTurnLate += TurnChange;
-        global::Pause.OnPause += Pause;
+        Pause.OnPause += OnPause;
     }
 
     private void OnDisable()
     {
-        inputManager.mouseClick.started -= HandleMouseClick;
+        inputManager.mouseClick.performed -= HandleMouseClick;
+        inputManager.changeTeammates.started -= HandleTeamChange;
         BaseAction.OnAnyActionEnded -= OnActionFinish;
         Unit.UnitDead -= OnPlayerDeath;
         UnitManager.GameOver -= GameOver;
         TurnSystem.IncrementTurnLate -= TurnChange;
-        global::Pause.OnPause -= Pause;
+        Pause.OnPause -= OnPause;
     }
 
     private void Start()
@@ -71,8 +76,40 @@ public class UnitActionSystem : MonoBehaviour
     private void HandleMouseClick(InputAction.CallbackContext context)
     {
         if(!AllowInput()) return;
-        if(TrySelectUnit()) return;
+
+        //Only allow action selection on single click
+        if(!doubleClick) 
+        {
+            doubleClick = true;
+            StartCoroutine(WaitForDoubleClick());
+        }
+        else 
+        {
+            doubleClick = false;
+            StopAllCoroutines();
+        }
+    }
+
+    private IEnumerator WaitForDoubleClick()
+    {
+        yield return new WaitForSeconds(0.2f);
         HandleSelectedAction();
+        doubleClick = false;
+    }
+
+
+    private void Double(InputAction.CallbackContext context)
+    {
+        TrySelectUnit();
+    }
+
+    private void HandleTeamChange(InputAction.CallbackContext context)
+    {
+        if(!AllowInput()) return;
+        if(selectedUnit == null) return;
+        int shift = (int)inputManager.changeTeammates.ReadValue<float>();
+        var newUnit = unitManager.GetShiftUnit(selectedUnit, shift);
+        SetSelectedUnit(newUnit);
     }
 
     private bool AllowInput()
@@ -185,10 +222,10 @@ public class UnitActionSystem : MonoBehaviour
     private void GameOver()
     {
         UpdateUI?.Invoke(null, null);
-        Pause(true);
+        OnPause(true);
     }
 
-    private void Pause(bool pause)
+    private void OnPause(bool pause)
     {
         allowInput = !pause;
     }

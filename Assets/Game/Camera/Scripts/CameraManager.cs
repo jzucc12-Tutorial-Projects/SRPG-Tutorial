@@ -6,12 +6,17 @@ using UnityEngine;
 /// </summary>
 public class CameraManager : MonoBehaviour
 {
+    #region //Camera variables
     [SerializeField] private List<string> aimAtTargetActions = new List<string>();
     [SerializeField] private GameObject actionCameraGameObject = null;
     private Transform camTransform => actionCameraGameObject.transform;
+    #endregion
+
+    #region //Positioning variables
     [SerializeField] private float yOffset = 1.5f;
     [SerializeField] private float zOffset = -6;
     private Unit initiator = null;
+    #endregion
 
 
     #region //Monobehaviour
@@ -26,6 +31,7 @@ public class CameraManager : MonoBehaviour
     {
         BaseAction.OnAnyActionStarted -= OnActionStarted;
         BaseAction.OnAnyActionEnded -= OnActionEnded;
+        Unit.UnitDead -= CheckRevert;
     }
     #endregion
 
@@ -40,10 +46,10 @@ public class CameraManager : MonoBehaviour
             Unit actingUnit = action.GetUnit();
             Vector3 target = targetCell.GetWorldPosition();
             Vector3 shootDir = (target - actingUnit.GetWorldPosition()).normalized;
-            Vector3 cameraPos = actingUnit.GetWorldPosition() + ((shootDir) * -1);
-            camTransform.position = cameraPos + new Vector3(0, yOffset, 0);
+            Vector3 cameraPos = actingUnit.GetWorldPosition();
+            Vector3 offset = ((shootDir) * zOffset) + new Vector3(0, yOffset, 0);
+            camTransform.position = cameraPos + offset;
             camTransform.LookAt(target);
-            camTransform.position += camTransform.forward * zOffset;
             ShowActionCamera();
         }
     }

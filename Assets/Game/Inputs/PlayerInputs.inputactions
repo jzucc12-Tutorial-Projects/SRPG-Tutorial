@@ -42,13 +42,22 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Alt Action",
+                    "name": "Double Click",
                     "type": "Button",
-                    "id": "a682fe7c-003c-48af-a467-5b98f0deb7fb",
+                    "id": "fd85dcc9-7cf5-4291-9c4e-dda2ebf5276c",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Change Teammates",
+                    "type": "Value",
+                    "id": "a682fe7c-003c-48af-a467-5b98f0deb7fb",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -218,13 +227,46 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "4bbd7439-7d82-4d42-a146-782e1ca213c6",
-                    "path": "<Mouse>/rightButton",
+                    "name": "1D Axis",
+                    "id": "ecf6293b-d3b9-4d93-b5af-3295ba30354c",
+                    "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Alt Action",
+                    "action": "Change Teammates",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "789bf43b-3b98-4f15-a811-20e74665d242",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Change Teammates",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "0b9e9047-2740-4f1d-947f-f684f30d1da0",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Change Teammates",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "49e59364-b199-4b46-905a-bce2b1af6823",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "MultiTap(tapDelay=0.2)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Double Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

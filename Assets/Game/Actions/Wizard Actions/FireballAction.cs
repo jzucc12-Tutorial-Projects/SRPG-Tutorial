@@ -39,8 +39,7 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
 
     protected override void OnFacing()
     {
-        SetTrigger?.Invoke("isShooting");
-        //SetTrigger?.Invoke("Fireball");
+        SetTrigger?.Invoke("Fireball");
     }
     #endregion
 

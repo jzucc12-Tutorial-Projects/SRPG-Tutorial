@@ -47,9 +47,9 @@ public class MedPackAction : TargetedAction, ISupply
     #endregion
 
     #region //Action selection
-    public override bool CanSelectAction()
+    public override bool CanSelectAction(int currentAP)
     {
-        return currentQuantity > 0 && base.CanSelectAction();
+        return currentQuantity > 0 && base.CanSelectAction(currentAP);
     }
     #endregion
 
@@ -82,6 +82,6 @@ public class MedPackAction : TargetedAction, ISupply
     #region //Getters
     public override int GetQuantity() => currentQuantity;
     public override string GetActionName() => "Bandages";
-    public override Vector3 GetTargetPosition() => target.GetWorldPosition();
+    public override Vector3 GetTargetPosition() => target.GetWorldPosition().PlaceOnGrid();
     #endregion
 }

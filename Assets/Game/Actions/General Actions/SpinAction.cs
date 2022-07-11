@@ -23,6 +23,7 @@ public class SpinAction : BaseAction
         ActionStart(onFinish, gridCell);
         unit.AddAccuracyMod(-accuracyDrop);
         unit.AddDamageMod(damageBoost);
+        Debug.Log("start");
         StartCoroutine(Spin());
         CallLog($"{unit.GetName()} did a 360");
     }
@@ -35,6 +36,7 @@ public class SpinAction : BaseAction
             float spinAdd = spinSpeed * Time.deltaTime;
             currentAngle += spinAdd;
             transform.eulerAngles += new Vector3(0, spinAdd, 0);
+            Debug.Log(currentAngle);
             yield return null;
         }
         ActionFinish();
@@ -47,9 +49,9 @@ public class SpinAction : BaseAction
         return new List<GridCell>()  { unitCell };
     }
 
-    public override bool CanSelectAction()
+    public override bool CanSelectAction(int currentAP)
     {
-        return unit.GetAP() > 1;
+        return currentAP > 1;
     }
     #endregion
 
@@ -62,7 +64,7 @@ public class SpinAction : BaseAction
     /// <returns></returns>
     public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
     {
-        if(unit.GetAP() == 2) new EnemyAIAction(this, targetCell, UnityEngine.Random.Range(50, 151));
+        if(unit.GetAP() == 2) new EnemyAIAction(this, targetCell, UnityEngine.Random.Range(25, 76));
         return new EnemyAIAction(this, targetCell, UnityEngine.Random.Range(50, 76));
     }
     #endregion
@@ -79,9 +81,9 @@ public class SpinAction : BaseAction
 
     #region //Getters
     public override string GetActionName() => "Spin";
-    public override int GetAPCost()
+    public override int GetAPCost(int currentAP)
     {
-        return Mathf.Max(1, unit.GetAP() - 1);
+        return Mathf.Max(1, currentAP - 1);
     }
     #endregion
 }

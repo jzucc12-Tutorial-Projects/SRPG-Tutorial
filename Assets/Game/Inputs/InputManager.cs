@@ -9,7 +9,8 @@ public class InputManager : MonoBehaviour
 {
     private PlayerInputs inputs = null;
     public InputAction mouseClick => inputs.Player.MouseClick;
-    public InputAction altAction => inputs.Player.AltAction;
+    public InputAction changeTeammates => inputs.Player.ChangeTeammates;
+    public InputAction doubleClick => inputs.Player.DoubleClick;
 
 
     #region //Monobehaviour
@@ -48,6 +49,11 @@ public class InputManager : MonoBehaviour
     public float GetCameraZoom()
     {
         return inputs.Player.CameraZoom.ReadValue<float>();
+    }
+
+    public float GetTeammateChange()
+    {
+        return changeTeammates.ReadValue<float>();
     }
     #endregion
 }

@@ -1005,7 +1005,7 @@ MonoBehaviour:
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
   m_UpdateMethod: 2
-  m_BlendUpdateMethod: 1
+  m_BlendUpdateMethod: 0
   m_DefaultBlend:
     m_Style: 1
     m_Time: 0.2
@@ -1973,7 +1973,7 @@ GameObject:
   - component: {fileID: 468843086}
   - component: {fileID: 468843088}
   m_Layer: 0
-  m_Name: Cinemachine Virtual Camera
+  m_Name: Input Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6683,9 +6683,10 @@ MonoBehaviour:
   - ManaBoltAction
   - FireballAction
   - HealingWindAction
+  - LightningBoltAction
   actionCameraGameObject: {fileID: 553360770}
-  yOffset: 2.5
-  zOffset: -7
+  yOffset: 2
+  zOffset: -8
 --- !u!1001 &1939848293
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8197,6 +8198,11 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 636905562}
     m_Modifications:
+    - target: {fileID: 7402897808467536777, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: unitName
+      value: Merlin
+      objectReference: {fileID: 0}
     - target: {fileID: 7402897808467536822, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_RootOrder
@@ -8255,7 +8261,7 @@ PrefabInstance:
     - target: {fileID: 7402897808467536823, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_Name
-      value: Wizard
+      value: Merlin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

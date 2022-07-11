@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 642008498672032320}
   - component: {fileID: 2629803204456673574}
   m_Layer: 7
-  m_Name: Male Ragdoll
+  m_Name: Male Soldier Ragdoll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

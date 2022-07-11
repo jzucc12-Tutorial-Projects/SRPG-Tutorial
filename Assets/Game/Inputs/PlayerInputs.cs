@@ -64,13 +64,22 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Alt Action"",
+                    ""name"": ""Double Click"",
                     ""type"": ""Button"",
-                    ""id"": ""a682fe7c-003c-48af-a467-5b98f0deb7fb"",
+                    ""id"": ""fd85dcc9-7cf5-4291-9c4e-dda2ebf5276c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Change Teammates"",
+                    ""type"": ""Value"",
+                    ""id"": ""a682fe7c-003c-48af-a467-5b98f0deb7fb"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -240,13 +249,46 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""4bbd7439-7d82-4d42-a146-782e1ca213c6"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""name"": ""1D Axis"",
+                    ""id"": ""ecf6293b-d3b9-4d93-b5af-3295ba30354c"",
+                    ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Alt Action"",
+                    ""action"": ""Change Teammates"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""789bf43b-3b98-4f15-a811-20e74665d242"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Change Teammates"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""0b9e9047-2740-4f1d-947f-f684f30d1da0"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Change Teammates"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""49e59364-b199-4b46-905a-bce2b1af6823"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": ""MultiTap(tapDelay=0.2)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Double Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -261,7 +303,8 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         m_Player_CameraRotate = m_Player.FindAction("Camera Rotate", throwIfNotFound: true);
         m_Player_CameraZoom = m_Player.FindAction("CameraZoom", throwIfNotFound: true);
         m_Player_MouseClick = m_Player.FindAction("Mouse Click", throwIfNotFound: true);
-        m_Player_AltAction = m_Player.FindAction("Alt Action", throwIfNotFound: true);
+        m_Player_DoubleClick = m_Player.FindAction("Double Click", throwIfNotFound: true);
+        m_Player_ChangeTeammates = m_Player.FindAction("Change Teammates", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -325,7 +368,8 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_CameraRotate;
     private readonly InputAction m_Player_CameraZoom;
     private readonly InputAction m_Player_MouseClick;
-    private readonly InputAction m_Player_AltAction;
+    private readonly InputAction m_Player_DoubleClick;
+    private readonly InputAction m_Player_ChangeTeammates;
     public struct PlayerActions
     {
         private @PlayerInputs m_Wrapper;
@@ -334,7 +378,8 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         public InputAction @CameraRotate => m_Wrapper.m_Player_CameraRotate;
         public InputAction @CameraZoom => m_Wrapper.m_Player_CameraZoom;
         public InputAction @MouseClick => m_Wrapper.m_Player_MouseClick;
-        public InputAction @AltAction => m_Wrapper.m_Player_AltAction;
+        public InputAction @DoubleClick => m_Wrapper.m_Player_DoubleClick;
+        public InputAction @ChangeTeammates => m_Wrapper.m_Player_ChangeTeammates;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -356,9 +401,12 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @MouseClick.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseClick;
                 @MouseClick.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseClick;
                 @MouseClick.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseClick;
-                @AltAction.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAltAction;
-                @AltAction.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAltAction;
-                @AltAction.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAltAction;
+                @DoubleClick.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDoubleClick;
+                @DoubleClick.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDoubleClick;
+                @DoubleClick.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDoubleClick;
+                @ChangeTeammates.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChangeTeammates;
+                @ChangeTeammates.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChangeTeammates;
+                @ChangeTeammates.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChangeTeammates;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -375,9 +423,12 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @MouseClick.started += instance.OnMouseClick;
                 @MouseClick.performed += instance.OnMouseClick;
                 @MouseClick.canceled += instance.OnMouseClick;
-                @AltAction.started += instance.OnAltAction;
-                @AltAction.performed += instance.OnAltAction;
-                @AltAction.canceled += instance.OnAltAction;
+                @DoubleClick.started += instance.OnDoubleClick;
+                @DoubleClick.performed += instance.OnDoubleClick;
+                @DoubleClick.canceled += instance.OnDoubleClick;
+                @ChangeTeammates.started += instance.OnChangeTeammates;
+                @ChangeTeammates.performed += instance.OnChangeTeammates;
+                @ChangeTeammates.canceled += instance.OnChangeTeammates;
             }
         }
     }
@@ -388,6 +439,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         void OnCameraRotate(InputAction.CallbackContext context);
         void OnCameraZoom(InputAction.CallbackContext context);
         void OnMouseClick(InputAction.CallbackContext context);
-        void OnAltAction(InputAction.CallbackContext context);
+        void OnDoubleClick(InputAction.CallbackContext context);
+        void OnChangeTeammates(InputAction.CallbackContext context);
     }
 }

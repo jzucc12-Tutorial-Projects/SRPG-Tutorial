@@ -39,8 +39,7 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
 
     protected override void OnFacing()
     {
-        SetTrigger?.Invoke("isShooting");
-        //SetTrigger?.Invoke("Healing Wind");
+        SetTrigger?.Invoke("Healing Wind");
     }
     #endregion
 

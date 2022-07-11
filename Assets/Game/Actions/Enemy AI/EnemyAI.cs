@@ -56,7 +56,10 @@ public class EnemyAI : MonoBehaviour
                     var alt = aiAction.GetAltAction().GetBestAIAction(enemy.GetGridCell());
                     if(alt != null && enemy.TryTakeAction(alt.action, alt.targetCell))
                         alt.PerformAction(ActionComplete);
+                    else
+                        continue;
                 }
+                else continue;
             }
 
             yield return new WaitUntil(doneWaiting);
@@ -95,7 +98,7 @@ public class EnemyAI : MonoBehaviour
                 EnemyAIAction enemyAction = GetBestAction(cell, currentAP);
                 if(enemyAction == null) break;
                 list.AddAIAction(enemyAction);
-                currentAP -= enemyAction.action.GetAPCost();
+                currentAP -= enemyAction.action.GetAPCost(currentAP);
             }
             lists.Add(list);
         }
@@ -129,8 +132,8 @@ public class EnemyAI : MonoBehaviour
             if(action is MoveAction) continue;
             var testAction = action.GetBestAIAction(enemyCell);
             if(testAction == null) continue;
-            if(!action.CanSelectAction()) continue;
-            if(currentAP < action.GetAPCost()) continue;
+            if(!action.CanSelectAction(currentAP)) continue;
+            if(currentAP < action.GetAPCost(currentAP)) continue;
 
             if(enemyAIAction == null || testAction.score > enemyAIAction.score) 
                 enemyAIAction = new EnemyAIAction(testAction);

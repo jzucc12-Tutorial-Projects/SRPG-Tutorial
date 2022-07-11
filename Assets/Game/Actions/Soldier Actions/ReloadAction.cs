@@ -41,9 +41,9 @@ public class ReloadAction : BaseAction, IAltAction, IOnSelectAction
         shootAction.OnUnSelected();
     }
 
-    public override bool CanSelectAction()
+    public override bool CanSelectAction(int currentAP)
     {
-        return shootAction.GetClipPercent() != 1 && base.CanSelectAction();
+        return shootAction.GetClipPercent() != 1 && base.CanSelectAction(currentAP);
     }
     public override List<GridCell> GetValidCells(GridCell unitCell)
     {

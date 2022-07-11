@@ -53,9 +53,9 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
     #endregion
 
     #region //Action selection
-    public override bool CanSelectAction()
+    public override bool CanSelectAction(int currentAP)
     {
-        return currentQuantity > 0 && base.CanSelectAction();
+        return currentQuantity > 0 && base.CanSelectAction(currentAP);
     }
 
     public void OnSelected()

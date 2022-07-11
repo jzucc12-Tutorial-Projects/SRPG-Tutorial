@@ -12,6 +12,7 @@ public class EnemyAIHub : MonoBehaviour
     private TurnSystem turnSystem = null;
     private UnitManager unitManager = null;
     private List<Unit> enemies => new List<Unit>(unitManager.GetEnemyList());
+    public static event Action<Unit> StartNewEnemy;
     #endregion
 
     #region //Turn taking variables
@@ -46,6 +47,7 @@ public class EnemyAIHub : MonoBehaviour
 
         foreach(Unit enemy in enemies)
         {
+            StartNewEnemy?.Invoke(enemy);
             var ai = enemy.GetComponent<EnemyAI>();
             yield return StartCoroutine(ai.TakeTurn(waitTime));
         }

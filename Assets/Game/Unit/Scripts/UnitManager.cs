@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using JZ.MATH;
 
 /// <summary>
 /// Keeps track of all living units.
@@ -81,5 +82,11 @@ public class UnitManager : MonoBehaviour
     public List<Unit> GetPlayerList() => playerList;
     public List<Unit> GetEnemyList() => enemyList;
     public Unit GetRootPlayer() => playerList.Count > 0 ? playerList[0] : null;
+    public Unit GetShiftUnit(Unit unit, int shift)
+    {
+        int currentIndex = playerList.IndexOf(unit);
+        int newIndex = Utils.Wrap(currentIndex + shift, 0, playerList.Count - 1);
+        return playerList[newIndex];
+    }
     #endregion
 }

@@ -12,6 +12,10 @@ public class CameraController : MonoBehaviour
     private InputManager inputManager = null;
     #endregion
 
+    #region //General input
+    private bool allowInput = true;
+    #endregion
+
     #region //Move and rotation variables
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotationSpeed = 100f;
@@ -34,8 +38,21 @@ public class CameraController : MonoBehaviour
         followOffset = transposer.m_FollowOffset;
     }
 
+    private void OnEnable()
+    {
+        UnitActionSystem.OnSelectedUnitChanged += MoveToUnit;
+        EnemyAIHub.StartNewEnemy += MoveToUnit;
+    }
+
+    private void OnDisable()
+    {
+        UnitActionSystem.OnSelectedUnitChanged -= MoveToUnit;
+        EnemyAIHub.StartNewEnemy -= MoveToUnit;
+    }
+
     private void Update()
     {
+        if(!allowInput) return;
         MoveCamera();
         RotateCamera();
         ZoomCamera();
@@ -43,6 +60,14 @@ public class CameraController : MonoBehaviour
     #endregion
 
     #region //Move and rotate camera
+    private void MoveToUnit(Unit newUnit)
+    {
+        if(newUnit == null) return;
+        allowInput = !newUnit.IsEnemy();
+        var target = newUnit.GetWorldPosition().PlaceOnGrid();
+        transform.position = new Vector3(target.x, transform.position.y, target.z);
+    }
+
     private void MoveCamera()
     {
         Vector3 inputMoveDir = inputManager.GetCameraMove();

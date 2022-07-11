@@ -39,8 +39,7 @@ public class TremorAction : CooldownAction, IAnimatedAction, IOnSelectAction
 
     protected override void OnFacing()
     {
-        SetTrigger?.Invoke("isShooting");
-        //SetTrigger?.Invoke("Tremor");
+        SetTrigger?.Invoke("Tremor");
     }
     #endregion
 

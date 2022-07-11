@@ -91,7 +91,8 @@ public abstract class BaseAction : MonoBehaviour
     /// If the action button is allowed to be clicked on
     /// </summary>
     /// <returns></returns>
-    public virtual bool CanSelectAction() => unit.GetAP() >= GetAPCost();
+    public bool CanSelectAction() => CanSelectAction(unit.GetAP());
+    public virtual bool CanSelectAction(int currentAP) => currentAP >= GetAPCost(currentAP);
     #endregion
 
     #region //Enemy action
@@ -127,7 +128,8 @@ public abstract class BaseAction : MonoBehaviour
     public Unit GetUnit() => unit;
     public virtual int GetQuantity() => -1; //Leave at -1 for an infinite amount
     public abstract string GetActionName();
-    public virtual int GetAPCost() => apCost;
+    public int GetAPCost() => GetAPCost(unit.GetAP());
+    public virtual int GetAPCost(int currentAP) => apCost;
     public bool HasAltAction() => altAction != null;
     public BaseAction GetAltAction() => altAction;
     #endregion
