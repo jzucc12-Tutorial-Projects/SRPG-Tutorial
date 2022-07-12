@@ -67,6 +67,7 @@ public class FocusAction : BaseAction, IAltAction
     #region //Tooltip
     protected override void SpecificTooltipSetup()
     {
+        tooltip.costText = $"Uses all remaining AP";
         tooltip.effectText = $"Resets the cooldown of {cooldownAction.GetActionName()}";
         tooltip.altText = $"Switch back to {cooldownAction.GetActionName()}";
     }

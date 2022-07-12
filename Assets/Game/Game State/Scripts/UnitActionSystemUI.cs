@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Pool;
 
 /// <summary>
 /// Handles UI related to actively select units and actions
@@ -13,6 +14,7 @@ public class UnitActionSystemUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI actionPointText = null;
     private List<ActionButtonUI> buttons = new List<ActionButtonUI>();
     private UnitActionSystem unitActionSystem = null;
+    private ObjectPool<ActionButtonUI> buttonPool = null;
     #endregion
 
 
@@ -20,18 +22,27 @@ public class UnitActionSystemUI : MonoBehaviour
     private void Awake()
     {
         unitActionSystem = FindObjectOfType<UnitActionSystem>();
+
+        foreach(Transform child in container)
+            Destroy(child.gameObject);
+
+        buttonPool = new ObjectPool<ActionButtonUI>(
+            () => Instantiate(buttonPrefab, container), 
+            (button) => button.gameObject.SetActive(true),
+            (button) => button.gameObject.SetActive(false),
+            (button) => Destroy(button.gameObject), true, 10);
     }
 
     private void OnEnable()
     {
         UnitActionSystem.UpdateUI += UpdateUI;
-        UnitActionSystem.OnSelectedUnitChanged += CreateButtons;
+        UnitActionSystem.OnSelectedUnitChanged += SetupButtons;
     }
 
     private void OnDisable()
     {
         UnitActionSystem.UpdateUI -= UpdateUI;
-        UnitActionSystem.OnSelectedUnitChanged -= CreateButtons;
+        UnitActionSystem.OnSelectedUnitChanged -= SetupButtons;
     }
     #endregion
 
@@ -48,17 +59,22 @@ public class UnitActionSystemUI : MonoBehaviour
         actionPointText.text = $"Action Points: {unit.GetAP()}";
     }
 
-    private void CreateButtons(Unit unit)
+    private void SetupButtons(Unit unit)
     {
-        if(unit == null) return;
+        foreach(var button in buttons)
+            buttonPool.Release(button);
+
         buttons.Clear();
-        foreach(Transform button in container)
-            Destroy(button.gameObject);
+        if(unit == null) return;
 
         var actions = unit.GetActions();
         bool lastIsAlt = actions[actions.Length - 1] is IAltAction;
         for(int ii = 0; ii < actions.Length; ii++)
         {
+            var button = buttonPool.Get();
+            buttons.Add(button);
+            button.transform.SetSiblingIndex(ii);
+
             //Figure out tooltip positioning
             int tooltipPos = 0;
             if(ii > 0)
@@ -67,9 +83,6 @@ public class UnitActionSystemUI : MonoBehaviour
                 bool isLast = ii == actions.Length - 1;
                 tooltipPos = (lastIsAlt && secondLast) || isLast ? 2 : 1;
             }
-
-            var button = Instantiate(buttonPrefab, container);
-            buttons.Add(button);
             button.SetAction(unitActionSystem, actions[ii], tooltipPos);
         }
     }

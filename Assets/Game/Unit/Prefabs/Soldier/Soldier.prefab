@@ -268,8 +268,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   weaponName: Rifle
-  bulletPrefab: {fileID: -1252846304145104993, guid: 5e575b5d809733d40a3e430c3e67b75f,
-    type: 3}
   bulletOrigin: {fileID: 213385559}
   weaponGO: {fileID: 4203205038678892587}
   animController: {fileID: 22100000, guid: 07dc407fa6e39f44687b586da6ec8abb, type: 2}
@@ -314,8 +312,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   weaponName: Pistol
-  bulletPrefab: {fileID: -1252846304145104993, guid: 5e575b5d809733d40a3e430c3e67b75f,
-    type: 3}
   bulletOrigin: {fileID: 1189217241}
   weaponGO: {fileID: 4203198220207403924}
   animController: {fileID: 22100000, guid: d6ee3152b6a3c3344844385c027bd68e, type: 2}

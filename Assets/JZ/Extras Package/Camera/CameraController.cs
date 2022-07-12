@@ -86,6 +86,7 @@ public class CameraController : MonoBehaviour
 
     private void TrackUnit(BaseAction action, GridCell targetCell)
     {
+        if(!(action is MoveAction)) return;
         var target = action.GetUnit().GetGridCell().GetWorldPosition();
         Vector3 aim = (targetCell.GetWorldPosition() - target).normalized;
         Vector3 moveTarget = new Vector3(target.x, transform.position.y, target.z); 

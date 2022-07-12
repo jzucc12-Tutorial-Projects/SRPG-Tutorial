@@ -33,7 +33,7 @@ public abstract class BaseAction : MonoBehaviour
         unit = GetComponent<Unit>();
         unitWeapon = GetComponent<UnitWeapon>();
         levelGrid = FindObjectOfType<LevelGrid>();
-        SpecificTooltipSetup();
+        SetupTooltip();
     }
     protected virtual void OnEnable() { }
     protected virtual void OnDisable() { }

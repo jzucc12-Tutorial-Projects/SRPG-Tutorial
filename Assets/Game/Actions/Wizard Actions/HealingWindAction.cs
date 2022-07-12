@@ -10,9 +10,9 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
     [Header("Healing Wind Action")]
     [SerializeField] private int aoeSize = 1;
     [SerializeField] private int healing = 30;
-    [SerializeField] private GameObject healingFX = null;
     private GridCell target;
     private MouseWorld mouseWorld = null;
+    private EffectsManager effectsManager = null;
     #endregion
 
     #region //Animated action
@@ -26,6 +26,7 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
     {
         base.Awake();
         mouseWorld = FindObjectOfType<MouseWorld>();
+        effectsManager = FindObjectOfType<EffectsManager>();
     }
     #endregion
 
@@ -67,7 +68,9 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
     #region //Animated action
     public void AnimationAct()
     {
-        Instantiate(healingFX, GetTargetPosition(), Quaternion.identity);
+        var wind = effectsManager.GetHealingWind();
+        wind.transform.position = GetTargetPosition();
+        wind.transform.rotation = Quaternion.identity;
         CallLog($"{unit.GetName()} summoned a healing aura");
         foreach(var cell in levelGrid.CheckGridRange(target, aoeSize, circularRange, true))
         {

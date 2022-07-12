@@ -920,12 +920,12 @@ PrefabInstance:
     - target: {fileID: 3180369009928131998, guid: ab60aa5b1df6acb44ad58aafd4e7cfc0,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3180369009928131998, guid: ab60aa5b1df6acb44ad58aafd4e7cfc0,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3180369009928131998, guid: ab60aa5b1df6acb44ad58aafd4e7cfc0,
         type: 3}
@@ -991,11 +991,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tooltip Center
-      objectReference: {fileID: 0}
-    - target: {fileID: 8543543748170210069, guid: ab60aa5b1df6acb44ad58aafd4e7cfc0,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -1064,12 +1059,12 @@ PrefabInstance:
     - target: {fileID: 3180369009928131998, guid: ab60aa5b1df6acb44ad58aafd4e7cfc0,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3180369009928131998, guid: ab60aa5b1df6acb44ad58aafd4e7cfc0,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3180369009928131998, guid: ab60aa5b1df6acb44ad58aafd4e7cfc0,
         type: 3}
@@ -1135,11 +1130,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tooltip Right
-      objectReference: {fileID: 0}
-    - target: {fileID: 8543543748170210069, guid: ab60aa5b1df6acb44ad58aafd4e7cfc0,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -1208,12 +1198,12 @@ PrefabInstance:
     - target: {fileID: 3180369009928131998, guid: ab60aa5b1df6acb44ad58aafd4e7cfc0,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3180369009928131998, guid: ab60aa5b1df6acb44ad58aafd4e7cfc0,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3180369009928131998, guid: ab60aa5b1df6acb44ad58aafd4e7cfc0,
         type: 3}
@@ -1279,11 +1269,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tooltip Left
-      objectReference: {fileID: 0}
-    - target: {fileID: 8543543748170210069, guid: ab60aa5b1df6acb44ad58aafd4e7cfc0,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

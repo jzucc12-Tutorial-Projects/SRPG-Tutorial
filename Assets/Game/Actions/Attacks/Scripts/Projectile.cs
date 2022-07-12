@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -24,18 +25,23 @@ public abstract class Projectile : MonoBehaviour
     private float totalDistance = 0;
 
 
-    private void Update()
+    private IEnumerator Move()
     {
-        MoveProjectile();
-        if ((target - transform.position).InRange(collisionDistance))
+        while(!(target - transform.position).InRange(collisionDistance))
         {
-            Collision();
-            OnCollision?.Invoke();
-            transform.position = target;
-            if (hasCollisionParticles) Instantiate(collisionParticles, target + Vector3.up, Quaternion.identity);
-            if (hasTrail) trail.transform.parent = null;
-            Destroy(gameObject);
+            MoveProjectile();
+            yield return null;
         }
+
+        Collision();
+        OnCollision?.Invoke();
+        transform.position = target;
+        if (hasCollisionParticles) Instantiate(collisionParticles, target + Vector3.up, Quaternion.identity);
+
+        if(hasTrail)
+            yield return new WaitForSeconds(trail.time);
+        
+        gameObject.SetActive(false);
     }
 
     private void MoveProjectile()
@@ -57,7 +63,8 @@ public abstract class Projectile : MonoBehaviour
     public virtual void SetUp(Vector3 target, Action OnCollision = null)
     {
         this.target = target;
-        this.OnCollision += OnCollision;
+        this.OnCollision = OnCollision;
         totalDistance = Vector3.Distance(transform.position, target);
+        StartCoroutine(Move());
     }
 }

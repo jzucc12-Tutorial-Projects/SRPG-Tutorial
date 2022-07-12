@@ -142,7 +142,7 @@ PrefabInstance:
     - target: {fileID: 642008498672032383, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
       propertyPath: maxActionPoints
-      value: 99
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4404485303077618263, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
@@ -203,8 +203,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   damage: 15
-  manaBoltPrefab: {fileID: -1252846304145104993, guid: 1bee0801474be994fa4e465aa1ae6a9c,
-    type: 3}
   manaBoltOrigin: {fileID: 7400249652017337130}
   accuracySO: {fileID: 11400000, guid: 56a6f131eda170d48b065d2f5c7a6d5a, type: 2}
 --- !u!114 &231023419207397835
@@ -233,8 +231,6 @@ MonoBehaviour:
   maxCooldown: 2
   aoeSize: 2
   damage: 30
-  fireBallFX: {fileID: 8233451602826486202, guid: 191c46a160fcba24caf2cff43e2081d1,
-    type: 3}
 --- !u!114 &231023419207397836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,8 +271,6 @@ MonoBehaviour:
   maxCooldown: 1
   aoeSize: 1
   healing: 30
-  healingFX: {fileID: 8518739745382398789, guid: 0da6ed4c56e5aac4394afc6b44289855,
-    type: 3}
 --- !u!114 &231023419207397838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,8 +350,6 @@ MonoBehaviour:
     m_Bits: 256
   maxCooldown: 3
   damage: 30
-  lightningFX: {fileID: 2716277158066502014, guid: c31209b97ae6d4c45a8492c1e8d2e73b,
-    type: 3}
   lightningOrigin: {fileID: 3953428685138820985}
 --- !u!114 &231023419207397871
 MonoBehaviour:

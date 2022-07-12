@@ -9,6 +9,7 @@ public class Grenade : Projectile
 {
     #region //Grenade variables
     [Header("Grenade")]
+    [SerializeField] private MeshRenderer grenade = null;
     [SerializeField] private int explosionRadius = 2;
     [SerializeField] private int damage = 25;
     [Tooltip("Damage multiplier to the target cell")] [SerializeField] private int onTargetMult = 2;
@@ -21,6 +22,7 @@ public class Grenade : Projectile
 
     protected override void Collision()
     {
+        grenade.enabled = false;
         var levelGrid = FindObjectOfType<LevelGrid>();
         OnCollisionStatic?.Invoke();
         foreach(var targetable in GetTargets(targetCell))
@@ -53,6 +55,7 @@ public class Grenade : Projectile
 
     public void SetUp(Unit thrower, Vector3 target, Action OnCollision = null)
     {
+        grenade.enabled = true;
         this.thrower = thrower;
         SetUp(target, OnCollision);
     }

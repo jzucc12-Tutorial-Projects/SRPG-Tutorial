@@ -49,7 +49,7 @@ public class CameraManager : MonoBehaviour
 
             //Increase camera aim if a wall is blocking the target
             Vector3 testPos = cameraPos + GetOffset(offset, aimDir);
-            if(Physics.Raycast(testPos, aimDir, (testPos - aimDir).magnitude, GridGlobals.obstacleMask))
+            if(Physics.Raycast(testPos, aimDir, (testPos - target).magnitude, GridGlobals.obstacleMask))
                 camTransform.position = cameraPos + GetOffset(blockingOffset, aimDir);
             else
                 camTransform.position = cameraPos + GetOffset(offset, aimDir);

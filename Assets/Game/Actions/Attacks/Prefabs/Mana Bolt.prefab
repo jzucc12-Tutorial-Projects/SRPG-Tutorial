@@ -140,7 +140,7 @@ TrailRenderer:
     generateLightingData: 0
   m_MinVertexDistance: 0.01
   m_MaskInteraction: 0
-  m_Autodestruct: 1
+  m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
 --- !u!1 &2318436205296990261
@@ -155,6 +155,7 @@ GameObject:
   - component: {fileID: -1252846304145104993}
   - component: {fileID: 8325978345556880901}
   - component: {fileID: 7118260864782737625}
+  - component: {fileID: -7122868315061870376}
   m_Layer: 0
   m_Name: Mana Bolt
   m_TagString: Untagged
@@ -4985,3 +4986,17 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &-7122868315061870376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2318436205296990261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 004b7ee983e6473429ba13369013faba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disableWithChild: 0
+  child: {fileID: 0}

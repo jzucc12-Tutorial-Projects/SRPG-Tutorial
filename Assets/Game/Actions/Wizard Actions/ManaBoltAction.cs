@@ -9,10 +9,10 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
     #region //Mana bolt action
     [Header("Mana bolt Action")]
     [SerializeField] private int damage = 0;
-    [SerializeField] private Bullet manaBoltPrefab = null;
     [SerializeField] private Transform manaBoltOrigin = null;
     [SerializeField] private AccuracySO accuracySO = null;
     private ITargetable target = null;
+    private EffectsManager effectsManager = null;
     #endregion
 
     #region //Animated action
@@ -20,6 +20,13 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
     public event Action<string> SetTrigger;
     #endregion
 
+    #region //Monobehaviour
+    protected override void Awake()
+    {
+        base.Awake();
+        effectsManager = FindObjectOfType<EffectsManager>();
+    }
+    #endregion
 
     #region //Action performing
     public override void TakeAction(GridCell gridCell, Action onFinish)
@@ -43,7 +50,6 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
         //Damage infliction
         if(hitModifier == 0) CallLog($"{unit.GetName()} missed {target.GetName()}");
         target.Damage(unit, damageDealt);
-        ActionFinish();
     }
     #endregion
 
@@ -71,13 +77,18 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
     #region //Animated action
     public void AnimationAct()
     {
-        var manaBolt = Instantiate(manaBoltPrefab, manaBoltOrigin.position, Quaternion.identity);
+        var manaBolt = effectsManager.GetManaBolt();
+        manaBolt.transform.position = manaBoltOrigin.position;
+        manaBolt.transform.rotation = Quaternion.identity;
         var manaBoltTarget = target.GetWorldPosition();
         manaBoltTarget.y = manaBolt.transform.position.y;
         manaBolt.SetUp(manaBoltTarget, BoltHit);
     }
 
-    public void AnimationEnd() { }
+    public void AnimationEnd() 
+    {
+        ActionFinish();
+    }
     #endregion
 
     #region //Tooltip

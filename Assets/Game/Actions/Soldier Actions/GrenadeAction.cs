@@ -14,6 +14,7 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
     private int currentQuantity;
     private Vector3 target;
     private MouseWorld mouseWorld = null;
+    private EffectsManager effectsManager = null;
     #endregion
 
     #region //Animated Action
@@ -28,6 +29,7 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
         base.Awake();
         Resupply();
         mouseWorld = FindObjectOfType<MouseWorld>();
+        effectsManager = FindObjectOfType<EffectsManager>();
     }
     #endregion
 
@@ -110,7 +112,9 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
     public void AnimationAct()
     {
         currentQuantity--;
-        var grenade = Instantiate(grenadePrefab, spawnPoint.position, Quaternion.identity);
+        var grenade = effectsManager.GetGrenade();
+        grenade.transform.position = spawnPoint.position;
+        grenade.transform.rotation = Quaternion.identity;
         grenade.SetUp(unit, target);
     }
 

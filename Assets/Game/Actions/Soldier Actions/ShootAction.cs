@@ -9,10 +9,10 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
     #region //Weapon info
     [Header("Weapon Info")]
     [SerializeField] private string weaponName = "Rifle";
-    [SerializeField] private Bullet bulletPrefab = null;
     [SerializeField] private Transform bulletOrigin = null;
     [SerializeField] private GameObject weaponGO = null;
     [SerializeField] private AnimatorOverrideController animController = null;
+    private EffectsManager effectsManager = null;
     #endregion
 
     #region //Firing info
@@ -36,6 +36,7 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
     {
         base.Awake();
         Resupply();
+        effectsManager = FindObjectOfType<EffectsManager>();
     }
     #endregion
 
@@ -121,7 +122,9 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
     {
         //Spawn bullet
         currentClip--;
-        var bullet = Instantiate(bulletPrefab, bulletOrigin.position, Quaternion.identity);
+        var bullet = effectsManager.GetBullet();
+        bullet.transform.position = bulletOrigin.position;
+        bullet.transform.rotation = Quaternion.identity;
         var bulletTarget = target.GetWorldPosition();
         bulletTarget.y = bullet.transform.position.y;
         bullet.SetUp(bulletTarget);

@@ -9,10 +9,10 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     #region //Variables
     [Header("Lightning Bolt Action")]
     [SerializeField] private int damage = 30;
-    [SerializeField] private LightningBolt lightningFX = null;
     [SerializeField] private Transform lightningOrigin = null;
     private GridCell target;
-    private MouseWorld mouseWorld;
+    private MouseWorld mouseWorld = null;
+    private EffectsManager effectsManager = null;
     #endregion
 
     #region //Animated action
@@ -26,6 +26,7 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     {
         base.Awake();
         mouseWorld = FindObjectOfType<MouseWorld>();
+        effectsManager = FindObjectOfType<EffectsManager>();
     }
     #endregion
 
@@ -76,13 +77,13 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     #region //Animated action
     public void AnimationAct()
     {
-        var fx = Instantiate(lightningFX, lightningOrigin.position, unit.transform.rotation);
-        Vector3 aimDir = target.GetWorldPosition() - unit.GetWorldPosition().PlaceOnGrid();
+        var lightning = effectsManager.GetLightningBolt();
+        lightning.transform.position = lightningOrigin.position;
+        lightning.transform.rotation = unit.transform.rotation;
         CallLog($"{unit.GetName()} shot a lightning bolt");
-        fx.SetUp(Damage, aimDir.normalized);
-        // lightningFX.transform.position = lightningOrigin.position;
-        // lightningFX.transform.rotation = unit.transform.rotation;
-        // lightningFX.gameObject.SetActive(true);
+        Vector3 aimDir = target.GetWorldPosition() - unit.GetWorldPosition().PlaceOnGrid();
+        lightning.SetUp(Damage, aimDir.normalized);
+
     }
 
     public void AnimationEnd()

@@ -10,9 +10,9 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
     [Header("Fireball Action")]
     [SerializeField] private int aoeSize = 2;
     [SerializeField] private int damage = 30;
-    [SerializeField] private GameObject fireBallFX = null;
     private GridCell target;
     private MouseWorld mouseWorld = null;
+    private EffectsManager effectsManager = null;
     #endregion
 
     #region //Animated action
@@ -26,6 +26,7 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
     {
         base.Awake();
         mouseWorld = FindObjectOfType<MouseWorld>();
+        effectsManager = FindObjectOfType<EffectsManager>();
     }
     #endregion
 
@@ -67,7 +68,9 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
     #region //Animated action
     public void AnimationAct()
     {
-        Instantiate(fireBallFX, GetTargetPosition(), Quaternion.identity);
+        var fireball = effectsManager.GetFireball();
+        fireball.transform.position = GetTargetPosition();
+        fireball.transform.rotation = Quaternion.identity;
         CallLog($"{unit.GetName()} summoned a fireball");
         foreach(var cell in levelGrid.CheckGridRange(target, aoeSize, circularRange, true))
         {
