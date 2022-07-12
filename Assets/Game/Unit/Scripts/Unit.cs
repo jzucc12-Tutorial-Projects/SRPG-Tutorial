@@ -77,8 +77,29 @@ public class Unit : MonoBehaviour, ITargetable
     #endregion
 
     #region //Health
-    public void Damage(int damage) => unitHealth.Damage(damage);
-    public int Heal(int amount) => unitHealth.Heal(amount); //Returns amount of health healed
+    public void Damage(Unit attacker, int damage) 
+    {
+
+        if(damage > 0) 
+        {
+            if(attacker == this)
+                ActionLogListener.Publish($"{attacker.GetName()} hit themself for {damage} damage");
+            else
+                ActionLogListener.Publish($"{attacker.GetName()} hit {GetName()} for {damage} damage");
+        }
+        unitHealth.Damage(damage);
+    }
+    public void Heal(Unit healer, int amount)
+    {
+        if(amount > 0) 
+        {
+            if(healer == this)
+                ActionLogListener.Publish($"{healer.GetName()} healed themself for {amount} hp");
+            else
+                ActionLogListener.Publish($"{healer.GetName()} healed {GetName()} for {amount} hp");
+        }
+        unitHealth.Heal(amount); //Returns amount of health healed
+    }
     private void OnDeath()
     {
         ActionLogListener.Publish($"{GetName()} has died");
@@ -91,7 +112,12 @@ public class Unit : MonoBehaviour, ITargetable
     //Returns true if the unit is still rotating
     public bool Rotate(Vector3 targetDirection)
     {
-        transform.forward = Vector3.Lerp(transform.forward, targetDirection, rotateSpeed * Time.deltaTime);
+        //The unit can get stuck if the rotation is close to 180. Give a push if that's the case
+        var angle = Vector3.SignedAngle(transform.forward, targetDirection, transform.up);
+        if(Mathf.Abs(angle) >= 177)
+            transform.Rotate(0, Mathf.Sign(angle) * rotateSpeed * Time.deltaTime, 0);
+        else
+            transform.forward = Vector3.Lerp(transform.forward, targetDirection, rotateSpeed * Time.deltaTime);
         return transform.forward != targetDirection;
     }
     #endregion

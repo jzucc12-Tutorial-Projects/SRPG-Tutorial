@@ -10,15 +10,19 @@ public class MoveAction : BaseAction
 {
     #region //Movement variables
     [Header("Move Action")]
-    [SerializeField] private int maxMoveDistance = 4;
-    [SerializeField] private float moveSpeed = 4;
-    [SerializeField] private float threshold = 0.025f;
+    [SerializeField, Min(0)] private int maxMoveDistance = 4;
+    [SerializeField, Min(0)] private float moveSpeed = 4;
+    [SerializeField, Min(0)] private float threshold = 0.025f;
+    [SerializeField, Min(0)] private int freeMoves = 1;
+    [SerializeField, Min(0)] private int totalMoves = 2;
+    [SerializeField, Min(0)] private int costIncreasePerMove = 1;
     [Tooltip("True if you don't want to count diagonals in range")] [SerializeField] protected bool circularRange = true;
     [Tooltip("True if the unit can target itself")] [SerializeField] protected bool includeSelf  = false;
     private List<Vector3> positionList = new List<Vector3>();
     private int positionIndex = 0;
     private Pathfinding pathfinder = null;
     private UnitManager unitManager = null;
+    private int currentMoves = 0;
     #endregion
 
     #region //Events
@@ -34,9 +38,21 @@ public class MoveAction : BaseAction
         pathfinder = FindObjectOfType<Pathfinding>();
         unitManager = FindObjectOfType<UnitManager>();
     }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        TurnSystem.IncrementTurn += ResetMoves;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        TurnSystem.IncrementTurn -= ResetMoves;
+    }
     #endregion
 
-    #region //Movement
+    #region //Action performing
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
         var cellList = pathfinder.FindPath(unit.GetGridCell(), gridCell, out int pathLength);
@@ -50,6 +66,7 @@ public class MoveAction : BaseAction
 
     private IEnumerator Move()
     {
+        currentMoves++;
         StartMoving?.Invoke();
         positionIndex = 0;
         while(positionIndex < positionList.Count)
@@ -76,6 +93,11 @@ public class MoveAction : BaseAction
         return GetValidCells().Contains(gridCell);
     }
 
+    public override bool CanSelectAction(int currentAP)
+    {
+        return currentMoves < totalMoves && base.CanSelectAction(currentAP);
+    }
+
     public override List<GridCell> GetValidCells(GridCell unitCell)
     {
         List<GridCell> validCellList = new List<GridCell>();
@@ -90,6 +112,12 @@ public class MoveAction : BaseAction
         }
 
         return validCellList;
+    }
+
+    private void ResetMoves(bool isPlayerTurn)
+    {
+        if(isPlayerTurn ^ unit.IsEnemy()) return;
+        currentMoves = 0;
     }
     #endregion
 
@@ -118,12 +146,29 @@ public class MoveAction : BaseAction
     #region //Tooltip
     protected override void SpecificTooltipSetup()
     {
-        tooltip.effectText = "Move the selected unit";
+        tooltip.effectText = $"Move the selected unit. {totalMoves} per turn.";
         tooltip.rangeText = maxMoveDistance.ToString();
+
+        string freeText = "";
+        string thenText = freeMoves > 0 ? " then" : "";
+
+        if(freeMoves == 1) 
+            freeText += "First move is free.\n";
+        else 
+            freeText = freeText += $"First {freeMoves} moves are free.\n";
+            
+        tooltip.costText = $"{freeText}Cost{thenText} increases by {costIncreasePerMove} per move.";
     }
     #endregion
 
     #region //Getters
     public override string GetActionName() => "Move";
+    public override int GetAPCost(int currentAP)
+    {
+        if(currentMoves < freeMoves) return 0;
+        int diffMoves = currentMoves - freeMoves;
+        return costIncreasePerMove * (1 + diffMoves);
+    }
+    public override int GetQuantity() => totalMoves - currentMoves;
     #endregion
 }

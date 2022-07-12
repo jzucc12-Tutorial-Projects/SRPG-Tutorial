@@ -42,15 +42,7 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
 
         //Damage infliction
         if(hitModifier == 0) CallLog($"{unit.GetName()} missed {target.GetName()}");
-        else 
-        {
-            string hitType;
-            if(hitModifier == 1) hitType = "hit";
-            else hitType = "crit"; 
-
-            CallLog($"{unit.GetName()} {hitType} {target.GetName()} for {damageDealt} damage");
-        }
-        target.Damage(damageDealt);
+        target.Damage(unit, damageDealt);
         ActionFinish();
     }
     #endregion

@@ -131,6 +131,9 @@ MonoBehaviour:
   maxMoveDistance: 4
   moveSpeed: 4
   threshold: 0.03
+  freeMoves: 1
+  totalMoves: 2
+  costIncreasePerMove: 1
   circularRange: 1
   includeSelf: 0
 --- !u!114 &2650283597064394310

@@ -36,7 +36,6 @@ public class SpinAction : BaseAction
             float spinAdd = spinSpeed * Time.deltaTime;
             currentAngle += spinAdd;
             transform.eulerAngles += new Vector3(0, spinAdd, 0);
-            Debug.Log(currentAngle);
             yield return null;
         }
         ActionFinish();

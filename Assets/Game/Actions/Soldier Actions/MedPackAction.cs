@@ -33,9 +33,7 @@ public class MedPackAction : TargetedAction, ISupply
     protected override void OnFacing()
     {
         currentQuantity--;
-        int healAmount = target.Heal(healingAmount);
-        if(target == unit) CallLog($"{unit.GetName()} healed themself for {healAmount} hp");
-        else CallLog($"{unit.GetName()} healed {target.GetName()} for {healAmount} hp");
+        target.Heal(unit, healingAmount);
         target = null;
         ActionFinish();
     }

@@ -66,8 +66,7 @@ public class MeleeAction : TargetedAction, IAnimatedAction
     public void AnimationAct()
     {
         OnMeleeStatic?.Invoke();
-        CallLog($"{unit.GetName()} struck {target.GetName()} for {damage} damage");
-        target.Damage(damage);
+        target.Damage(unit, damage);
     }
 
     public void AnimationEnd()

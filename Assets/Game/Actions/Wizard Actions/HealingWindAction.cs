@@ -75,8 +75,7 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
             if(targetUnit == null) continue;
             Vector3 dir = targetUnit.GetWorldPosition() - GetTargetPosition();
             if(Physics.Raycast(GetTargetPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
-            int healAmount = targetUnit.Heal(healing);
-            CallLog($"{targetUnit.GetName()} was healed for {healAmount} hp");
+            targetUnit.Heal(unit, healing);
         }
     }
 

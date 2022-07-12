@@ -1,5 +1,6 @@
 using UnityEngine;
 using Cinemachine;
+using System.Collections;
 
 /// <summary>
 /// Moves camera based on player input
@@ -14,16 +15,28 @@ public class CameraController : MonoBehaviour
 
     #region //General input
     private bool allowInput = true;
+    [SerializeField] private bool testMode = true;
+    private bool snap = false;
+    private bool alignWithTarget = false;
     #endregion
 
-    #region //Move and rotation variables
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float rotationSpeed = 100f;
+    #region //Movement
+    [Header("Movement")]
+    [SerializeField, Min(0)] private float moveSpeed = 5f;
+    [SerializeField, Min(0)] private float unitMoveMult = 8;
     #endregion
 
-    #region //Zoom variables
-    [SerializeField] private float zoomAmount = 1f;
-    [SerializeField] private float zoomSpeed = 5f;
+    #region //Rotation
+    [Header("Rotation")]
+    [SerializeField, Min(0)] private float rotationSpeed = 100f;
+    [SerializeField, Min(0)] private float unitRotateMult = 7f;
+    #endregion
+
+    #region //Zoom
+    [Header("Zoom")]
+    [SerializeField, Min(0)] private float zoomAmount = 1f;
+    [SerializeField, Min(0)] private float zoomSpeed = 5f;
+    [SerializeField, Min(0)] private float unitZoomMult = 2;
     private Vector3 followOffset = new Vector3();
     private const float minZoom = 2f;
     private const float maxZoom = 12f;
@@ -42,51 +55,115 @@ public class CameraController : MonoBehaviour
     {
         UnitActionSystem.OnSelectedUnitChanged += MoveToUnit;
         EnemyAIHub.StartNewEnemy += MoveToUnit;
+        BaseAction.OnAnyActionStarted += TrackUnit;
+        BaseAction.OnAnyActionEnded += StopTracking;
     }
 
     private void OnDisable()
     {
         UnitActionSystem.OnSelectedUnitChanged -= MoveToUnit;
         EnemyAIHub.StartNewEnemy -= MoveToUnit;
+        BaseAction.OnAnyActionStarted -= TrackUnit;
+        BaseAction.OnAnyActionEnded -= StopTracking;
     }
 
     private void Update()
     {
+        //For easy switching when I show this to people
+        if(testMode && Input.GetKeyDown(KeyCode.M))
+            snap = !snap;
+
+        //For easy switching when I show this to people
+        if(testMode && Input.GetKeyDown(KeyCode.N))
+            alignWithTarget = !alignWithTarget;
+
         if(!allowInput) return;
-        MoveCamera();
-        RotateCamera();
-        ZoomCamera();
+        MoveCamera(inputManager.GetCameraMove(), 1);
+        RotateCamera(inputManager.GetCameraRotate(), 1);
+        ZoomCamera(inputManager.GetCameraZoom(), 1);
     }
     #endregion
+
+    private void TrackUnit(BaseAction action, GridCell targetCell)
+    {
+        var target = action.GetUnit().GetGridCell().GetWorldPosition();
+        Vector3 aim = (targetCell.GetWorldPosition() - target).normalized;
+        Vector3 moveTarget = new Vector3(target.x, transform.position.y, target.z); 
+        StartCoroutine(Track(action.GetUnit(), target, aim));
+    }
+
+    private IEnumerator Track(Unit unit, Vector3 target,  Vector3 aim)
+    {
+        yield return MoveOverTime(target, aim, false);
+        while(true)
+        {
+            Vector3 moveTarget = unit.GetWorldPosition();
+            moveTarget.y = transform.position.y;
+            transform.position = moveTarget;
+            yield return null;
+        }
+    }
+
+    private void StopTracking()
+    {
+        StopAllCoroutines();
+        allowInput = true;
+    }
 
     #region //Move and rotate camera
     private void MoveToUnit(Unit newUnit)
     {
         if(newUnit == null) return;
-        allowInput = !newUnit.IsEnemy();
         var target = newUnit.GetWorldPosition().PlaceOnGrid();
-        transform.position = new Vector3(target.x, transform.position.y, target.z);
+        Vector3 moveTarget = new Vector3(target.x, transform.position.y, target.z);
+
+        if(snap)
+        {
+            transform.position = moveTarget;
+            transform.forward = Vector3.forward;
+            allowInput = !newUnit.IsEnemy();
+        }
+        else
+        {
+            StopAllCoroutines();
+            allowInput = false;
+            StartCoroutine(MoveOverTime(target, newUnit.transform.forward, !newUnit.IsEnemy()));
+        }
+
     }
 
-    private void MoveCamera()
+    private IEnumerator MoveOverTime(Vector3 movementTarget, Vector3 rotationTarget, bool input)
     {
-        Vector3 inputMoveDir = inputManager.GetCameraMove();
-        Vector3 moveVector = transform.forward * inputMoveDir.y + transform.right * inputMoveDir.x;
-        transform.position += moveVector * moveSpeed * Time.deltaTime;
+        if(!alignWithTarget) rotationTarget = Vector3.forward;
+
+        while(transform.position != movementTarget || transform.forward != rotationTarget)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, movementTarget, unitMoveMult * moveSpeed * Time.deltaTime);
+            transform.forward = Vector3.RotateTowards(transform.forward, rotationTarget, rotationSpeed * unitRotateMult * moveSpeed * Time.deltaTime, 1);
+            ZoomCamera(1, unitZoomMult);
+            yield return null;
+        }
+        
+        allowInput = input;
     }
 
-    private void RotateCamera()
+    private void MoveCamera(Vector3 moveDir, int mult)
     {
-        Vector3 rotationVector = Vector2.zero;
-        rotationVector.y = inputManager.GetCameraRotate();
-        transform.eulerAngles += rotationVector * rotationSpeed * Time.deltaTime;
+        Vector3 moveVector = transform.forward * moveDir.y + transform.right * moveDir.x;
+        transform.position += moveVector * moveSpeed * Time.deltaTime * mult;
+    }
+
+    private void RotateCamera(float dir, float mult)
+    {
+        float rotateAmount = dir * mult * rotationSpeed * Time.deltaTime;
+        transform.Rotate(0, rotateAmount, 0);
     }
     #endregion
 
     #region //Zoom camera
-    private void ZoomCamera()
+    private void ZoomCamera(float dir, float mult)
     {
-        followOffset.y += zoomAmount * inputManager.GetCameraZoom();
+        followOffset.y += zoomAmount * dir * mult;
         followOffset.y = Mathf.Clamp(followOffset.y, minZoom, maxZoom);
         transposer.m_FollowOffset = Vector3.Lerp(transposer.m_FollowOffset, followOffset, Time.deltaTime * zoomSpeed);
     }

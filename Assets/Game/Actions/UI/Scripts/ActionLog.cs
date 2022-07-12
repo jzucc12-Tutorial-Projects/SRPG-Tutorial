@@ -45,10 +45,10 @@ public class ActionLog : MonoBehaviour
 
     public void AddText(string text)
     {
-        for(int ii = entries.Length - 2; ii >= 0; ii--)
-            entries[ii].CopyEntry(entries[ii+1]);
+        for(int ii = 1; ii < entries.Length; ii++)
+            entries[ii].CopyEntry(entries[ii-1]);
 
-        entries[0].SetText(text);
+        entries[entries.Length - 1].SetText(text);
     }
     #endregion
 }

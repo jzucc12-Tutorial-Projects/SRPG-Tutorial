@@ -75,8 +75,7 @@ public class TremorAction : CooldownAction, IAnimatedAction, IOnSelectAction
             if(targetable == null || !targetable.CanBeTargeted(unit, false)) continue;
             Vector3 dir = targetable.GetWorldPosition() - GetTargetPosition();
             if(Physics.Raycast(GetTargetPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
-            targetable.Damage(damage);
-            CallLog($"{targetable.GetName()} took {damage} damage");
+            targetable.Damage(unit, damage);
         }
     }
 

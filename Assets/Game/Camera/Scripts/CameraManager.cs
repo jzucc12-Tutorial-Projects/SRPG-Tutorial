@@ -13,8 +13,8 @@ public class CameraManager : MonoBehaviour
     #endregion
 
     #region //Positioning variables
-    [SerializeField] private float yOffset = 1.5f;
-    [SerializeField] private float zOffset = -6;
+    [SerializeField] private Vector3 offset = Vector3.zero;
+    [SerializeField] private Vector3 blockingOffset = Vector3.zero;
     private Unit initiator = null;
     #endregion
 
@@ -35,7 +35,6 @@ public class CameraManager : MonoBehaviour
     }
     #endregion
 
-
     #region //Camera Transitions
     private void OnActionStarted(BaseAction action, GridCell targetCell)
     {
@@ -43,15 +42,26 @@ public class CameraManager : MonoBehaviour
         if(aimAtTargetActions.Contains(action.GetType().ToString()))
         {
             initiator = action.GetUnit();
-            Unit actingUnit = action.GetUnit();
+            
             Vector3 target = targetCell.GetWorldPosition();
-            Vector3 shootDir = (target - actingUnit.GetWorldPosition()).normalized;
-            Vector3 cameraPos = actingUnit.GetWorldPosition();
-            Vector3 offset = ((shootDir) * zOffset) + new Vector3(0, yOffset, 0);
-            camTransform.position = cameraPos + offset;
+            Vector3 aimDir = (target - initiator.GetWorldPosition()).normalized;
+            Vector3 cameraPos = initiator.GetWorldPosition();
+
+            //Increase camera aim if a wall is blocking the target
+            Vector3 testPos = cameraPos + GetOffset(offset, aimDir);
+            if(Physics.Raycast(testPos, aimDir, (testPos - aimDir).magnitude, GridGlobals.obstacleMask))
+                camTransform.position = cameraPos + GetOffset(blockingOffset, aimDir);
+            else
+                camTransform.position = cameraPos + GetOffset(offset, aimDir);
+
             camTransform.LookAt(target);
             ShowActionCamera();
         }
+    }
+
+    private Vector3 GetOffset(Vector3 offset, Vector3 aim)
+    {
+        return ((aim) * offset.z) + new Vector3(0, offset.y, 0);
     }
 
     private void CheckRevert(Unit deadUnit)

@@ -111,7 +111,7 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
     {
         currentQuantity--;
         var grenade = Instantiate(grenadePrefab, spawnPoint.position, Quaternion.identity);
-        grenade.SetUp(target);
+        grenade.SetUp(unit, target);
     }
 
     public void AnimationEnd()

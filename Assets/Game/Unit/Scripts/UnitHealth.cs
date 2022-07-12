@@ -28,6 +28,7 @@ public class UnitHealth : MonoBehaviour
         currentHealth -= damage;
         OnHPChange?.Invoke(GetHealthPercentage());
 
+
         if(currentHealth <= 0)
         {
             currentHealth = 0;
@@ -38,12 +39,11 @@ public class UnitHealth : MonoBehaviour
     }
 
     //Returns the amount of health healed
-    public int Heal(int amount)
+    public void Heal(int amount)
     {
         int healAmount = Mathf.Min(maxHealth, currentHealth + amount);
         currentHealth += healAmount;
         OnHPChange?.Invoke(GetHealthPercentage());
-        return healAmount;
     }
 
     private void Die()

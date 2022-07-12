@@ -48,8 +48,7 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
         if(targetable == null) return;
         if(targetable == GetComponent<ITargetable>()) return;
         Vector3 dir = targetable.GetWorldPosition() - GetTargetPosition();
-        targetable.Damage(damage);
-        CallLog($"{targetable.GetName()} took {damage} damage");
+        targetable.Damage(unit, damage);
     }
     #endregion
 

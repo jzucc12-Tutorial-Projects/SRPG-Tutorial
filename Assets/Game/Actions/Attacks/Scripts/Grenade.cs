@@ -15,6 +15,7 @@ public class Grenade : Projectile
     [SerializeField] private LayerMask obstacleLayer = 0;
     private GridCell targetCell => target.GetGridCell();
     public static Action OnCollisionStatic;
+    private Unit thrower = null;
     #endregion
 
 
@@ -27,8 +28,7 @@ public class Grenade : Projectile
             Vector3 dir = targetable.GetWorldPosition() - transform.position;
             if(Physics.Raycast(target, dir, dir.magnitude, obstacleLayer)) continue;
             var targetDamage = GetDamage(targetCell == targetable.GetGridCell());
-            targetable.Damage(targetDamage);
-            ActionLogListener.Publish($"{targetable.GetName()} took {targetDamage} damage");
+            targetable.Damage(thrower, targetDamage);
         }
     }
 
@@ -49,5 +49,11 @@ public class Grenade : Projectile
     {
         if(onTarget) return damage * onTargetMult;
         else return damage;
+    }
+
+    public void SetUp(Unit thrower, Vector3 target, Action OnCollision = null)
+    {
+        this.thrower = thrower;
+        SetUp(target, OnCollision);
     }
 }

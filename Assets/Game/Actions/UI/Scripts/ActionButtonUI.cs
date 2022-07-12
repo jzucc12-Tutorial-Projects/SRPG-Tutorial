@@ -46,8 +46,8 @@ public class ActionButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         this.uaSystem = uaSystem;
         pos = Mathf.Clamp(pos, 0, 2);
         tooltip = tooltips[pos];
-        tooltip.SetUp(action.GetToolTip());
         UpdateUI(action);
+        tooltip.SetUp(action.GetToolTip());
         if(action is IAltAction) gameObject.SetActive(false);
     }
 
