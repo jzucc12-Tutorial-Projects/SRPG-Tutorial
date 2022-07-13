@@ -23,7 +23,6 @@ public class SpinAction : BaseAction
         ActionStart(onFinish, gridCell);
         unit.AddAccuracyMod(-accuracyDrop);
         unit.AddDamageMod(damageBoost);
-        Debug.Log("start");
         StartCoroutine(Spin());
         CallLog($"{unit.GetName()} did a 360");
     }
@@ -63,8 +62,8 @@ public class SpinAction : BaseAction
     /// <returns></returns>
     public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
     {
-        if(unit.GetAP() == 2) new EnemyAIAction(this, targetCell, UnityEngine.Random.Range(25, 76));
-        return new EnemyAIAction(this, targetCell, UnityEngine.Random.Range(50, 76));
+        if(unit.GetAP() == 2) new EnemyAIAction(this, targetCell, UnityEngine.Random.Range(25, 51));
+        return new EnemyAIAction(this, targetCell, UnityEngine.Random.Range(10, 51));
     }
     #endregion
 

@@ -42,4 +42,6 @@ public class EffectsManager : MonoBehaviour
     {
         return lightningBoltPool.GetEffect().GetComponent<LightningBolt>();
     }
+
+    public Grenade GetGrenadeReference() => grenadePool.GetReference().GetComponent<Grenade>();
 }

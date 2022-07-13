@@ -13,6 +13,7 @@ public class EffectPool : MonoBehaviour
     ObjectPool<Effect> effectPool = null;
 
 
+    #region //Monobehaviour
     private void Awake()
     {
          effectPool = new ObjectPool<Effect>(Create, OnGet, OnReturn, Destroyed, false, defaultSize, maxSize);
@@ -24,7 +25,9 @@ public class EffectPool : MonoBehaviour
          foreach(var obj in objs)
             effectPool.Release(obj);
     }
+    #endregion
 
+    #region //Pool methods
     private Effect Create()
     {
         var obj = Instantiate(effect, transform);
@@ -44,9 +47,15 @@ public class EffectPool : MonoBehaviour
 
     private void Destroyed(Effect obj)
     {
-        Destroy(obj);
+        Debug.Log(effectPool.CountAll);
+        Destroy(obj.gameObject);
     }
 
     public Effect GetEffect() => effectPool.Get();
     public void ReleaseEffect(Effect effect) => effectPool.Release(effect);
+    #endregion
+
+    #region //Getters
+    public Effect GetReference() => effect;
+    #endregion
 }

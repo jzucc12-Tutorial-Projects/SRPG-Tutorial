@@ -73,5 +73,8 @@ public abstract class CooldownAction : TargetedAction, ISupply
         if(currentCooldown > 0) return currentCooldown;
         else return -1;
     }
+
+    public float GetCooldownPercentLeft() => currentCooldown / maxCooldown;
+    public int GetMaxCooldown() => maxCooldown;
     #endregion
 }

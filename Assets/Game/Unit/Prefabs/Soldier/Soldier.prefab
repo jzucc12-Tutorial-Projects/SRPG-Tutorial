@@ -355,8 +355,6 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 256
-  grenadePrefab: {fileID: 1405143200156881841, guid: 35210049c62b16d4595af9499866e772,
-    type: 3}
   spawnPoint: {fileID: 4197579253955208349}
   maxQuantity: 3
 --- !u!114 &6595300755385506393

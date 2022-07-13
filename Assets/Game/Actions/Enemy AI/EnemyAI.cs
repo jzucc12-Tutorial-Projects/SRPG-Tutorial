@@ -25,51 +25,75 @@ using UnityEngine;
 public class EnemyAI : MonoBehaviour
 {
     private Unit enemy = null;
-    private bool waiting = false;
+    private MoveAction moveAction = null;
 
 
     #region //Monobehaviour
     private void Awake()
     {
         enemy = GetComponent<Unit>();
+        moveAction = enemy.GetComponent<MoveAction>();
     }
     #endregion
 
     #region //Take turn
     public IEnumerator TakeTurn(float waitTime)
     {
+        //Set up
+        bool waiting = false;
+        Action actionComplete = () => waiting = false;
         var actionList = DetermineActions();
         Func<bool> doneWaiting = () => !waiting || !enemy.IsAlive();
+        int actionNo = 0;
 
-        foreach(var aiAction in actionList.GetAIActions())
+        while(enemy.GetAP() > 0)
         {
+            //Reset
+            bool performed = false;
             waiting = true;
-            if (enemy.TryTakeAction(aiAction.action, aiAction.targetCell))
-                aiAction.PerformAction(ActionComplete);
-            else
+            
+            //Get next action. Abort if out of actions
+            EnemyAIAction aiAction = actionList.GetAction(actionNo);
+            if(aiAction == null) break;
+
+            //Take the current action if possible
+            if(enemy.TryTakeAction(aiAction.action, aiAction.targetCell))
             {
-                var redo = aiAction.action.GetBestAIAction(enemy.GetGridCell());
-                if (redo != null && enemy.TryTakeAction(redo.action, redo.targetCell))
-                    redo.PerformAction(ActionComplete);
-                else if(aiAction.TryAlt())
-                {
-                    var alt = aiAction.GetAltAction().GetBestAIAction(enemy.GetGridCell());
-                    if(alt != null && enemy.TryTakeAction(alt.action, alt.targetCell))
-                        alt.PerformAction(ActionComplete);
-                    else
-                        continue;
-                }
-                else continue;
+                performed = true;
+                actionNo++;
+                aiAction.PerformAction(actionComplete);
+                yield return new WaitUntil(doneWaiting);
+                if(!enemy.IsAlive()) yield break;
+                yield return new WaitForSeconds(waitTime);
             }
 
-            yield return new WaitUntil(doneWaiting);
-            if(!enemy.IsAlive()) yield break;
-            yield return new WaitForSeconds(waitTime);
+            //Update list with current state
+            var testList = MakeActionList(new EnemyAIActionList(actionList, actionNo), enemy.GetGridCell(), enemy.GetAP());
+            if(!performed && testList == actionList) break;
+            actionList = testList;
         }
-
     }
 
-    private void ActionComplete() => waiting = false;
+    /// <summary>
+    /// Old method of how to handle an action being inelligible
+    /// </summary>
+    /// <param name="aiAction"></param>
+    /// <returns></returns>
+    private EnemyAIAction TryTakeAction(EnemyAIAction aiAction)
+    {
+        if(enemy.TryTakeAction(aiAction.action, aiAction.targetCell)) return aiAction;
+
+        var redo = aiAction.action.GetBestAIAction(enemy.GetGridCell());
+        if (redo != null && enemy.TryTakeAction(redo.action, redo.targetCell)) return redo;
+
+        if(aiAction.TryAlt())
+        {
+            var alt = aiAction.GetAltAction().GetBestAIAction(enemy.GetGridCell());
+            if(alt != null && enemy.TryTakeAction(alt.action, alt.targetCell)) return alt;
+            else return null;
+        }
+        return null;
+    }
     #endregion
 
     #region //Choosing actions
@@ -77,39 +101,22 @@ public class EnemyAI : MonoBehaviour
     {
         var startCell = enemy.GetGridCell();
         var lists = new List<EnemyAIActionList>();
-        var moveAction = enemy.GetComponent<MoveAction>();
         var validCells = moveAction.GetValidCells();
+        int currentAP;
 
         foreach(var cell in validCells)
         {
-            int currentAP = enemy.GetAP();
+            currentAP = enemy.GetAP();
             var list = new EnemyAIActionList();
 
             //Handle moving first
             if(enemy.GetGridCell() != cell)
             {
                 list.AddAIAction(moveAction.GetEnemyAIAction(enemy.GetGridCell(), cell));
-                currentAP--;
+                currentAP -= moveAction.GetAPForMove(0);
             }
 
-            //Choose actions
-            while(currentAP > 0)
-            {
-                EnemyAIAction enemyAction = GetBestAction(cell, currentAP);
-                if(enemyAction == null) break;
-                list.AddAIAction(enemyAction);
-                currentAP -= enemyAction.action.GetAPCost(currentAP);
-            }
-            lists.Add(list);
-        }
-
-        //Try a move if the enemy has not yet already
-        foreach(var list in lists)
-        {
-            if(list.HasAction(moveAction)) continue;
-            if(list.GetTotalCost() >= enemy.GetAP()) continue;
-            var move = moveAction.GetBestAIAction(startCell);
-            list.AddAIAction(move);
+            lists.Add(MakeActionList(list, cell, currentAP));
         }
 
         //Sort lists from high to low total scores
@@ -121,6 +128,23 @@ public class EnemyAI : MonoBehaviour
         });
         
         return lists[0];
+    }
+
+    private EnemyAIActionList MakeActionList(EnemyAIActionList list, GridCell unitCell, int currentAP)
+    {
+        while(currentAP > 0)
+        {
+            EnemyAIAction enemyAction = GetBestAction(unitCell, currentAP);
+            if(enemyAction == null) break;
+            list.AddAIAction(enemyAction);
+            currentAP -= enemyAction.action.GetAPCost(currentAP);
+        }
+
+        if(list.HasAction(moveAction)) return list;
+        if(list.GetTotalCost() + moveAction.GetAPForMove(0) >= enemy.GetAP()) return list;
+        var move = moveAction.GetBestAIAction(unitCell);
+        list.AddAIAction(move);
+        return list;
     }
 
     private EnemyAIAction GetBestAction(GridCell enemyCell, int currentAP)

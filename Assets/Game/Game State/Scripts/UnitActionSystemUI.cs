@@ -15,6 +15,8 @@ public class UnitActionSystemUI : MonoBehaviour
     private List<ActionButtonUI> buttons = new List<ActionButtonUI>();
     private UnitActionSystem unitActionSystem = null;
     private ObjectPool<ActionButtonUI> buttonPool = null;
+    private Unit activeUnit = null;
+    private BaseAction activeAction = null;
     #endregion
 
 
@@ -44,12 +46,20 @@ public class UnitActionSystemUI : MonoBehaviour
         UnitActionSystem.UpdateUI -= UpdateUI;
         UnitActionSystem.OnSelectedUnitChanged -= SetupButtons;
     }
+
+    private void Start()
+    {
+        SetupButtons(activeUnit);
+        UpdateUI(activeUnit, activeAction);
+    }
     #endregion
 
     #region //UI Updating
     private void UpdateUI(Unit unit, BaseAction action)
     {
         if(unit == null) return;
+        activeUnit = unit;
+        activeAction = action;
         UpdateActionPoints(unit);
         UpdateActionButtons(action);
     }

@@ -165,8 +165,12 @@ public class MoveAction : BaseAction
     public override string GetActionName() => "Move";
     public override int GetAPCost(int currentAP)
     {
-        if(currentMoves < freeMoves) return 0;
-        int diffMoves = currentMoves - freeMoves;
+        return GetAPForMove(currentMoves);
+    }
+    public int GetAPForMove(int moveNumber)
+    {
+        if(moveNumber < freeMoves) return 0;
+        int diffMoves = moveNumber - freeMoves;
         return costIncreasePerMove * (1 + diffMoves);
     }
     public override int GetQuantity() => totalMoves - currentMoves;

@@ -58,9 +58,17 @@ public class FocusAction : BaseAction, IAltAction
     #endregion
 
     #region //Enemy AI
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell cell)
+    /// <summary>
+    /// Highly prioritizes when cooldown is longer
+    /// </summary>
+    /// <param name="targetCell"></param>
+    /// <param name="unitCell"></param>
+    /// <returns></returns>
+    public override EnemyAIAction GetEnemyAIAction(GridCell targetCell, GridCell unitCell)
     {
-        throw new NotImplementedException();
+        int score = 5 * cooldownAction.GetMaxCooldown();
+        float cooldownLeft = Mathf.Max(0, cooldownAction.GetCooldownPercentLeft());
+        return new EnemyAIAction(this, unitCell, Mathf.RoundToInt(cooldownLeft * 70));
     }
     #endregion
 

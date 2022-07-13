@@ -2,7 +2,7 @@ using System;
 /// <summary>
 /// Holds data on an action the ai will take
 /// </summary>
-public class EnemyAIAction
+public class EnemyAIAction : IEquatable<EnemyAIAction>
 {
     public BaseAction action = null;
     public GridCell targetCell = new GridCell();
@@ -40,4 +40,12 @@ public class EnemyAIAction
     }
 
     public BaseAction GetAltAction() => action.GetAltAction();
+
+    public bool Equals(EnemyAIAction other)
+    {
+        if(this.action != other.action) return false;
+        if(this.targetCell != other.targetCell) return false;
+        if(this.score != other.score) return false;
+        return true;
+    }
 }

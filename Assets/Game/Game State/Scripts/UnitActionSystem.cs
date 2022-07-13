@@ -173,7 +173,7 @@ public class UnitActionSystem : MonoBehaviour
 
     private void HandleSelectedAction()
     {
-        if(selectedAction == null) return;
+        if(selectedUnit == null || selectedAction == null) return;
         GridCell targetCell = mouseWorld.GetGridCell();
         if(!selectedUnit.TryTakeAction(selectedAction, targetCell)) return;
 

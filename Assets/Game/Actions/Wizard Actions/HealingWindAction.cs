@@ -59,9 +59,32 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
     #endregion
 
     #region //Enemy AI
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell cell)
+    /// <summary>
+    /// Priotizes healing moare allies.
+    /// Less points if there is an enemy.
+    /// Likes hitting supply crates
+    /// </summary>
+    /// <param name="unitCell"></param>
+    /// <param name="targetCell"></param>
+    /// <returns></returns>
+    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
     {
-        throw new System.NotImplementedException();
+        int score = -3 * maxCooldown;
+
+        foreach(var cell in levelGrid.CheckGridRange(targetCell, aoeSize, circularRange, true))
+        {
+            var targetUnit = cell.GetUnit();
+            if(targetUnit == null) continue;
+
+            float hpPercent = targetUnit.GetHealthPercentage();
+            if(hpPercent > 0.7f) score += 10;
+            else if(hpPercent > 0.5f) score += Mathf.RoundToInt(15 / hpPercent);
+            else if(hpPercent > 0.25f) score += Mathf.RoundToInt(30 / hpPercent);
+            else score += Mathf.RoundToInt(45 / hpPercent);
+            if(!targetUnit.IsEnemy()) score *= -1;
+        }
+
+        return new EnemyAIAction(this, targetCell, score);
     }
     #endregion
 

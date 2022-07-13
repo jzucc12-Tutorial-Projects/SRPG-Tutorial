@@ -14,13 +14,15 @@ public class Effect : MonoBehaviour
 
     private void OnDisable() 
     {
-        pool.ReleaseEffect(this);
+        ReleaseMe();
     }
 
     private void Update()
     {
         if(!disableWithChild) return;
         if(child.activeInHierarchy) return;
-        gameObject.SetActive(false);
+        ReleaseMe();
     }
+
+    public void ReleaseMe() => pool.ReleaseEffect(this);
 }

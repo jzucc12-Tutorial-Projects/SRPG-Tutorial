@@ -8,9 +8,9 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
 {
     #region //Variables
     [Header("Grenade Action")]
-    [SerializeField] private Grenade grenadePrefab = null;
     [SerializeField] private Transform spawnPoint = null;
     [SerializeField] private int maxQuantity = 3;
+    private Grenade grenadePrefab = null;
     private int currentQuantity;
     private Vector3 target;
     private MouseWorld mouseWorld = null;
@@ -30,6 +30,12 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
         Resupply();
         mouseWorld = FindObjectOfType<MouseWorld>();
         effectsManager = FindObjectOfType<EffectsManager>();
+    }
+
+    protected override void Start()
+    {
+        grenadePrefab = effectsManager.GetGrenadeReference();
+        base.Start();
     }
     #endregion
 
@@ -85,9 +91,11 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
     public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
     {
         int score = 0;
+        int numTargets = 0;
 
         foreach(var targetable in grenadePrefab.GetTargets(targetCell))
         {
+            numTargets++;
             if(targetable is SupplyCrate)
                 score += 25;
             else if(!(targetable is Unit))
@@ -102,6 +110,8 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
                 if(targetUnit == unit) score -= 50;
             }
         }
+
+        if(numTargets == 1) score = Mathf.RoundToInt(score * 0.5f);
         float quantityMod = currentQuantity / maxQuantity;
         score = Mathf.RoundToInt(score * quantityMod);
         return new EnemyAIAction(this, targetCell, score);

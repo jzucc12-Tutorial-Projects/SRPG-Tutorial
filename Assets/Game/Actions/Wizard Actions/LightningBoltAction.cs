@@ -68,9 +68,41 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     #endregion
 
     #region //Enemy AI
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell cell)
+    /// <summary>
+    /// Priotizes hitting more targets. Extra points for it being an enemy unit.
+    /// Less points if friendly. Even less if it is itself
+    /// Likes hitting supply crates
+    /// </summary>
+    /// <param name="unitCell"></param>
+    /// <param name="targetCell"></param>
+    /// <returns></returns>
+    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
     {
-        throw new System.NotImplementedException();
+        int score = -5 * maxCooldown;
+        int numTargets = 0;
+
+        foreach(var cell in levelGrid.GetLine(unitCell, targetCell))
+        {
+            numTargets++;
+            var targetable = cell.GetTargetable();
+            if(targetable == null) continue;
+
+            if(targetable is SupplyCrate)
+                score += 15;
+            else if(!(targetable is Unit))
+                score += 5;
+            else
+            {
+                Unit targetUnit = targetable as Unit;
+                int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - damage);
+                score += 50 - hpDiff/3;
+                if(targetUnit.IsEnemy()) score *= -1;
+                if(targetUnit == unit) score -= 50;
+            }
+        }
+
+        if(numTargets == 1) score = Mathf.RoundToInt(score * 0.5f);
+        return new EnemyAIAction(this, targetCell, score);
     }
     #endregion
 
@@ -83,7 +115,6 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
         CallLog($"{unit.GetName()} shot a lightning bolt");
         Vector3 aimDir = target.GetWorldPosition() - unit.GetWorldPosition().PlaceOnGrid();
         lightning.SetUp(Damage, aimDir.normalized);
-
     }
 
     public void AnimationEnd()
