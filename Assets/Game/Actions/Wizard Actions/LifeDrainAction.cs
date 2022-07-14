@@ -11,7 +11,7 @@ public class LifeDrainAction : CooldownAction, IAnimatedAction, IOnSelectAction
     [Header("Healing Wind Action")]
     [SerializeField] private int damage = 0;
     [SerializeField] private float healPercent = 0;
-    [SerializeField] private AccuracySO accuracySO = null;
+    [SerializeField, ScriptableObjectDropdown(typeof(AccuracySO))] private AccuracySO accuracySO = null;
     private Unit target = null;
     private EffectsManager effectsManager = null;
     private int damageDealt;
@@ -126,7 +126,7 @@ public class LifeDrainAction : CooldownAction, IAnimatedAction, IOnSelectAction
     private IEnumerator AttackMissed()
     {
         CallLog($"{unit.GetName()}'s life dain failed");
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(1f);
         AnimationEnd();
     }
 

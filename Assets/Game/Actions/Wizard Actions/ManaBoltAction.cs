@@ -10,7 +10,7 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
     [Header("Mana bolt Action")]
     [SerializeField] private int damage = 0;
     [SerializeField] private Transform manaBoltOrigin = null;
-    [SerializeField] private AccuracySO accuracySO = null;
+    [SerializeField, ScriptableObjectDropdown(typeof(AccuracySO))] private AccuracySO accuracySO = null;
     private ITargetable target = null;
     private EffectsManager effectsManager = null;
     #endregion

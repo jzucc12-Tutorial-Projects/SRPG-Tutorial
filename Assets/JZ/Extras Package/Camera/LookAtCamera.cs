@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class LookAtCamera : MonoBehaviour
 {
-    [SerializeField] private bool invert = true;
+    [SerializeField] private bool lookDirectlyAtCamera = false;
     private Transform cameraTransform = null;
 
     
@@ -16,14 +16,12 @@ public class LookAtCamera : MonoBehaviour
 
     private void LateUpdate()
     {
-        if(invert)
+        if(lookDirectlyAtCamera)
         {
             Vector3 dirToCamera = (cameraTransform.position - transform.position).normalized;
             transform.LookAt(transform.position + dirToCamera * -1);
         }
         else
-        {
-            transform.LookAt(cameraTransform);
-        }
+            transform.forward = cameraTransform.forward;
     }
 }

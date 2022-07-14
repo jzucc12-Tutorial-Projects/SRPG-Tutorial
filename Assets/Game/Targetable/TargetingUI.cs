@@ -36,13 +36,14 @@ public class TargetingUI : MonoBehaviour
     #endregion
 
     #region //Updating UI
-    private void ShowUI(Dictionary<ITargetable, (int, int)> targets)
+    private void ShowUI(Dictionary<ITargetable, (int, int, int)> targets)
     {
-        if(targets.TryGetValue(targetable, out (int, int) values))
+        if(targets.TryGetValue(targetable, out (int, int, int) values))
         {
             uiContainer.SetActive(true);
-            accuracyText.text = $"{values.Item1}%";
-            critText.text = $"{values.Item2}%";
+            // accuracyText.text = $"{values.Item1}/{values.Item2}%"; //Used in actual builds
+            accuracyText.text = $"{values.Item1}/{values.Item2}%"; //Used to see fudged accuracy when in dev
+            critText.text = $"{values.Item3}%";
         }
     }
 

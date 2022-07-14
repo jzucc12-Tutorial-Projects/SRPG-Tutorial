@@ -41,6 +41,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 640515295999141891, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
+      propertyPath: damage
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 640515295999141891, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
       propertyPath: blockingLayer.m_Bits
       value: 896
       objectReference: {fileID: 0}
@@ -380,7 +385,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 896
   maxCooldown: 3
-  damage: 30
+  damage: 45
   lightningOrigin: {fileID: 3953428685138820985}
 --- !u!114 &231023419207397871
 MonoBehaviour:
@@ -411,7 +416,7 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
-  requiresUnit: 0
+  requiresUnit: 1
   requiresTargetable: 1
   targetAllies: 0
   actionRange: 10
@@ -420,8 +425,8 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 896
-  maxCooldown: 4
-  damage: 30
+  maxCooldown: 3
+  damage: 40
   healPercent: 0.75
   accuracySO: {fileID: 11400000, guid: a42ee84d08b431248b94c3a362cb1bef, type: 2}
 --- !u!114 &8113985476390056165

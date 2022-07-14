@@ -12,18 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd8abb7d1809244eadeb85428c35588, type: 3}
   m_Name: Life Drain Accuracy
   m_EditorClassIdentifier: 
-  baseAccuracy: 100
+  baseAccuracy: 90
   nonUnitMult: 0.75
+  fudgeSO: {fileID: 11400000, guid: 7ea39e92a955ea446a84e097490d3609, type: 2}
   dropWithDistance: 1
-  distanceDrop: 5
-  nearRange: 2
+  distanceDrop: 3
+  nearRange: 3
   dropWithBlocking: 0
   blockingDrop: 5
   accuracyBlockingLayer:
     serializedVersion: 2
     m_Bits: 128
   dropWithHealth: 1
-  healthTick: 0.1
-  healthDrop: 2
+  healthTick: 0.25
+  healthDrop: 1
   critChance: 10
   critMult: 1.5

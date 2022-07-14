@@ -177,7 +177,7 @@ MonoBehaviour:
   spinSpeed: 360
   spinAmount: 360
   accuracyDrop: 30
-  damageBoost: 0.5
+  damageBoost: 1
 --- !u!114 &640515295999141891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -696,7 +696,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeb1b32e59fba3840a9297073cd14846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  invert: 1
+  lookDirectlyAtCamera: 0
 --- !u!1 &6106715373550484295
 GameObject:
   m_ObjectHideFlags: 0

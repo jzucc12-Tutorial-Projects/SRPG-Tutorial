@@ -10,7 +10,6 @@ public static class JZVectorExtensions
         return new Vector2(vector.x * vector.x, vector.y * vector.y);
     }
 
-
     //Courtesy of the GMTK Discord
     /// <summary>
     /// Allows you to replace the a value in a vector
@@ -24,6 +23,7 @@ public static class JZVectorExtensions
         );
     }
 
+    //Courtesy of the GMTK Discord
     /// <summary>
     /// Flatten the Vector along the Y axis.
     /// </summary>
@@ -32,6 +32,7 @@ public static class JZVectorExtensions
         return new Vector3(vector.x, 0f, vector.z);
     }
 
+    //Courtesy of the GMTK Discord
     /// <summary>
     /// Flatten the Vector along the X axis.
     /// </summary>
@@ -40,6 +41,7 @@ public static class JZVectorExtensions
         return new Vector3(0f, vector.y, vector.z);
     }
 
+    //Courtesy of the GMTK Discord
     /// <summary>
     /// Flatten the Vector along the Z axis.
     /// </summary>
@@ -48,6 +50,7 @@ public static class JZVectorExtensions
         return new Vector3(vector.x, vector.y, 0f);
     }
 
+    //Courtesy of the GMTK Discord
     /// <summary>
     /// Flatten the Vector along the specified vector. Vector is assumed to be normalized
     /// </summary>
@@ -72,26 +75,14 @@ public static class JZVectorExtensions
     {
         return (vector - endPoint).InRange(range);
     }
-
-    /// <summary>
-    /// Determines if vector magnitude is within a range using square magnitude
-    /// </summary>
     public static bool InRange(this Vector2 vector, float range)
     {
         return vector.sqrMagnitude <= range * range;
     }
-
-    /// <summary>
-    /// Determines if vector magnitude is within a range using square magnitude
-    /// </summary>
     public static bool InRange(this Vector3 vector, Vector3 endPoint, float range)
     {
         return (vector - endPoint).InRange(range);
     }
-
-    /// <summary>
-    /// Determines if vector magnitude is within a range using square magnitude
-    /// </summary>
     public static bool InRange(this Vector3 vector, float range)
     {
         return vector.sqrMagnitude <= range * range;
@@ -133,5 +124,28 @@ public static class JZVectorExtensions
     {
         var diff = vecB - vecA;
         return diff.sqrMagnitude;
+    }
+
+    /// <summary>
+    /// Elementwise clamps a vector
+    /// </summary>
+    /// <param name="current"></param>
+    /// <param name="min"></param>
+    /// <param name="max"></param>
+    /// <returns></returns>
+    public static Vector3 Clamp(this Vector3 current, Vector3 min, Vector3 max)
+    {
+        Vector3 result;
+        result.x = Mathf.Clamp(current.x, min.x, max.x);
+        result.y = Mathf.Clamp(current.y, min.y, max.y);
+        result.z = Mathf.Clamp(current.z, min.z, max.z);
+        return result;
+    }
+    public static Vector2 Clamp(this Vector2 current, Vector2 min, Vector2 max)
+    {
+        Vector2 result;
+        result.x = Mathf.Clamp(current.x, min.x, max.x);
+        result.y = Mathf.Clamp(current.y, min.y, max.y);
+        return result;
     }
 }

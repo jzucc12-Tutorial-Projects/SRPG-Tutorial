@@ -72,6 +72,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 640515295999141891, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
+      propertyPath: damage
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 640515295999141891, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
       propertyPath: blockingLayer.m_Bits
       value: 896
       objectReference: {fileID: 0}
@@ -278,7 +283,7 @@ MonoBehaviour:
   requiresUnit: 0
   requiresTargetable: 1
   targetAllies: 0
-  actionRange: 5
+  actionRange: 6
   facingLimit: 0.993
   waitTime: 0.5
   blockingLayer:
@@ -288,10 +293,10 @@ MonoBehaviour:
   bulletOrigin: {fileID: 213385559}
   weaponGO: {fileID: 4203205038678892587}
   animController: {fileID: 22100000, guid: 07dc407fa6e39f44687b586da6ec8abb, type: 2}
-  maxClip: 3
-  damage: 30
+  maxClip: 4
+  damage: 25
   accuracySO: {fileID: 11400000, guid: ea9e9ea0aa7946c4e850396dd66588b4, type: 2}
---- !u!114 &3136485398240801056
+--- !u!114 &2255335593328114444
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -323,7 +328,7 @@ MonoBehaviour:
   requiresUnit: 0
   requiresTargetable: 1
   targetAllies: 0
-  actionRange: 9
+  actionRange: 10
   facingLimit: 0.993
   waitTime: 0.5
   blockingLayer:
@@ -333,10 +338,24 @@ MonoBehaviour:
   bulletOrigin: {fileID: 1189217241}
   weaponGO: {fileID: 4203198220207403924}
   animController: {fileID: 22100000, guid: d6ee3152b6a3c3344844385c027bd68e, type: 2}
-  maxClip: 6
+  maxClip: 7
   damage: 15
   accuracySO: {fileID: 11400000, guid: e8d6d181983f17d48864284eea71603c, type: 2}
---- !u!114 &4493701696448881613
+--- !u!114 &4522232182180476428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4201871009660209446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a20e3f9e40592b4496dcc5789608543, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  apCost: 1
+  shootAction: {fileID: 3469473236974308855}
+--- !u!114 &5752354215346654472
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -354,7 +373,7 @@ MonoBehaviour:
   requiresUnit: 0
   requiresTargetable: 1
   targetAllies: 0
-  actionRange: 5
+  actionRange: 10
   facingLimit: 0.993
   waitTime: 0.5
   blockingLayer:
@@ -365,22 +384,8 @@ MonoBehaviour:
   weaponGO: {fileID: 4203205038678892587}
   animController: {fileID: 22100000, guid: 07dc407fa6e39f44687b586da6ec8abb, type: 2}
   maxClip: 1
-  damage: 30
-  accuracySO: {fileID: 11400000, guid: ea9e9ea0aa7946c4e850396dd66588b4, type: 2}
---- !u!114 &4522232182180476428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4201871009660209446}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a20e3f9e40592b4496dcc5789608543, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  apCost: 1
-  shootAction: {fileID: 3469473236974308855}
+  damage: 40
+  accuracySO: {fileID: 11400000, guid: 49743cb6674cefe49bb45aacc8bdb67c, type: 2}
 --- !u!114 &5827028340083949613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -394,7 +399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apCost: 1
-  shootAction: {fileID: 4493701696448881613}
+  shootAction: {fileID: 5752354215346654472}
 --- !u!114 &6413714798032799125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -445,7 +450,7 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 896
-  healingAmount: 50
+  healingAmount: 60
   maxQuantity: 1
 --- !u!4 &4206039011323308099 stripped
 Transform:

@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd8abb7d1809244eadeb85428c35588, type: 3}
   m_Name: Mana bolt Accuracy
   m_EditorClassIdentifier: 
-  baseAccuracy: 100
+  baseAccuracy: 95
   nonUnitMult: 0.75
+  fudgeSO: {fileID: 11400000, guid: 7ea39e92a955ea446a84e097490d3609, type: 2}
   dropWithDistance: 0
   distanceDrop: 5
   nearRange: 2
@@ -23,7 +24,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   dropWithHealth: 0
-  healthTick: 0.1
+  healthTick: 0.2
   healthDrop: 2
   critChance: 10
   critMult: 2

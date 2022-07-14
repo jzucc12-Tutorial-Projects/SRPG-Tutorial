@@ -20,6 +20,12 @@ public class CameraController : MonoBehaviour
     private bool alignWithTarget = false;
     #endregion
 
+    #region //Camera bounds
+    [Header("Camera Bounds")]
+    [SerializeField] private Vector3 minBounds = Vector3.zero;
+    [SerializeField] private Vector3 maxBounds = Vector3.zero;
+    #endregion
+
     #region //Movement
     [Header("Movement")]
     [SerializeField, Min(0)] private float moveSpeed = 5f;
@@ -41,7 +47,7 @@ public class CameraController : MonoBehaviour
     private const float minZoom = 2f;
     private const float maxZoom = 12f;
     #endregion
-    
+
 
     #region //Monobehaviour
     private void Awake()
@@ -82,14 +88,20 @@ public class CameraController : MonoBehaviour
         RotateCamera(inputManager.GetCameraRotate(), 1);
         ZoomCamera(inputManager.GetCameraZoom(), 1);
     }
+
+    private void LateUpdate()
+    {
+        transform.position = transform.position.Clamp(minBounds, maxBounds);
+    }
     #endregion
 
+    #region //Moving to units
     private void TrackUnit(BaseAction action, GridCell targetCell)
     {
         if(!(action is MoveAction)) return;
         var target = action.GetUnit().GetGridCell().GetWorldPosition();
         Vector3 aim = (targetCell.GetWorldPosition() - target).normalized;
-        Vector3 moveTarget = new Vector3(target.x, transform.position.y, target.z); 
+        Vector3 moveTarget = new Vector3(target.x, transform.position.y, target.z);
         StartCoroutine(Track(action.GetUnit(), target, aim));
     }
 
@@ -143,15 +155,16 @@ public class CameraController : MonoBehaviour
             ZoomCamera(1, unitZoomMult);
             yield return null;
         }
-        
+
         allowInput = input;
     }
+    #endregion
 
     #region //Move with input
     private void MoveCamera(Vector3 moveDir, int mult)
     {
         Vector3 moveVector = transform.forward * moveDir.y + transform.right * moveDir.x;
-        transform.position += moveVector * moveSpeed * Time.deltaTime * mult;
+        transform.position = transform.position + moveVector * moveSpeed * Time.deltaTime * mult;
     }
 
     private void RotateCamera(float dir, float mult)

@@ -10,6 +10,8 @@ public class AccuracySO : ScriptableObject
     [Header("Accuracy and drop values")]
     [Tooltip("Base accuracy when in near range")] [SerializeField, MinMax(1, 100)] private int baseAccuracy = 100;
     [Tooltip("Accuracy drop multiplier with non-unit targets")] [SerializeField] private float nonUnitMult = 0.75f;
+    [Tooltip("How the accuracy system modifies accuracy in the player's favor")]
+    [SerializeField, ScriptableObjectDropdown(typeof(FudgeAccuracySO))] FudgeAccuracySO fudgeSO = null;
 
     [Header("Distance drop")]
     [Tooltip("Should accuracy drop with distance?")] [SerializeField] private bool dropWithDistance = true;
@@ -61,13 +63,21 @@ public class AccuracySO : ScriptableObject
     public float DamageMult(int accuracy)
     {
         int roll = UnityEngine.Random.Range(0, 101);
-        if(roll < CalculateCritChance(accuracy)) return critMult;
-        else if(accuracy == 100) return 1;
+        if (roll < CalculateCritChance(accuracy)) return critMult;
+        else if (accuracy == 100) return 1;
+        return roll <= FudgeAccuracy(accuracy)? 1 : 0;
+    }
 
-        int fudgeFactor = 0;
-        if(accuracy > 0) fudgeFactor = 12 - (accuracy / 10);
-        int fudgedAccuracy = Mathf.Min(100, accuracy + fudgeFactor);
-        return roll <= fudgedAccuracy ? 1 : 0;
+    /// <summary>
+    /// Offsets accuracy because people are bad with probability.
+    /// Fudge equation generated in excel spreadsheet
+    /// </summary>
+    /// <param name="accuracy"></param>
+    /// <returns></returns>
+    public int FudgeAccuracy(int accuracy)
+    {
+        if(fudgeSO == null) return accuracy;
+        else return fudgeSO.GetFudgeAccuracy(accuracy);
     }
 
     public int CalculateAccuracy(Unit attacker, Vector3 attackerPosition, ITargetable target)
@@ -81,7 +91,7 @@ public class AccuracySO : ScriptableObject
         //Distance drop
         if(dropWithDistance)
         {
-            int distance = attackerGridCell.GetGridDistance(target.GetGridCell(), true);
+            int distance = attackerGridCell.GetGridDistance(target.GetGridCell(), false);
             drop += distanceDrop * (Mathf.Max(0, distance - nearRange));
         }
 

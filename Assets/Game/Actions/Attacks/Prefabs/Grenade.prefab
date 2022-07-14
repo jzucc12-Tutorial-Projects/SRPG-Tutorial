@@ -232,7 +232,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   grenade: {fileID: 1405143200767621075}
   explosionRadius: 2
-  damage: 25
+  damage: 20
   onTargetMult: 2
   obstacleLayer:
     serializedVersion: 2

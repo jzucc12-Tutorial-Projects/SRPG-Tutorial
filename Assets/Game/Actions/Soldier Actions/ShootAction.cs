@@ -19,7 +19,7 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
     [Header("Firing Info")]
     [Tooltip("Shots before a reload is needed")] [SerializeField] private int maxClip = 6;
     [SerializeField] private int damage = 40;
-    [SerializeField] private AccuracySO accuracySO = null;
+    [SerializeField, ScriptableObjectDropdown(typeof(AccuracySO))] private AccuracySO accuracySO = null;
     public static event Action OnShootStatic;
     #endregion
 
