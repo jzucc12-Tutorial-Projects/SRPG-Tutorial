@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &513068071517236070
+--- !u!1001 &2203186007047386483
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -66,7 +66,7 @@ PrefabInstance:
     - target: {fileID: 642008498672032321, guid: 6c57b5dd9ddcd4643b9d8e6dd9d2edda,
         type: 3}
       propertyPath: m_Name
-      value: Soldier Ragdoll
+      value: Ragdoll
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

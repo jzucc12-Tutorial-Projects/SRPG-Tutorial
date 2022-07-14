@@ -18,8 +18,8 @@ public class EnemyTurnUI : MonoBehaviour
         TurnSystem.IncrementTurn -= UpdateUI;
     }
 
-    private void UpdateUI(bool isPlayerTurn)
+    private void UpdateUI(bool team1Turn)
     {
-        enemyTurnUI.SetActive(!isPlayerTurn);
+        enemyTurnUI.SetActive(GameGlobals.IsAI(team1Turn));
     }
 }

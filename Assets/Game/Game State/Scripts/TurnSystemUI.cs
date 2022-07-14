@@ -34,15 +34,15 @@ public class TurnSystemUI : MonoBehaviour
     #endregion
 
     #region //Updating UI
-    private void UpdateUI(bool isPlayerTurn)
+    private void UpdateUI(bool isTeam1)
     {
-        HideUI(!isPlayerTurn);
+        HideUI(isTeam1);
         turnNumberText.text = $"Turn Number: {turnSystem.GetTurnCount()}";
     }
 
-    private void HideUI(bool hide)
+    private void HideUI(bool team1Turn)
     {
-        nextTurnButton.gameObject.SetActive(!hide);
+        nextTurnButton.gameObject.SetActive(!GameGlobals.IsAI(team1Turn));
     }
     #endregion
 }

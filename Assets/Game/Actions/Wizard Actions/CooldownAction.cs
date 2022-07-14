@@ -44,9 +44,9 @@ public abstract class CooldownAction : TargetedAction, ISupply
         currentCooldown = 0;
     }
 
-    private void CooldownTick(bool isPlayerTurn)
+    private void CooldownTick(bool team1Turn)
     {
-        if(!isPlayerTurn ^ unit.IsEnemy()) return;
+        if(team1Turn ^ unit.IsTeam1()) return;
         currentCooldown = Mathf.Max(0, currentCooldown - 1);
     }
     #endregion

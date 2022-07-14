@@ -56,13 +56,13 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
     #region //Action selection
     public void OnSelected()
     {
-        if(unit.IsEnemy()) return;
+        if(unit.IsAI()) return;
         AccuracyHub.ShowAccuracyUI(unit, GetTargetedCells(unit.GetGridCell()), accuracySO);
     }
 
     public void OnUnSelected()
     {
-        if(unit.IsEnemy()) return;
+        if(unit.IsAI()) return;
         AccuracyHub.HideAccuracyUI();
     }
     #endregion

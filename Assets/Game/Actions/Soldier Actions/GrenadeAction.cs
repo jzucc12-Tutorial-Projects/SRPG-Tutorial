@@ -68,13 +68,13 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
 
     public void OnSelected()
     {
-        if(unit.IsEnemy()) return;
+        if(unit.IsAI()) return;
         mouseWorld.SetAOESize(grenadePrefab.GetExplosionRadius(), false);
     }
 
     public void OnUnSelected()
     {
-        if(unit.IsEnemy()) return;
+        if(unit.IsAI()) return;
         mouseWorld.ResetAOE();
     }
     #endregion
@@ -106,7 +106,7 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
                 bool onTarget = targetUnit.GetGridCell() == targetCell;
                 int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - grenadePrefab.GetDamage(onTarget));
                 score += 60 - hpDiff/3;
-                if(targetUnit.IsEnemy()) score *= -1;
+                if(targetUnit.IsAI()) score *= -1;
                 if(targetUnit == unit) score -= 50;
             }
         }

@@ -29,6 +29,12 @@ public class UnitSelectedVisual : MonoBehaviour
     {
         UnitActionSystem.OnSelectedUnitChanged -= ChangeSelected;
     }
+
+
+    private void Start()
+    {
+        gameObject.SetActive(!GameGlobals.IsAI(unit.IsTeam1()));
+    }
     #endregion
 
     #region //Updating visuals

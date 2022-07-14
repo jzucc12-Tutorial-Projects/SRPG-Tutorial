@@ -8,7 +8,7 @@ public class Unit : MonoBehaviour, ITargetable
 {
     #region //Unit properties
     [SerializeField] private string unitName = "Unit";
-    [SerializeField] private bool isEnemy = false;
+    [SerializeField] private bool isTeam1 = true;
     [SerializeField] private int priority = 0;
     #endregion
 
@@ -143,9 +143,9 @@ public class Unit : MonoBehaviour, ITargetable
     public void AddDamageMod(float amount) => damageMod += amount;
 
     //Resets action points and unit modifiers at the end of a turn
-    private void RestoreUnit(bool isPlayerTurn)
+    private void RestoreUnit(bool team1Turn)
     {
-        if(isPlayerTurn ^ !isEnemy) return;
+        if(team1Turn ^ IsTeam1()) return;
         currentActionPoints = maxActionPoints;
         accuracyMod = 0;
         damageMod = 0;
@@ -156,7 +156,8 @@ public class Unit : MonoBehaviour, ITargetable
     #region //Getters
     public int GetPriority() => priority;
     public string GetName() => unitName;
-    public bool IsEnemy() => isEnemy;
+    public bool IsTeam1() => isTeam1;
+    public bool IsAI() => GameGlobals.IsAI(isTeam1);
     public float GetHealthPercentage() => unitHealth.GetHealthPercentage();
     public int GetHealth() => unitHealth.GetHealth();
     public bool IsAlive() => unitHealth.GetHealthPercentage() > 0;
@@ -177,7 +178,7 @@ public class Unit : MonoBehaviour, ITargetable
     public BaseAction[] GetActions() => actions;
     public bool CanBeTargeted(Unit attackingUnit, bool isHealing)
     {
-        bool differentFromTarget = isEnemy ^ attackingUnit.isEnemy;
+        bool differentFromTarget = IsTeam1() ^ attackingUnit.IsTeam1();
 
         if(isHealing)
             return !differentFromTarget && GetHealthPercentage() < 1;

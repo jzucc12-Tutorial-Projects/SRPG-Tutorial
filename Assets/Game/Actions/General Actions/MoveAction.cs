@@ -114,9 +114,9 @@ public class MoveAction : BaseAction
         return validCellList;
     }
 
-    private void ResetMoves(bool isPlayerTurn)
+    private void ResetMoves(bool team1Turn)
     {
-        if(isPlayerTurn ^ unit.IsEnemy()) return;
+        if(team1Turn ^ unit.IsTeam1()) return;
         currentMoves = 0;
     }
     #endregion
@@ -132,8 +132,9 @@ public class MoveAction : BaseAction
     {
         int score = 0;
         Vector3 newPosition = targetCell.GetWorldPosition();
-        foreach(var player in unitManager.GetPlayerList())
+        foreach(var player in unitManager.GetUnitList())
         {
+            if(player.IsAI()) continue;
             var dir = (player.GetWorldPosition() - newPosition);
             if(Physics.Raycast(newPosition, dir, dir.magnitude, GridGlobals.obstacleMask))
                 score += 25;

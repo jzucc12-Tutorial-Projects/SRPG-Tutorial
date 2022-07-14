@@ -22,7 +22,6 @@ public class UnitActionSystem : MonoBehaviour
     private Unit selectedUnit = null;
     public static event Action<Unit> OnSelectedUnitChanged;
     [SerializeField] private LayerMask unitMask = -1;
-    private Unit defaultUnit => unitManager.GetRootPlayer();
     #endregion
 
     #region //Action variables
@@ -31,6 +30,10 @@ public class UnitActionSystem : MonoBehaviour
     private BaseAction selectedAction = null;
     private bool isBusy = false;
     private bool doubleClick = false;
+    #endregion
+
+    #region //Turn changing
+    private bool team1Turn = true;
     #endregion
 
 
@@ -45,7 +48,7 @@ public class UnitActionSystem : MonoBehaviour
     private void OnEnable()
     {
         inputManager.mouseClick.performed += HandleMouseClick;
-        inputManager.changeTeammates.started += HandleTeamChange;
+        inputManager.changeTeammates.started += HandleShiftUnit;
         inputManager.doubleClick.performed += Double;
         BaseAction.OnAnyActionEnded += OnActionFinish;
         Unit.UnitDead += OnPlayerDeath;
@@ -57,7 +60,7 @@ public class UnitActionSystem : MonoBehaviour
     private void OnDisable()
     {
         inputManager.mouseClick.performed -= HandleMouseClick;
-        inputManager.changeTeammates.started -= HandleTeamChange;
+        inputManager.changeTeammates.started -= HandleShiftUnit;
         BaseAction.OnAnyActionEnded -= OnActionFinish;
         Unit.UnitDead -= OnPlayerDeath;
         UnitManager.GameOver -= GameOver;
@@ -67,7 +70,7 @@ public class UnitActionSystem : MonoBehaviour
 
     private void Start()
     {
-        SetSelectedUnit(defaultUnit);
+        SetSelectedUnit(GetDefaultUnit(team1Turn));
         ClearBusy();
     }
     #endregion
@@ -103,12 +106,12 @@ public class UnitActionSystem : MonoBehaviour
         TrySelectUnit();
     }
 
-    private void HandleTeamChange(InputAction.CallbackContext context)
+    private void HandleShiftUnit(InputAction.CallbackContext context)
     {
         if(!AllowInput()) return;
         if(selectedUnit == null) return;
         int shift = (int)inputManager.changeTeammates.ReadValue<float>();
-        var newUnit = unitManager.GetShiftUnit(selectedUnit, shift);
+        var newUnit = unitManager.GetShiftUnit(selectedUnit, team1Turn, shift);
         SetSelectedUnit(newUnit);
     }
 
@@ -126,26 +129,18 @@ public class UnitActionSystem : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(inputManager.GetMouseScreenPosition());
         bool didHit = Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, unitMask);
         if(!didHit || !hit.collider.TryGetComponent<Unit>(out Unit unit)) return false;
-        if(unit.IsEnemy()) return false;
+        if(team1Turn ^ unit.IsTeam1()) return false;
         if(unit == selectedUnit) return false;
         SetSelectedUnit(unit);
         return true;
     }
 
-    private void TurnChange(bool isPlayerTurn)
-    {
-        allowInput = isPlayerTurn;
-        Unit unit = isPlayerTurn ? defaultUnit : null;
-        SetSelectedUnit(unit);
-        UIChange();
-    }
-
     private void OnPlayerDeath(Unit unit)
     {
-        if(unit.IsEnemy()) return;
+        if(unit.IsAI()) return;
         if(unit == selectedUnit) 
         {
-            SetSelectedUnit(defaultUnit);
+            SetSelectedUnit(GetDefaultUnit(team1Turn));
             ClearBusy();
         }
     }
@@ -157,6 +152,8 @@ public class UnitActionSystem : MonoBehaviour
         if(newUnit != null) SetSelectedAction(newUnit.GetRootAction());
         else UIChange();
     }
+
+    private Unit GetDefaultUnit(bool isTeam1) => unitManager.GetRootUnit(isTeam1);
     #endregion
 
     #region //Action selection
@@ -216,6 +213,18 @@ public class UnitActionSystem : MonoBehaviour
         UpdateUI?.Invoke(selectedUnit, selectedAction);
         mouseWorld.RefreshMouse();
     }
+    #endregion
+
+    #region //Turn changing
+    private void TurnChange(bool team1Turn)
+    {
+        this.team1Turn = team1Turn;
+        allowInput = !IsAITurn();
+        Unit unit = IsAITurn() ? null : GetDefaultUnit(team1Turn);
+        SetSelectedUnit(unit);
+        UIChange();
+    }
+    private bool IsAITurn() => GameGlobals.IsAI(team1Turn);
     #endregion
 
     #region //Halting

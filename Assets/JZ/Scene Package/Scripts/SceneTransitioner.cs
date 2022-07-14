@@ -30,6 +30,10 @@ namespace JZ.SCENE
         #region //Monobehaviour
         private void Awake() 
         {
+            if(FindObjectsOfType<SceneTransitioner>().Length > 1)
+                Destroy(gameObject);
+            else DontDestroyOnLoad(gameObject);
+
             animations = GetComponentsInChildren<TransitionAnimation>(); 
             foreach(var animation in animations)
                 animators.Add(animation.GetComponent<Animator>());

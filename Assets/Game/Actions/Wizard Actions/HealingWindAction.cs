@@ -47,13 +47,13 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
     #region //Action selection
     public void OnSelected()
     {
-        if(unit.IsEnemy()) return;
+        if(unit.IsAI()) return;
         mouseWorld.SetAOESize(aoeSize, false);
     }
 
     public void OnUnSelected()
     {
-        if(unit.IsEnemy()) return;
+        if(unit.IsAI()) return;
         mouseWorld.ResetAOE();
     }
     #endregion
@@ -81,7 +81,7 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
             else if(hpPercent > 0.5f) score += Mathf.RoundToInt(15 / hpPercent);
             else if(hpPercent > 0.25f) score += Mathf.RoundToInt(30 / hpPercent);
             else score += Mathf.RoundToInt(45 / hpPercent);
-            if(!targetUnit.IsEnemy()) score *= -1;
+            if(!targetUnit.IsAI()) score *= -1;
         }
 
         return new EnemyAIAction(this, targetCell, score);

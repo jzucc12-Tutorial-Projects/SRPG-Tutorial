@@ -111,7 +111,6 @@ public class CameraController : MonoBehaviour
         allowInput = true;
     }
 
-    #region //Move and rotate camera
     private void MoveToUnit(Unit newUnit)
     {
         if(newUnit == null) return;
@@ -122,13 +121,13 @@ public class CameraController : MonoBehaviour
         {
             transform.position = moveTarget;
             transform.forward = Vector3.forward;
-            allowInput = !newUnit.IsEnemy();
+            allowInput = !newUnit.IsAI();
         }
         else
         {
             StopAllCoroutines();
             allowInput = false;
-            StartCoroutine(MoveOverTime(target, newUnit.transform.forward, !newUnit.IsEnemy()));
+            StartCoroutine(MoveOverTime(target, newUnit.transform.forward, !newUnit.IsAI()));
         }
 
     }
@@ -148,6 +147,7 @@ public class CameraController : MonoBehaviour
         allowInput = input;
     }
 
+    #region //Move with input
     private void MoveCamera(Vector3 moveDir, int mult)
     {
         Vector3 moveVector = transform.forward * moveDir.y + transform.right * moveDir.x;
@@ -159,9 +159,7 @@ public class CameraController : MonoBehaviour
         float rotateAmount = dir * mult * rotationSpeed * Time.deltaTime;
         transform.Rotate(0, rotateAmount, 0);
     }
-    #endregion
 
-    #region //Zoom camera
     private void ZoomCamera(float dir, float mult)
     {
         followOffset.y += zoomAmount * dir * mult;

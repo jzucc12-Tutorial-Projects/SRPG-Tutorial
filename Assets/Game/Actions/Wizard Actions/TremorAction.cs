@@ -46,13 +46,13 @@ public class TremorAction : CooldownAction, IAnimatedAction, IOnSelectAction
     #region //Action selection
     public void OnSelected()
     {
-        if(unit.IsEnemy()) return;
+        if(unit.IsAI()) return;
         mouseWorld.SetAOESize(aoeSize, true);
     }
 
     public void OnUnSelected()
     {
-        if(unit.IsEnemy()) return;
+        if(unit.IsAI()) return;
         mouseWorld.ResetAOE();
     }
     #endregion
@@ -83,7 +83,7 @@ public class TremorAction : CooldownAction, IAnimatedAction, IOnSelectAction
             else
             {
                 Unit targetUnit = targetable as Unit;
-                if(targetUnit.IsEnemy()) continue;
+                if(targetUnit.IsAI()) continue;
                 int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - damage);
                 score += 50 - hpDiff/3;
             }

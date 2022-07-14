@@ -10,12 +10,17 @@ public class TurnSystem : MonoBehaviour
     private int turnNumber = 1;
     public static event Action<bool> IncrementTurn;
     public static event Action<bool> IncrementTurnLate;
-    private bool isPlayerTurn = true;
+    private bool team1Turn = true;
     private bool canChangeTurns = true;
     #endregion
 
 
     #region //Monobehaviour
+    private void Awake()
+    {
+        team1Turn = GameGlobals.TwoPlayer() || GameGlobals.IsTeam2AI();
+    }
+
     private void OnEnable()
     {
         UnitManager.GameOver += TurnOff;
@@ -28,8 +33,8 @@ public class TurnSystem : MonoBehaviour
 
     private void Start()
     {
-        IncrementTurn?.Invoke(isPlayerTurn);
-        IncrementTurnLate?.Invoke(isPlayerTurn);    
+        IncrementTurn?.Invoke(team1Turn);
+        IncrementTurnLate?.Invoke(team1Turn);    
     }
     #endregion
 
@@ -43,11 +48,11 @@ public class TurnSystem : MonoBehaviour
     {
         if(!canChangeTurns) return;
         turnNumber++;
-        isPlayerTurn = !isPlayerTurn;
-        IncrementTurn?.Invoke(isPlayerTurn);
-        IncrementTurnLate?.Invoke(isPlayerTurn);    
+        team1Turn = !team1Turn;
+        IncrementTurn?.Invoke(team1Turn);
+        IncrementTurnLate?.Invoke(team1Turn);    
 
-        string turnText = isPlayerTurn ? "Player" : "Enemy";
+        string turnText = team1Turn ? "Player" : "Enemy";
         ActionLogListener.Publish($"It's now the {turnText}'s turn");
     }
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -8,7 +9,8 @@ public class UnitAnimator : MonoBehaviour
     #region //Variables
     [SerializeField] private UnitWeapon unitWeapon = null;
     [SerializeField] private Animator animator = null;
-    private IAnimatedAction currentAnimAction = null;
+    private Action Act;
+    private Action End;
     #endregion
 
 
@@ -84,19 +86,21 @@ public class UnitAnimator : MonoBehaviour
 
     #region //Animated Actions
     //Called from animation events. Call when you want the action's effect to take place, like as a sword hits its target
-    public void CurrentAct() => currentAnimAction.AnimationAct(); 
+    public void CurrentAct() => Act?.Invoke();
 
     //Called from  the animation events. Call at the end of the animation.
-    public void CurrentEnd() => currentAnimAction.AnimationEnd();
+    public void CurrentEnd() => End?.Invoke();
 
     private void SetAnimatedAction(IAnimatedAction animatedAction)
     {
-        currentAnimAction = animatedAction;
+        Act = animatedAction.AnimationAct;
+        End = animatedAction.AnimationEnd;
     }
 
     private void ResetAnimatedAction()
     {
-        currentAnimAction = null;
+        Act = null;
+        End = null;
     }
     #endregion
 }

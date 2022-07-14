@@ -47,13 +47,13 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
     #region //Action selection
     public void OnSelected()
     {
-        if(unit.IsEnemy()) return;
+        if(unit.IsAI()) return;
         mouseWorld.SetAOESize(aoeSize, false);
     }
 
     public void OnUnSelected()
     {
-        if(unit.IsEnemy()) return;
+        if(unit.IsAI()) return;
         mouseWorld.ResetAOE();
     }
     #endregion
@@ -87,7 +87,7 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
                 Unit targetUnit = targetable as Unit;
                 int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - damage);
                 score += 50 - hpDiff/3;
-                if(targetUnit.IsEnemy()) score *= -1;
+                if(targetUnit.IsAI()) score *= -1;
                 if(targetUnit == unit) score -= 50;
             }
         }

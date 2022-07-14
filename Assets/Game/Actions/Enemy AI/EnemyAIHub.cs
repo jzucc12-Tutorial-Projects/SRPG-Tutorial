@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -11,14 +12,12 @@ public class EnemyAIHub : MonoBehaviour
     #region //Cached components
     private TurnSystem turnSystem = null;
     private UnitManager unitManager = null;
-    private List<Unit> enemies => new List<Unit>(unitManager.GetEnemyList());
     public static event Action<Unit> StartNewEnemy;
     #endregion
 
     #region //Turn taking variables
     [SerializeField] private float startUpTime = 0.5f;
     [SerializeField] private float waitTime = 2;
-    private bool isPlayerTurn = true;
     #endregion
 
 
@@ -27,6 +26,7 @@ public class EnemyAIHub : MonoBehaviour
     {
         turnSystem = FindObjectOfType<TurnSystem>();
         unitManager = FindObjectOfType<UnitManager>();
+        if(GameGlobals.TwoPlayer()) enabled = false;
     }
 
     private void OnEnable()
@@ -36,7 +36,7 @@ public class EnemyAIHub : MonoBehaviour
 
     private void OnDisable()
     {
-        TurnSystem.IncrementTurn += OnTurnChange;
+        TurnSystem.IncrementTurn -= OnTurnChange;
     }
     #endregion
 
@@ -44,6 +44,14 @@ public class EnemyAIHub : MonoBehaviour
     private IEnumerator EnemyTurn()
     {
         yield return new WaitForSeconds(startUpTime);
+
+        var units = unitManager.GetUnitList();
+        var enemies = new List<Unit>();
+        foreach(var unit in units)
+        {
+            if(!unit.IsAI()) continue;
+            enemies.Add(unit);
+        }
 
         foreach(Unit enemy in enemies)
         {
@@ -55,10 +63,9 @@ public class EnemyAIHub : MonoBehaviour
         turnSystem.NextTurn();
     }
 
-    private void OnTurnChange(bool isPlayerTurn)
+    private void OnTurnChange(bool team1Turn)
     {
-        this.isPlayerTurn = isPlayerTurn;
-        if(isPlayerTurn) return;
+        if(!GameGlobals.IsAI(team1Turn)) return;
         StartCoroutine(EnemyTurn());
     }
     #endregion

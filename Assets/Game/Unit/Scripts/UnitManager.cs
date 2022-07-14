@@ -10,9 +10,9 @@ public class UnitManager : MonoBehaviour
 {
     #region //Unit lists
     private List<Unit> unitList = new List<Unit>();
-    private List<Unit> playerList = new List<Unit>();
-    private List<Unit> enemyList = new List<Unit>();
-    public static event Action<bool> GameOverSided; //True if players win
+    private List<Unit> team1List = new List<Unit>();
+    private List<Unit> team2List = new List<Unit>();
+    public static event Action<bool> GameOverSided; //True if team 1 wins
     public static event Action GameOver;
     #endregion
 
@@ -35,34 +35,34 @@ public class UnitManager : MonoBehaviour
     private void AddUnit(Unit unit)
     {
         unitList.Add(unit);
-        if(unit.IsEnemy()) 
+        if(unit.IsTeam1()) 
         {
-            enemyList.Add(unit);
-            SortList(enemyList);
+            team1List.Add(unit);
+            SortList(team1List);
         }
         else
         {
-            playerList.Add(unit);
-            SortList(playerList);
+            team2List.Add(unit);
+            SortList(team2List);
         }
     }
 
     private void RemoveUnit(Unit unit)
     {
-        unitList.Remove(unit);
-        if(unit.IsEnemy()) 
-            RemoveFromList(enemyList, unit);
+        if(unit.IsTeam1()) 
+            RemoveFromList(team1List, unit);
         else 
-            RemoveFromList(playerList, unit);
+            RemoveFromList(team2List, unit);
     }
 
     private void RemoveFromList(List<Unit> list, Unit unit)
     {
+        unitList.Remove(unit);
         list.Remove(unit);
-        SortList(enemyList);
+        SortList(list);
         if(list.Count > 0) return;
         GameOver?.Invoke();
-        GameOverSided?.Invoke(unit.IsEnemy());
+        GameOverSided?.Invoke(!unit.IsTeam1());
         Time.timeScale = 0.2f;
     }
 
@@ -79,14 +79,18 @@ public class UnitManager : MonoBehaviour
 
     #region //Getters
     public List<Unit> GetUnitList() => unitList;
-    public List<Unit> GetPlayerList() => playerList;
-    public List<Unit> GetEnemyList() => enemyList;
-    public Unit GetRootPlayer() => playerList.Count > 0 ? playerList[0] : null;
-    public Unit GetShiftUnit(Unit unit, int shift)
+    public Unit GetRootUnit(bool isTeam1)
     {
-        int currentIndex = playerList.IndexOf(unit);
-        int newIndex = Utils.Wrap(currentIndex + shift, 0, playerList.Count - 1);
-        return playerList[newIndex];
+        var list = isTeam1 ? team1List : team2List;
+        return list.Count > 0 ? list[0] : null;
+    }
+
+    public Unit GetShiftUnit(Unit unit, bool isTeam1, int shift)
+    {
+        var list = isTeam1 ? team1List : team2List;
+        int currentIndex = list.IndexOf(unit);
+        int newIndex = Utils.Wrap(currentIndex + shift, 0, list.Count - 1);
+        return list[newIndex];
     }
     #endregion
 }

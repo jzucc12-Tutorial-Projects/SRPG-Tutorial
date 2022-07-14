@@ -9,14 +9,13 @@ using UnityEngine;
 /// The AI will not move multiple times in a given turn
 /// Currently the AI favors movements that place it further away from enemies. Playing passively.
 /// AI can't track current ammo, stock, etc when choosing an action
-/// If a chosen action is no longer valid (like if attack 1 kills its target leaving no target for attack 2)
-///     it will either choose a new target, try the alt action, or do nothing. It won't consider other options.
+/// The AI will replan its turn after every action it takes.
 
 /// POSSIBLE CHANGES:
 /// Make handling movement better. I first need to decide if I want there to be a limit on one or two movements per turn. Scoring moving is also weird.
 ///     Reason choosing between being aggressive (wanting to be near foes) or being defensive (wanting to get away from foes). I could potentially
 ///     make it dependent upon remaining AP, health, and a few other factors. TBD.
-/// Have the AI re-evaluate its turn after each action it takes. This will have to come with a more concrete idea as to how moving will work.
+/// Possibly have the AI consider the new plan rather than always take it
 
 /// <summary>
 /// Decides and take the turn for an enemy ai
@@ -33,6 +32,7 @@ public class EnemyAI : MonoBehaviour
     {
         enemy = GetComponent<Unit>();
         moveAction = enemy.GetComponent<MoveAction>();
+        if(GameGlobals.TwoPlayer()) enabled = false;
     }
     #endregion
 

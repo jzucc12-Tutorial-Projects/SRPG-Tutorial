@@ -163,12 +163,12 @@ PrefabInstance:
     - target: {fileID: 642008498672032321, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
       propertyPath: m_Name
-      value: Soldier
+      value: Male Soldier
       objectReference: {fileID: 0}
     - target: {fileID: 642008498672032383, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
       propertyPath: unitName
-      value: Soldier
+      value: Male Soldier
       objectReference: {fileID: 0}
     - target: {fileID: 4329673137153643020, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
@@ -216,10 +216,16 @@ PrefabInstance:
       propertyPath: event1.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: GrenadeAction, Assembly-CSharp
       objectReference: {fileID: 0}
+    - target: {fileID: 7930978741787514549, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: ragdollPrefab
+      value: 
+      objectReference: {fileID: 4246254622416127061, guid: 72f128663737c12439f1ce59ad2f91bd,
+        type: 3}
     - target: {fileID: 8675959288734960670, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
       propertyPath: m_text
-      value: Soldier
+      value: Male Soldier
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects:
