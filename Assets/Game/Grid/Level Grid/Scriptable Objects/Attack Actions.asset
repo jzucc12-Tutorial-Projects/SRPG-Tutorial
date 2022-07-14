@@ -20,6 +20,7 @@ MonoBehaviour:
   - FireballAction
   - TremorAction
   - LightningBoltAction
+  - LifeDrainAction
   baseMaterial: {fileID: 2100000, guid: 459acefdc21517b4e8985f525790d113, type: 2}
   mouseMaterial: {fileID: 2100000, guid: c4dcc0b1a068afb44879e0eadce2086b, type: 2}
   targetedMaterial: {fileID: 2100000, guid: ee86cc519265f694ca3bcbb4b984742f, type: 2}

@@ -6,7 +6,7 @@ using UnityEngine;
 public interface ITargetable
 {
     bool CanBeTargeted(Unit attackingUnit, bool isHealing);
-    void Damage(Unit attacker, int damage);
+    int Damage(Unit attacker, int damage);
     GridCell GetGridCell();
     Vector3 GetWorldPosition();
     string GetName();

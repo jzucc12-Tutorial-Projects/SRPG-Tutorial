@@ -11,6 +11,7 @@ public class EffectsManager : MonoBehaviour
     [SerializeField] EffectPool healingWindPool = null;
     [SerializeField] EffectPool fireballPool = null;
     [SerializeField] EffectPool lightningBoltPool = null;
+    [SerializeField] EffectPool lifeDrainPool = null;
 
 
     public Bullet GetBullet()
@@ -41,6 +42,11 @@ public class EffectsManager : MonoBehaviour
     public LightningBolt GetLightningBolt()
     {
         return lightningBoltPool.GetEffect().GetComponent<LightningBolt>();
+    }
+
+    public Bullet GetLifeDrain()
+    {
+        return lifeDrainPool.GetEffect().GetComponent<Bullet>();
     }
 
     public Grenade GetGrenadeReference() => grenadePool.GetReference().GetComponent<Grenade>();

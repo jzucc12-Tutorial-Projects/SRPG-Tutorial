@@ -12,12 +12,13 @@ public abstract class TargetedAction : BaseAction
     [Header("Targeted Actions")]
     [Tooltip("True if you don't want to count diagonals in range")] [SerializeField] protected bool circularRange = true;
     [Tooltip("True if the unit can target itself")] [SerializeField] protected bool includeSelf  = false;
-    [SerializeField] private bool requiresTargetable = true;
+    [SerializeField] private bool requiresUnit = false;
+    [SerializeField, HideIf("requiresUnit")] private bool requiresTargetable = true;
     [SerializeField] private bool targetAllies = false;
     [SerializeField] protected int actionRange = 1;
     [Tooltip("How close to the target you must be facing to perform the action")] [SerializeField, MinMax(0, 1)] private float facingLimit = 0.9f;
     [Tooltip("Minimum wait to start action if unit is already facing its target")] [SerializeField, Min(0)] private float waitTime = 0;
-    [SerializeField] private LayerMask obstacleLayer = 0;
+    [SerializeField] private LayerMask blockingLayer = 0;
     #endregion
     
 
@@ -87,7 +88,13 @@ public abstract class TargetedAction : BaseAction
 
         foreach(var cell in GetRangeCells(attackerCell))
         {
-            if(requiresTargetable)
+            if(requiresUnit)
+            {
+                var targetUnit = cell.GetUnit();
+                if(targetUnit == null) continue;
+                if(!targetUnit.CanBeTargeted(unit, targetAllies)) continue;
+            }
+            else if(requiresTargetable)
             {
                 var target = cell.GetTargetable();
                 if(target == null) continue;
@@ -108,17 +115,25 @@ public abstract class TargetedAction : BaseAction
 
         foreach(var cell in levelGrid.CheckGridRange(attackerCell, actionRange, circularRange, includeSelf))
         {
-            Vector3 targetPosition = unit.ConvertToShoulderHeight(cell);
-            Vector3 aimDir = (targetPosition - attackerWorldPosition).normalized;
-            bool hit = Physics.Raycast(attackerWorldPosition, aimDir,
-                            Vector3.Distance(attackerWorldPosition, targetPosition),
-                            obstacleLayer);
-            if(hit) continue;
+            //Omit cells that have obstacles (needed for actions that aren't impeded by obstacles)
             if(cell.HasObstacle()) continue;
 
-            bool hitDown = Physics.Raycast(targetPosition, Vector3.down, 2f, obstacleLayer);
-            if(hitDown) continue;
+            Vector3 targetPosition = unit.ConvertToShoulderHeight(cell);
+            Vector3 aimDir = (targetPosition - attackerWorldPosition).normalized;
+            bool obstacleHit = Physics.Raycast(attackerWorldPosition, aimDir, out RaycastHit hit,
+                            Vector3.Distance(attackerWorldPosition, targetPosition), 
+                            blockingLayer);
             
+            //Check to make sure target cells aren't skipped
+            if(obstacleHit)
+            {
+                //Checks if the testing cell is the one that was hit.
+                //If so, only skip if that cell does not have a targetable
+                GridCell hitCell = hit.point.GetGridCell();
+                if(cell != hitCell) continue;
+                if(hitCell.GetTargetable() == null) continue;
+            }
+
             validCells.Add(cell);
         }
 

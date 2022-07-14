@@ -25,5 +25,5 @@ MonoBehaviour:
   dropWithHealth: 0
   healthTick: 0.1
   healthDrop: 2
-  critChance: 1
+  critChance: 10
   critMult: 2

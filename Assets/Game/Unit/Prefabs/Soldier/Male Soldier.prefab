@@ -70,6 +70,11 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 640515295999141891, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: blockingLayer.m_Bits
+      value: 896
+      objectReference: {fileID: 0}
     - target: {fileID: 641286072489781896, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -170,6 +175,11 @@ PrefabInstance:
       propertyPath: unitName
       value: Male Soldier
       objectReference: {fileID: 0}
+    - target: {fileID: 2650283597064394310, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: blockingLayer.m_Bits
+      value: 896
+      objectReference: {fileID: 0}
     - target: {fileID: 4329673137153643020, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
       propertyPath: defaultWeapon
@@ -265,14 +275,15 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
+  requiresUnit: 0
   requiresTargetable: 1
   targetAllies: 0
   actionRange: 5
   facingLimit: 0.993
   waitTime: 0.5
-  obstacleLayer:
+  blockingLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 896
   weaponName: Rifle
   bulletOrigin: {fileID: 213385559}
   weaponGO: {fileID: 4203205038678892587}
@@ -309,14 +320,15 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
+  requiresUnit: 0
   requiresTargetable: 1
   targetAllies: 0
   actionRange: 9
   facingLimit: 0.993
   waitTime: 0.5
-  obstacleLayer:
+  blockingLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 896
   weaponName: Pistol
   bulletOrigin: {fileID: 1189217241}
   weaponGO: {fileID: 4203198220207403924}
@@ -324,6 +336,37 @@ MonoBehaviour:
   maxClip: 6
   damage: 15
   accuracySO: {fileID: 11400000, guid: e8d6d181983f17d48864284eea71603c, type: 2}
+--- !u!114 &4493701696448881613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4201871009660209446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f63085333f41834497c0001cba8bd91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  apCost: 1
+  circularRange: 1
+  includeSelf: 0
+  requiresUnit: 0
+  requiresTargetable: 1
+  targetAllies: 0
+  actionRange: 5
+  facingLimit: 0.993
+  waitTime: 0.5
+  blockingLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  weaponName: X-Ray Rifle
+  bulletOrigin: {fileID: 213385559}
+  weaponGO: {fileID: 4203205038678892587}
+  animController: {fileID: 22100000, guid: 07dc407fa6e39f44687b586da6ec8abb, type: 2}
+  maxClip: 1
+  damage: 30
+  accuracySO: {fileID: 11400000, guid: ea9e9ea0aa7946c4e850396dd66588b4, type: 2}
 --- !u!114 &4522232182180476428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,6 +381,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   apCost: 1
   shootAction: {fileID: 3469473236974308855}
+--- !u!114 &5827028340083949613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4201871009660209446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a20e3f9e40592b4496dcc5789608543, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  apCost: 1
+  shootAction: {fileID: 4493701696448881613}
 --- !u!114 &6413714798032799125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,14 +410,15 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
+  requiresUnit: 0
   requiresTargetable: 0
   targetAllies: 0
   actionRange: 5
   facingLimit: 0.993
   waitTime: 0.25
-  obstacleLayer:
+  blockingLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 768
   spawnPoint: {fileID: 4197579253955208349}
   maxQuantity: 3
 --- !u!114 &6595300755385506393
@@ -378,14 +436,15 @@ MonoBehaviour:
   apCost: 2
   circularRange: 1
   includeSelf: 1
+  requiresUnit: 0
   requiresTargetable: 1
   targetAllies: 1
   actionRange: 1
   facingLimit: 0.9
   waitTime: 0
-  obstacleLayer:
+  blockingLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 896
   healingAmount: 50
   maxQuantity: 1
 --- !u!4 &4206039011323308099 stripped

@@ -489,17 +489,12 @@ PrefabInstance:
     - target: {fileID: 5700086547262430292, guid: ca26a6ba703bd824197fd33573c9614b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5700086547262430292, guid: ca26a6ba703bd824197fd33573c9614b,
         type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5700086547262430292, guid: ca26a6ba703bd824197fd33573c9614b,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5700086547262430292, guid: ca26a6ba703bd824197fd33573c9614b,
         type: 3}
@@ -856,7 +851,7 @@ PrefabInstance:
     - target: {fileID: 7054100785206631000, guid: f5f8f6c463b496541b61106c987a40eb,
         type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7054100785206631000, guid: f5f8f6c463b496541b61106c987a40eb,
         type: 3}
@@ -1162,7 +1157,7 @@ Transform:
   - {fileID: 636905562}
   - {fileID: 1585717498}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &357380731
 MonoBehaviour:
@@ -1559,7 +1554,7 @@ PrefabInstance:
     - target: {fileID: 3396091478773092022, guid: 1795217b573c8144da2fd4b92f1e3c68,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3396091478773092022, guid: 1795217b573c8144da2fd4b92f1e3c68,
         type: 3}
@@ -1660,7 +1655,7 @@ PrefabInstance:
     - target: {fileID: 5700086547262430292, guid: ca26a6ba703bd824197fd33573c9614b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5700086547262430292, guid: ca26a6ba703bd824197fd33573c9614b,
         type: 3}
@@ -2004,7 +1999,7 @@ RectTransform:
   - {fileID: 1201821488}
   - {fileID: 2113458236}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2147,7 +2142,7 @@ PrefabInstance:
     - target: {fileID: 5700086547262430292, guid: ca26a6ba703bd824197fd33573c9614b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 5700086547262430292, guid: ca26a6ba703bd824197fd33573c9614b,
         type: 3}
@@ -2391,7 +2386,7 @@ Transform:
   - {fileID: 1684666797}
   - {fileID: 152442140}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &582912404
 GameObject:
@@ -2444,6 +2439,53 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyTurnUI: {fileID: 791941753}
+--- !u!1 &609711537
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 609711539}
+  - component: {fileID: 609711538}
+  m_Layer: 0
+  m_Name: Life Drain Pool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &609711538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609711537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d1cf54bcbb93d74a9f26d9e1fd28dc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effect: {fileID: -7122868315061870376, guid: b3bd5ade0d15cd847a05415aacf76ff2, type: 3}
+  defaultSize: 2
+  maxSize: 5
+--- !u!4 &609711539
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609711537}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1040049874}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &611471381
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3092,7 +3134,7 @@ PrefabInstance:
     - target: {fileID: 4990226251484698421, guid: e9fd06e454c829a4a85806ae55eade60,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4990226251484698421, guid: e9fd06e454c829a4a85806ae55eade60,
         type: 3}
@@ -3254,7 +3296,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &838853475
 MonoBehaviour:
@@ -3869,6 +3911,7 @@ MonoBehaviour:
   healingWindPool: {fileID: 1105326390}
   fireballPool: {fileID: 326655727}
   lightningBoltPool: {fileID: 552169645}
+  lifeDrainPool: {fileID: 609711538}
 --- !u!4 &1040049874
 Transform:
   m_ObjectHideFlags: 0
@@ -3887,8 +3930,9 @@ Transform:
   - {fileID: 1105326389}
   - {fileID: 326655726}
   - {fileID: 552169644}
+  - {fileID: 609711539}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1059344480
 GameObject:
@@ -5166,50 +5210,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turnNumberText: {fileID: 1183905058}
   nextTurnButton: {fileID: 849289107}
---- !u!1 &1535634186
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1535634187}
-  - component: {fileID: 1535634188}
-  m_Layer: 0
-  m_Name: Input Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1535634187
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1535634186}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1535634188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1535634186}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c8a9a9320349614aa60c0e42f5858ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1554657045
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6988,7 +6988,7 @@ Transform:
   - {fileID: 866859411}
   - {fileID: 716467828}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1937049627
 MonoBehaviour:
@@ -7010,6 +7010,7 @@ MonoBehaviour:
   - FireballAction
   - HealingWindAction
   - LightningBoltAction
+  - LifeDrainAction
   actionCameraGameObject: {fileID: 553360770}
   offset: {x: 0, y: 2, z: -8}
   blockingOffset: {x: 0, y: 8, z: -5}
@@ -7773,6 +7774,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2129883197}
+  - component: {fileID: 2129883198}
   m_Layer: 0
   m_Name: Input
   m_TagString: Untagged
@@ -7795,8 +7797,20 @@ Transform:
   - {fileID: 168386940}
   - {fileID: 2099129289}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2129883198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2129883196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c8a9a9320349614aa60c0e42f5858ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2134393989
 GameObject:
   m_ObjectHideFlags: 0

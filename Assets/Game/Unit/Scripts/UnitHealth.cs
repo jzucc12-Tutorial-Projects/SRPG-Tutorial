@@ -23,27 +23,27 @@ public class UnitHealth : MonoBehaviour
     #endregion
 
     #region //Damage and healing
-    public void Damage(int damage)
+    public int Damage(int damage)
     {
+        int damageAmount = Mathf.Min(damage, currentHealth);
         currentHealth -= damage;
         OnHPChange?.Invoke(GetHealthPercentage());
-
-
-        if(currentHealth <= 0)
-        {
-            currentHealth = 0;
-            Die();
-        }
-        else if(damage > 0)
-            OnDamage?.Invoke();
+        if(damage > 0) OnDamage?.Invoke();
+        return damageAmount;
     }
 
-    //Returns the amount of health healed
-    public void Heal(int amount)
+    public int Heal(int amount)
     {
-        int healAmount = Mathf.Min(maxHealth, currentHealth + amount);
+        int healAmount = Mathf.Min(amount, maxHealth - currentHealth);
         currentHealth += healAmount;
         OnHPChange?.Invoke(GetHealthPercentage());
+        return healAmount;
+    }
+
+    public void DeathCheck()
+    {
+        if(currentHealth > 0) return;
+        Die();
     }
 
     private void Die()

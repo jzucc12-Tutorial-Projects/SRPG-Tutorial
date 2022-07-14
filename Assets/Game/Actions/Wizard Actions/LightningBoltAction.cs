@@ -129,6 +129,7 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
         base.SpecificTooltipSetup();
         tooltip.effectText = "Shoot a lightning bolt, damaging\nanything it its path";
         tooltip.altText = "Switch to focus action";
+        tooltip.rangeText = "Straight line until it hits a wall";
         tooltip.damageText = damage.ToString();
     }
     #endregion

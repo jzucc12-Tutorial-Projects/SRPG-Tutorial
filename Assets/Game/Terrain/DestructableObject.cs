@@ -22,14 +22,16 @@ public class DestructableObject : MonoBehaviour, ITargetable
     #endregion
 
     #region //Damaging and destruction
-    public void Damage(Unit attacker, int damage)
+    public int Damage(Unit attacker, int damage)
     {
-        currentHealth -= damage;
+        int damageDealt = Mathf.Min(damage, currentHealth);
+        currentHealth -= damageDealt;
         if(currentHealth <= 0) 
         {
             ActionLogListener.Publish($"{attacker.GetName()} destroyed {GetName()}");
             ObjectDestroyed();
         }
+        return damageDealt;
     }
 
     private void ObjectDestroyed()

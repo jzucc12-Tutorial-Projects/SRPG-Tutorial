@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fbd8abb7d1809244eadeb85428c35588, type: 3}
-  m_Name: Pistol Accuracy
+  m_Name: Life Drain Accuracy
   m_EditorClassIdentifier: 
   baseAccuracy: 100
   nonUnitMult: 0.75
   dropWithDistance: 1
   distanceDrop: 5
-  nearRange: 7
+  nearRange: 2
   dropWithBlocking: 0
   blockingDrop: 5
   accuracyBlockingLayer:
@@ -26,4 +26,4 @@ MonoBehaviour:
   healthTick: 0.1
   healthDrop: 2
   critChance: 10
-  critMult: 2
+  critMult: 1.5

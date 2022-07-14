@@ -20,6 +20,7 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
     public event Action<string> SetTrigger;
     #endregion
 
+
     #region //Monobehaviour
     protected override void Awake()
     {

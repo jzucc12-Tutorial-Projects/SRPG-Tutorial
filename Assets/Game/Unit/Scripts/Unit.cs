@@ -77,29 +77,33 @@ public class Unit : MonoBehaviour, ITargetable
     #endregion
 
     #region //Health
-    public void Damage(Unit attacker, int damage) 
+    public int Damage(Unit attacker, int damage) 
     {
-
-        if(damage > 0) 
+        int damageAmount = unitHealth.Damage(damage);
+        if(damageAmount > 0) 
         {
             if(attacker == this)
-                ActionLogListener.Publish($"{attacker.GetName()} hit themself for {damage} damage");
+                ActionLogListener.Publish($"{attacker.GetName()} hit themself for {damageAmount} damage");
             else
-                ActionLogListener.Publish($"{attacker.GetName()} hit {GetName()} for {damage} damage");
+                ActionLogListener.Publish($"{attacker.GetName()} hit {GetName()} for {damageAmount} damage");
         }
-        unitHealth.Damage(damage);
+        unitHealth.DeathCheck();
+        return damageAmount;
     }
-    public void Heal(Unit healer, int amount)
+    public int Heal(Unit healer, int amount)
     {
-        if(amount > 0) 
+        int healAmount = unitHealth.Heal(amount);
+        if(healAmount > 0) 
         {
             if(healer == this)
-                ActionLogListener.Publish($"{healer.GetName()} healed themself for {amount} hp");
+                ActionLogListener.Publish($"{healer.GetName()} healed themself for {healAmount} hp");
             else
-                ActionLogListener.Publish($"{healer.GetName()} healed {GetName()} for {amount} hp");
+                ActionLogListener.Publish($"{healer.GetName()} healed {GetName()} for {healAmount} hp");
         }
-        unitHealth.Heal(amount); //Returns amount of health healed
+
+        return healAmount;
     }
+
     private void OnDeath()
     {
         ActionLogListener.Publish($"{GetName()} has died");

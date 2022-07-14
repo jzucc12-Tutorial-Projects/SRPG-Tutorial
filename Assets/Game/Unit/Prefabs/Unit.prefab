@@ -152,14 +152,15 @@ MonoBehaviour:
   apCost: 1
   circularRange: 1
   includeSelf: 0
+  requiresUnit: 0
   requiresTargetable: 0
   targetAllies: 0
   actionRange: 1
   facingLimit: 0.97
   waitTime: 0
-  obstacleLayer:
+  blockingLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
 --- !u!114 &7907523317165694775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,14 +193,15 @@ MonoBehaviour:
   apCost: 2
   circularRange: 0
   includeSelf: 0
+  requiresUnit: 0
   requiresTargetable: 1
   targetAllies: 0
   actionRange: 1
   facingLimit: 0.9
   waitTime: 0
-  obstacleLayer:
+  blockingLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
   damage: 70
 --- !u!114 &6225444261919296823
 MonoBehaviour:
