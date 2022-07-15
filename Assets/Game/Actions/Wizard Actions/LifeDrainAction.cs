@@ -80,7 +80,7 @@ public class LifeDrainAction : CooldownAction, IAnimatedAction, IOnSelectAction
         Unit targetUnit = targetCell.GetUnit();
 
         //Accuracy score
-        int accuracy = accuracySO.CalculateAccuracy(unit, unitCell.GetWorldPosition(), target);
+        int accuracy = accuracySO.CalculateAccuracy(unit, unitCell.GetWorldPosition(), targetUnit);
         score += accuracy - 100;
 
         //Target score

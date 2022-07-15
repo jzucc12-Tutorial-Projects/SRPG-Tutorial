@@ -44,6 +44,11 @@ public abstract class CooldownAction : TargetedAction, ISupply
         currentCooldown = 0;
     }
 
+    public void ReduceAP(int amount)
+    {
+        currentCooldown = Mathf.Max(0, currentCooldown - amount);
+    }
+
     private void CooldownTick(bool team1Turn)
     {
         if(team1Turn ^ unit.IsTeam1()) return;

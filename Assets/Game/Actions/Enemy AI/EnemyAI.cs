@@ -153,14 +153,19 @@ public class EnemyAI : MonoBehaviour
 
         foreach(var action in enemy.GetActions())
         {
+            //Can take action
             if(action is MoveAction) continue;
-            var testAction = action.GetBestAIAction(enemyCell);
-            if(testAction == null) continue;
             if(!action.CanSelectAction(currentAP)) continue;
             if(currentAP < action.GetAPCost(currentAP)) continue;
 
-            if(enemyAIAction == null || testAction.score > enemyAIAction.score) 
-                enemyAIAction = new EnemyAIAction(testAction);
+            //Test action is the current best choice
+            var testAction = action.GetBestAIAction(enemyCell);
+            if(testAction == null) continue;
+            if(testAction.score <= 0) continue;
+            if(enemyAIAction != null && testAction.score > enemyAIAction.score) continue;
+
+            //Set action
+            enemyAIAction = new EnemyAIAction(testAction);
         }
         return enemyAIAction;
     }

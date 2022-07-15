@@ -465,7 +465,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c62a7104fa495ad4fb5065ad437b3e5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxUses: 2
   tooltip: {fileID: 9207968465195873309}
+  removeAfterUse:
+  - itemsToRemove:
+    - {fileID: 3925224135171338005}
+    - {fileID: 454422540263524970}
+    - {fileID: 369866905963388864}
+  - itemsToRemove:
+    - {fileID: 5972463127307755449}
+    - {fileID: 395106422658517927}
+    - {fileID: 7743170634812252937}
 --- !u!1001 &861269974898892164
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -482,7 +492,9 @@ PrefabInstance:
         Soldier: Reload guns and refill
         gear
 
-        Wizard: Reset spell cooldowns'
+        Wizard: Reset spell cooldowns
+
+        Uses left: 2 / 2'
       objectReference: {fileID: 0}
     - target: {fileID: 4332906474099357529, guid: 159cacd89e04de746a3fe76eddce694b,
         type: 3}
@@ -22807,6 +22819,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2736254284844072106}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3925224135171338005 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1405143200156881855, guid: 35210049c62b16d4595af9499866e772,
+    type: 3}
+  m_PrefabInstance: {fileID: 2736254284844072106}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3021638204508908127
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23033,6 +23051,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4711435747346091014}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5972463127307755449 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1405143200156881855, guid: 35210049c62b16d4595af9499866e772,
+    type: 3}
+  m_PrefabInstance: {fileID: 4711435747346091014}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5700086548531123185
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23199,6 +23223,12 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 710f9bac1a26064439306a44e742c04b, type: 3}
+--- !u!1 &7743170634812252937 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: 710f9bac1a26064439306a44e742c04b,
+    type: 3}
+  m_PrefabInstance: {fileID: 7743170634812351913}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7743170634812751657 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 710f9bac1a26064439306a44e742c04b,

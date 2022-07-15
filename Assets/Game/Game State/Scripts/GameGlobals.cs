@@ -1,6 +1,6 @@
 public static class GameGlobals
 {
-    private static GameMode currentMode = GameMode.twoPlayer;
+    private static GameMode currentMode = GameMode.team2AI;
     public static void SetMode(GameMode newMode)
     {
         currentMode = newMode;

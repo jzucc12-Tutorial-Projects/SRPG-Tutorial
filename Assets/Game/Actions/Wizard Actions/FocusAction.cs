@@ -25,7 +25,7 @@ public class FocusAction : BaseAction, IAltAction
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
         ActionStart(onFinish, gridCell);
-        cooldownAction.Resupply();
+        cooldownAction.ReduceAP(unit.GetAP());
         CallLog($"{unit.GetName()} focused on {cooldownAction.GetActionName()}");
         ActionFinish();
     }
@@ -75,8 +75,8 @@ public class FocusAction : BaseAction, IAltAction
     #region //Tooltip
     protected override void SpecificTooltipSetup()
     {
-        tooltip.costText = $"Uses all remaining AP";
-        tooltip.effectText = $"Resets the cooldown of {cooldownAction.GetActionName()}";
+        tooltip.costText = $"Uses all remaining AP.";
+        tooltip.effectText = $"Reduces the cooldown of {cooldownAction.GetActionName()} by 1 per AP spent";
         tooltip.altText = $"Switch back to {cooldownAction.GetActionName()}";
     }
     #endregion

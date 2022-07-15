@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 
-public class AudioManager {
+public class AudioManager 
+{
     private static AudioManager _instance;
 
-    public static AudioManager Instance () {
+    public static AudioManager Instance () 
+    {
         if (_instance == null) {
             _instance = new AudioManager();
         }
@@ -18,9 +17,11 @@ public class AudioManager {
 
     private void Awake() 
     {
-        if (_instance != null && _instance != this) {
+        if (_instance != null && _instance != this) 
+        {
             Debug.Log("Two Singletons active. May cause issues.");
         }
+        
     }
 
     /// <summary>

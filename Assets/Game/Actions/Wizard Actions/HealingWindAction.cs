@@ -77,7 +77,8 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
             if(targetUnit == null) continue;
 
             float hpPercent = targetUnit.GetHealthPercentage();
-            if(hpPercent > 0.7f) score += 10;
+            if(hpPercent == 1) score += 0;
+            else if(hpPercent > 0.7f) score += 10;
             else if(hpPercent > 0.5f) score += Mathf.RoundToInt(15 / hpPercent);
             else if(hpPercent > 0.25f) score += Mathf.RoundToInt(30 / hpPercent);
             else score += Mathf.RoundToInt(45 / hpPercent);

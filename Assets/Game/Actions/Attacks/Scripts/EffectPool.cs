@@ -47,7 +47,6 @@ public class EffectPool : MonoBehaviour
 
     private void Destroyed(Effect obj)
     {
-        Debug.Log(effectPool.CountAll);
         Destroy(obj.gameObject);
     }
 

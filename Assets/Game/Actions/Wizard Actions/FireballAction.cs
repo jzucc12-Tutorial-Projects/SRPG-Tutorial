@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -42,6 +43,18 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
     {
         SetTrigger?.Invoke("Fireball");
     }
+
+    private IEnumerable<ITargetable> GetTargets(GridCell targetCell)
+    {
+        foreach(var cell in levelGrid.CheckGridRange(targetCell, aoeSize, circularRange, true))
+        {
+            ITargetable targetable = cell.GetTargetable();
+            if(targetable == null) continue;
+            Vector3 dir = targetable.GetWorldPosition() - GetTargetPosition();
+            if(Physics.Raycast(GetTargetPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
+            yield return targetable;
+        } 
+    }
     #endregion
 
     #region //Action selection
@@ -72,12 +85,9 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
         int score = -5 * maxCooldown;
         int numTargets = 0;
 
-        foreach(var cell in levelGrid.CheckGridRange(targetCell, aoeSize, circularRange, true))
+        foreach(var targetable in GetTargets(targetCell))
         {
             numTargets++;
-            var targetable = cell.GetTargetable();
-            if(targetable == null) continue;
-
             if(targetable is SupplyCrate)
                 score += 15;
             else if(!(targetable is Unit))
@@ -104,14 +114,8 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
         fireball.transform.position = GetTargetPosition();
         fireball.transform.rotation = Quaternion.identity;
         CallLog($"{unit.GetName()} summoned a fireball");
-        foreach(var cell in levelGrid.CheckGridRange(target, aoeSize, circularRange, true))
-        {
-            ITargetable targetable = cell.GetTargetable();
-            if(targetable == null) continue;
-            Vector3 dir = targetable.GetWorldPosition() - GetTargetPosition();
-            if(Physics.Raycast(GetTargetPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
+        foreach(var targetable in GetTargets(target))
             targetable.Damage(unit, damage);
-        }
     }
 
     public void AnimationEnd()
