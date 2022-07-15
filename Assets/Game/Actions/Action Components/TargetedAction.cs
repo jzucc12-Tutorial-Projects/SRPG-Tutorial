@@ -118,6 +118,9 @@ public abstract class TargetedAction : BaseAction
             //Omit cells that have obstacles (needed for actions that aren't impeded by obstacles)
             if(cell.HasObstacle()) continue;
 
+            //Level grid is square by default. This takes non-square levels into account
+            if(cell.CantTarget()) continue;
+
             Vector3 targetPosition = unit.ConvertToShoulderHeight(cell);
             Vector3 aimDir = (targetPosition - attackerWorldPosition).normalized;
             bool obstacleHit = Physics.Raycast(attackerWorldPosition, aimDir, out RaycastHit hit,

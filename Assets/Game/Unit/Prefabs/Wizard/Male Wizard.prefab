@@ -151,6 +151,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 642008498672032383, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
+      propertyPath: isTeam1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 642008498672032383, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
       propertyPath: unitName
       value: Wizard
       objectReference: {fileID: 0}
@@ -255,7 +260,7 @@ MonoBehaviour:
   requiresUnit: 0
   requiresTargetable: 0
   targetAllies: 0
-  actionRange: 7
+  actionRange: 5
   facingLimit: 0.993
   waitTime: 0.5
   blockingLayer:

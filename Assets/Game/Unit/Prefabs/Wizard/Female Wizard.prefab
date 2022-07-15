@@ -44,11 +44,6 @@ PrefabInstance:
       propertyPath: unitName
       value: Female Wizard
       objectReference: {fileID: 0}
-    - target: {fileID: 7402897808467536777, guid: c4f714f34391d1f4c8c690b346814d3e,
-        type: 3}
-      propertyPath: maxActionPoints
-      value: 99
-      objectReference: {fileID: 0}
     - target: {fileID: 7402897808467536822, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_RootOrder

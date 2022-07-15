@@ -6,8 +6,9 @@ using UnityEngine;
 public class DestructableObject : MonoBehaviour, ITargetable
 {
     #region //Variables
+    [SerializeField] private GameObject rootObject = null;
     [SerializeField] private string objectName = "";
-    [SerializeField] private Transform destroyedPrefab = null;
+    [SerializeField] private Transform destroyedObject = null;
     [SerializeField] private Transform aimPoint = null;
     [SerializeField] private int maxHealth = 1;
     private int currentHealth = 0;
@@ -36,10 +37,11 @@ public class DestructableObject : MonoBehaviour, ITargetable
 
     private void ObjectDestroyed()
     {
-        var destroyTransform = Instantiate(destroyedPrefab, transform.position, transform.rotation);
+        destroyedObject.gameObject.SetActive(true);
         Vector3 randomDir = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f));
-        destroyTransform.ApplyExplosionToRBChildren(150f, transform.position + randomDir, 10f);
-        Destroy(gameObject);
+        destroyedObject.ApplyExplosionToRBChildren(150f, destroyedObject.position + randomDir, 10f);
+        destroyedObject.transform.parent = null;
+        Destroy(rootObject);
     }
     #endregion
 

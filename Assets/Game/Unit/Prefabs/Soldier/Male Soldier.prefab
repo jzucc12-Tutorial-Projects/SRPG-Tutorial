@@ -231,6 +231,11 @@ PrefabInstance:
       propertyPath: event1.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: GrenadeAction, Assembly-CSharp
       objectReference: {fileID: 0}
+    - target: {fileID: 6208183024560329706, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: maxHealth
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 7930978741787514549, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
       propertyPath: ragdollPrefab

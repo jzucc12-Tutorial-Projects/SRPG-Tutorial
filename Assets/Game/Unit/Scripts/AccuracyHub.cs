@@ -14,6 +14,7 @@ public static class AccuracyHub
         foreach(var gridCell in targetCells)
         {
             ITargetable target = gridCell.GetTargetable();
+            if(targets.ContainsKey(target)) continue;
             int accuracy = accuracySO.CalculateAccuracy(attacker, attacker.GetWorldPosition(), target);
             int fudgeAccuracy = accuracySO.FudgeAccuracy(accuracy);
             int crit = accuracySO.CalculateCritChance(accuracy);

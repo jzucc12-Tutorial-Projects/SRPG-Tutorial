@@ -13,6 +13,7 @@ public static class GridGlobals
     public static readonly LayerMask interactableMask = 1 << 9; //Level object
     public static readonly LayerMask obstacleMask = 1 << 8; //Obstacle
     public static readonly LayerMask blockWalkingMask = 1 << 8 | 1 << 9; //Level object or Obstacle
+    public static readonly LayerMask noTargetMask = 1 << 11;
 }
 
 /// <summary>
@@ -108,6 +109,10 @@ public static class GridExtensions
     public static bool HasObstacle(this GridCell gridCell)
     {
         return Raycast(gridCell, GridGlobals.obstacleMask);
+    }
+    public static bool CantTarget(this GridCell gridCell)
+    {
+        return Raycast(gridCell, GridGlobals.noTargetMask);
     }
     public static bool HasHighObstacle(this GridCell gridCell)
     {
