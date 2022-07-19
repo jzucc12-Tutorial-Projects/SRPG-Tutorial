@@ -41,15 +41,9 @@ public class InteractAction : TargetedAction
     #endregion
 
     #region //Enemy action
-    /// <summary>
-    /// No interacting. ONLY DESTRUCTION!!!
-    /// </summary>
-    /// <param name="unitCell"></param>
-    /// <param name="targetCell"></param>
-    /// <returns></returns>
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
+    protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        return new EnemyAIAction(this, targetCell, 0);
+        return 0;
     }
     #endregion
 

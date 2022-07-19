@@ -59,18 +59,18 @@ public class MedPackAction : TargetedAction, ISupply
     /// <param name="unitCell"></param>
     /// <param name="targetCell"></param>
     /// <returns></returns>
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
+    protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
         int score = 0;
-        float hpPercent = targetCell.GetUnit().GetHealthPercentage();
+        Unit targetUnit = targetCell.GetUnit();
+        float myHPPercent = unit.GetHealthPercentage();
+        if(myHPPercent == 1) return 0;
 
-        if(hpPercent > 0.7f) score += 0;
-        else if(hpPercent > 0.5f) score += Mathf.RoundToInt(1 / hpPercent);
-        else if(hpPercent > 0.25f) score += Mathf.RoundToInt(45 / hpPercent);
-        else score += 500;
-
-       return new EnemyAIAction(this, targetCell, 500);
+        float factor = Mathf.Lerp(10, 25, actionList.GetAggression()/10f);
+        score += Mathf.RoundToInt(factor/myHPPercent);
+        return score;
     }
+
     #endregion
 
     #region //Tooltip

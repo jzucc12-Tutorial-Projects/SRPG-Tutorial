@@ -83,37 +83,13 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
     #endregion
 
     #region //Enemy action
-    /// <summary>
-    /// Prioritizes units over other targets. Highly prioritizes if it kills.
-    /// Drops priority with accuracy and increases with lower target hp.
-    /// Aggressively destroys supply crates
-    /// </summary>
-    /// <param name="unitCell"></param>
-    /// <param name="targetCell"></param>
-    /// <returns></returns>
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
+    protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        //Set up
-        int score = 0;
         ITargetable target = targetCell.GetTargetable();
-
-        //Accuracy score
-        int accuracy = accuracySO.CalculateAccuracy(unit, unitCell.GetWorldPosition(), target);
-        score += accuracy - 100;
-
-        //Target score
-        Unit targetUnit = target as Unit;
-        SupplyCrate crate = target as SupplyCrate;
-        if(crate != null) score += 100;
-        else if(targetUnit == null) score += 25;
-        else
-        {
-            int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - damage * unit.GetDamageMod());
-            score += 100 - hpDiff/2;
-            if(hpDiff <= 0)
-                score += 120;
-        }
-        return new EnemyAIAction(this, targetCell, score);
+        AIDamageVars vars = new AIDamageVars(damage, 105, 20, 10);
+        if(actionList.GetAggression() > 5) vars.SetNonUnitValues(25, 15);
+        int score = unit.AccuracyDamageScoring(actionList.HasAction<SpinAction>(), target, vars, accuracySO, unitCell.GetWorldPosition());
+        return score;
     }
     #endregion
 

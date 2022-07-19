@@ -44,7 +44,7 @@ public abstract class CooldownAction : TargetedAction, ISupply
         currentCooldown = 0;
     }
 
-    public void ReduceAP(int amount)
+    public void ReduceCooldown(int amount)
     {
         currentCooldown = Mathf.Max(0, currentCooldown - amount);
     }
@@ -60,6 +60,14 @@ public abstract class CooldownAction : TargetedAction, ISupply
     public override bool CanSelectAction(int currentAP)
     {
         return currentCooldown == 0 && base.CanSelectAction(currentAP);
+    }
+    #endregion
+
+    #region //Enemy AI Action
+    protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
+    {
+        if(actionList.HasAction<CooldownAction>()) return -25;
+        return 0;
     }
     #endregion
 

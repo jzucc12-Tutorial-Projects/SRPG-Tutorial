@@ -67,35 +67,16 @@ public class LifeDrainAction : CooldownAction, IAnimatedAction, IOnSelectAction
     #endregion
 
     #region //Enemy AI
-    /// <summary>
-    /// Priotizes lower health enemies and when its health is low
-    /// </summary>
-    /// <param name="unitCell"></param>
-    /// <param name="targetCell"></param>
-    /// <returns></returns>
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
+    protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        //Set up
-        int score = -3 * maxCooldown;
+        int score = 0;
         Unit targetUnit = targetCell.GetUnit();
+        AIDamageVars vars = new AIDamageVars(damage, 65, 30, 20);
+        score += unit.AccuracyDamageScoring(actionList.HasAction<SpinAction>(), targetUnit, vars, accuracySO, unitCell.GetWorldPosition());
 
-        //Accuracy score
-        int accuracy = accuracySO.CalculateAccuracy(unit, unitCell.GetWorldPosition(), targetUnit);
-        score += accuracy - 100;
-
-        //Target score
-        int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - damage * unit.GetDamageMod());
-        score += 100 - hpDiff/2;
-        if(hpDiff <= 0)
-            score += 120;
-
-        float hpPercent = unit.GetHealthPercentage();
-        if(hpPercent > 0.7f) score += 0;
-        else if(hpPercent > 0.5f) score += Mathf.RoundToInt(1 / hpPercent);
-        else if(hpPercent > 0.25f) score += Mathf.RoundToInt(45 / hpPercent);
-        else score += 500;
-        
-        return new EnemyAIAction(this, targetCell, score);
+        float myHPPercent = unit.GetHealthPercentage();
+        score += Mathf.RoundToInt(12/myHPPercent);
+        return score + base.GetScore(actionList, unitCell, targetCell);
     }
     #endregion
 

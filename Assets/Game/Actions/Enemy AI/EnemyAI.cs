@@ -23,8 +23,14 @@ using UnityEngine;
 [RequireComponent(typeof(Unit))]
 public class EnemyAI : MonoBehaviour
 {
+    #region //Variables
     private Unit enemy = null;
     private MoveAction moveAction = null;
+    [SerializeField, Range(0,10)] private int aggression = 5;
+    [SerializeField, Min(1)] private int iterations = 1;
+    [SerializeField] private bool iterateLists = false;
+    [SerializeField] private bool iterateActions = true;
+    #endregion
 
 
     #region //Monobehaviour
@@ -42,9 +48,10 @@ public class EnemyAI : MonoBehaviour
         //Set up
         bool waiting = false;
         Action actionComplete = () => waiting = false;
-        var actionList = DetermineActions();
+        var actionList = DetermineActions(enemy.GetGridCell());
         Func<bool> doneWaiting = () => !waiting || !enemy.IsAlive();
         int actionNo = 0;
+        Debug.Log(actionList);
 
         while(enemy.GetAP() > 0)
         {
@@ -68,106 +75,121 @@ public class EnemyAI : MonoBehaviour
             }
 
             //Update list with current state
-            var testList = MakeActionList(new EnemyAIActionList(actionList, actionNo), enemy.GetGridCell(), enemy.GetAP());
+            var testList = MakeActionList(new EnemyAIActionList(actionList, actionNo), enemy.GetGridCell());
             if(!performed && testList == actionList) break;
             actionList = testList;
         }
     }
 
-    /// <summary>
-    /// Old method of how to handle an action being inelligible
-    /// </summary>
-    /// <param name="aiAction"></param>
-    /// <returns></returns>
-    private EnemyAIAction TryTakeAction(EnemyAIAction aiAction)
+    private EnemyAIActionList DetermineActions(GridCell unitCell)
     {
-        if(enemy.TryTakeAction(aiAction.action, aiAction.targetCell)) return aiAction;
-
-        var redo = aiAction.action.GetBestAIAction(enemy.GetGridCell());
-        if (redo != null && enemy.TryTakeAction(redo.action, redo.targetCell)) return redo;
-
-        if(aiAction.TryAlt())
+        var lists = new List<EnemyAIActionList>();
+        foreach(var cell in moveAction.GetValidCells(unitCell))
         {
-            var alt = aiAction.GetAltAction().GetBestAIAction(enemy.GetGridCell());
-            if(alt != null && enemy.TryTakeAction(alt.action, alt.targetCell)) return alt;
-            else return null;
+            var list = new EnemyAIActionList(enemy.GetAP(), aggression);
+            if(cell != unitCell)
+            {
+                var aiAction = moveAction.GetAIAction(list, unitCell, cell);
+                list.AddAIAction(aiAction);
+            }
+            lists.Add(MakeActionList(list, cell));
         }
-        return null;
+
+        //Return the best list
+        lists.Sort((EnemyAIActionList a, EnemyAIActionList b) => b.GetScore() - a.GetScore());
+        return lists[0];
     }
     #endregion
 
-    #region //Choosing actions
-    private EnemyAIActionList DetermineActions()
+    #region //Get actions
+    private EnemyAIActionList MakeActionList(EnemyAIActionList list, GridCell unitCell)
     {
-        var startCell = enemy.GetGridCell();
-        var lists = new List<EnemyAIActionList>();
-        var validCells = moveAction.GetValidCells();
-        int currentAP;
-
-        foreach(var cell in validCells)
+        //Determine possible actions and locations
+        var actionOptions = new Dictionary<BaseAction, List<GridCell>>();
+        foreach(var action in enemy.GetActions())
         {
-            currentAP = enemy.GetAP();
-            var list = new EnemyAIActionList();
+            if(!TryAction(list, action)) continue;
+            var cells = action.GetValidCells(unitCell);
+            if(cells.Count == 0) continue;
+            actionOptions.Add(action, cells);
+        }
+        if(actionOptions.Keys.Count == 0) return null;
 
-            //Handle moving first
-            if(enemy.GetGridCell() != cell)
+        //Generate lists
+        var lists = new List<EnemyAIActionList>();
+        int iterationCount = iterateLists ? iterations : 1;
+        for(int ii = 0; ii < iterationCount; ii++)
+        {
+            var newList = new EnemyAIActionList(list);
+            while(newList.GetAP() > 0)
             {
-                list.AddAIAction(moveAction.GetEnemyAIAction(enemy.GetGridCell(), cell));
-                currentAP -= moveAction.GetAPForMove(0);
+                EnemyAIAction enemyAction = GetBestAction(newList, unitCell, actionOptions);
+                if(enemyAction == null) break;
+                newList.AddAIAction(enemyAction);
             }
-
-            lists.Add(MakeActionList(list, cell, currentAP));
+            lists.Add(newList);
         }
 
-        //Sort lists from high to low total scores
-        lists.Sort((x,y) => 
-        {
-            if(x.GetScore() > y.GetScore()) return -1;
-            else if(x.GetScore() < y.GetScore()) return 1;
-            return 0;
-        });
-        
+        //Return the best list
+        lists.Sort((EnemyAIActionList a, EnemyAIActionList b) => b.GetScore() - a.GetScore());
         return lists[0];
     }
 
-    private EnemyAIActionList MakeActionList(EnemyAIActionList list, GridCell unitCell, int currentAP)
+    private EnemyAIAction GetBestAction(EnemyAIActionList list, GridCell unitCell, Dictionary<BaseAction, List<GridCell>> actionOptions)
     {
-        while(currentAP > 0)
+        //Simulation set up
+        int currentIteration = 0;
+        var actions = new List<BaseAction>(actionOptions.Keys);
+        var aiActions = new List<EnemyAIAction>();
+        int iterationCount = iterateActions ? iterations : 1;
+
+        //Make options. Weird way to break reference to the source
+        var myOptions = new Dictionary<BaseAction, List<GridCell>>();
+        foreach(var action in actions)
         {
-            EnemyAIAction enemyAction = GetBestAction(unitCell, currentAP);
-            if(enemyAction == null) break;
-            list.AddAIAction(enemyAction);
-            currentAP -= enemyAction.action.GetAPCost(currentAP);
+            var cells = new List<GridCell>(actionOptions[action]);
+            myOptions.Add(action, cells);
         }
 
-        if(list.HasAction(moveAction)) return list;
-        if(list.GetTotalCost() + moveAction.GetAPForMove(0) >= enemy.GetAP()) return list;
-        var move = moveAction.GetBestAIAction(unitCell);
-        list.AddAIAction(move);
-        return list;
+        while(currentIteration < iterationCount)
+        {
+            //Check for breaking
+            if(actions.Count == 0) break;
+
+            //Get score
+            var action = actions.GetRandomEntry();
+            var targetCells = myOptions[action];
+            if(targetCells.Count == 0) Debug.Log(action);
+            var targetCell = targetCells.GetRandomEntry();
+            var testAction = action.GetAIAction(list, unitCell, targetCell);
+
+            //Remove current
+            myOptions[action].Remove(targetCell);
+            if(myOptions[action].Count == 0) actions.Remove(action);
+
+            //Add AI Action
+            if(testAction.score <= 0) continue;
+            aiActions.Add(testAction);
+            currentIteration++;
+        }
+
+        //Get Best Action
+        if(aiActions.Count == 0) return null;
+        aiActions.Sort((EnemyAIAction a, EnemyAIAction b) => b.score - a.score);
+        return aiActions[0];
     }
 
-    private EnemyAIAction GetBestAction(GridCell enemyCell, int currentAP)
+    private bool TryAction(EnemyAIActionList list, BaseAction action)
     {
-        EnemyAIAction enemyAIAction = null;
-
-        foreach(var action in enemy.GetActions())
+        int currentAP = list.GetAP();
+        if(!action.CanSelectAction(currentAP)) return false;
+        if(action == moveAction)
         {
-            //Can take action
-            if(action is MoveAction) continue;
-            if(!action.CanSelectAction(currentAP)) continue;
-            if(currentAP < action.GetAPCost(currentAP)) continue;
-
-            //Test action is the current best choice
-            var testAction = action.GetBestAIAction(enemyCell);
-            if(testAction == null) continue;
-            if(testAction.score <= 0) continue;
-            if(enemyAIAction != null && testAction.score > enemyAIAction.score) continue;
-
-            //Set action
-            enemyAIAction = new EnemyAIAction(testAction);
+            if(currentAP < moveAction.GetAPForMove(list.ActionInListCount<MoveAction>()))
+                return false;
         }
-        return enemyAIAction;
+        else if(currentAP < action.GetAPCost(currentAP)) return false;
+        return true;
     }
     #endregion
 }

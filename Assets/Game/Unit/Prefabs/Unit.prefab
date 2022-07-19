@@ -215,6 +215,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16ee734f5ddba9645afa351eb2ddc38b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aggression: 5
+  iterations: 25
+  iterateLists: 0
+  iterateActions: 1
 --- !u!1 &704012140628820037
 GameObject:
   m_ObjectHideFlags: 0

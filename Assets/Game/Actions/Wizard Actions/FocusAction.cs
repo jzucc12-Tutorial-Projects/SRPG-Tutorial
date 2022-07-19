@@ -5,11 +5,12 @@ using UnityEngine;
 /// <summary>
 /// Resets the cooldown of an attached action
 /// </summary>
-public class FocusAction : BaseAction, IAltAction
+public class FocusAction : BaseAction, IAltAction, IOnSelectAction
 {
     #region //Variables
     [Header("Focus Action")]
     [SerializeField] private CooldownAction cooldownAction = null;
+    private int reduceAmount = 0;
     #endregion
 
 
@@ -25,7 +26,7 @@ public class FocusAction : BaseAction, IAltAction
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
         ActionStart(onFinish, gridCell);
-        cooldownAction.ReduceAP(unit.GetAP());
+        cooldownAction.ReduceCooldown(reduceAmount);
         CallLog($"{unit.GetName()} focused on {cooldownAction.GetActionName()}");
         ActionFinish();
     }
@@ -34,16 +35,12 @@ public class FocusAction : BaseAction, IAltAction
     #region //Action selection
     public void OnSelected()
     {
-        var selected = cooldownAction as IOnSelectAction;
-        if(selected == null) return;
-        selected.OnSelected();
+        reduceAmount = unit.GetAP();
     }
 
     public void OnUnSelected()
     {
-        var selected = cooldownAction as IOnSelectAction;
-        if(selected == null) return;
-        selected.OnUnSelected();
+        reduceAmount = 0;
     }
 
     public override bool CanSelectAction(int currentAP)
@@ -58,17 +55,10 @@ public class FocusAction : BaseAction, IAltAction
     #endregion
 
     #region //Enemy AI
-    /// <summary>
-    /// Highly prioritizes when cooldown is longer
-    /// </summary>
-    /// <param name="targetCell"></param>
-    /// <param name="unitCell"></param>
-    /// <returns></returns>
-    public override EnemyAIAction GetEnemyAIAction(GridCell targetCell, GridCell unitCell)
+    protected override int GetScore(EnemyAIActionList actionList, GridCell targetCell, GridCell unitCell)
     {
-        int score = 5 * cooldownAction.GetMaxCooldown();
         float cooldownLeft = Mathf.Max(0, cooldownAction.GetCooldownPercentLeft());
-        return new EnemyAIAction(this, unitCell, Mathf.RoundToInt(cooldownLeft * 70));
+        return Mathf.RoundToInt(cooldownLeft * 30 * actionList.GetAP());
     }
     #endregion
 

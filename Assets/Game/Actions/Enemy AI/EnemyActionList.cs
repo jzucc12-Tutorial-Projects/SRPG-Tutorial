@@ -5,13 +5,19 @@ using System.Collections.Generic;
 /// <summary>
 /// Holds a possible turn for the AI.
 /// </summary>
-public class EnemyAIActionList : IEquatable<EnemyAIActionList>
+public class EnemyAIActionList
 {
     private List<EnemyAIAction> aiActions = new List<EnemyAIAction>();
+    private int maxAP = 0;
+    private int aggression = 5;
 
 
     #region //Constructor
-    public EnemyAIActionList() { }
+    public EnemyAIActionList(int maxAP, int aggression) 
+    { 
+        this.maxAP = maxAP;
+        this.aggression = aggression;
+    }
 
     /// <summary>
     /// Copy from a source list. Leave count at -1 to copy the whole list.
@@ -20,6 +26,9 @@ public class EnemyAIActionList : IEquatable<EnemyAIActionList>
     /// <param name="count">How many list items you want to copy</param>
     public EnemyAIActionList(EnemyAIActionList source, int count = -1)
     {
+        this.maxAP = source.maxAP;
+        this.aggression = source.aggression;
+        
         if(count == -1)
         {
             aiActions = new List<EnemyAIAction>(source.aiActions);
@@ -37,19 +46,23 @@ public class EnemyAIActionList : IEquatable<EnemyAIActionList>
         aiActions.Add(aiAction);
     }
 
-    public bool HasAction(BaseAction action)
+    public bool HasAction<T>() where T : BaseAction
     {
+        return ActionInListCount<T>() > 0;
+    }
+
+    public int ActionInListCount<T>() where T : BaseAction
+    {
+        int count = 0;
         foreach(var aiAction in aiActions)
         {
-            if(aiAction.action != action) continue;
-            return true;
+            if(aiAction.action is T) count++;
         }
-        return false; 
+        return count;
     }
     #endregion
 
     #region //Getters
-    public List<EnemyAIAction> GetAIActions() => aiActions;
     public EnemyAIAction GetAction(int index)
     {
         if(index < 0 || index >= aiActions.Count) return null;
@@ -63,32 +76,28 @@ public class EnemyAIActionList : IEquatable<EnemyAIActionList>
 
         return total;
     }
-    public int GetTotalCost()
+
+    public int GetAggression() => aggression;
+    public int PassiveLevel() => 10 - aggression;
+    public int GetAP()
     {
-        int cost = 0;
+        int ap = maxAP;
+        int moves = 0;
         foreach(var aiAction in aiActions)
         {
-            cost += aiAction.action.GetAPCost();
+            int cost = 0;
+            if(aiAction.action is MoveAction)
+            {
+                var moveAction = aiAction.action as MoveAction;
+                cost = moveAction.GetAPForMove(moves);
+                moves++;
+            }
+            else
+                cost = aiAction.action.GetAPCost(ap);
+            
+            ap -= cost;
         }
-        return cost;
-    }
-
-    public bool Equals(EnemyAIActionList other)
-    {
-        if(this.aiActions.Count != other.aiActions.Count) return false;
-        for(int ii = 0; ii < aiActions.Count; ii++)
-            if(this.aiActions[ii] != other.aiActions[ii]) return false;
-
-        return true;
-    }
-
-    public override string ToString()
-    {
-        string output = $"Score: {GetScore()}, Actions: ";
-        foreach(var aiAction in aiActions)
-            output += $"{aiAction.action.GetActionName()}, ";
-        
-        return output.Remove(output.Length - 2);
+        return ap;
     }
     #endregion
 }

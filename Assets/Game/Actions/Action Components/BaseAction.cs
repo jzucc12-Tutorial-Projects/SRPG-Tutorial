@@ -98,22 +98,12 @@ public abstract class BaseAction : MonoBehaviour
     #endregion
 
     #region //Enemy action
-    public EnemyAIAction GetBestAIAction(GridCell referenceCell)
+    public EnemyAIAction GetAIAction(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        List<EnemyAIAction> actionList = new List<EnemyAIAction>();
-
-        foreach(var targetCell in GetValidCells(referenceCell))
-        {
-            EnemyAIAction enemyAction = GetEnemyAIAction(referenceCell, targetCell);
-            actionList.Add(enemyAction);
-        }
-
-        if(actionList.Count <= 0) return null;
-        actionList.Sort((EnemyAIAction a, EnemyAIAction b) => b.score - a.score);
-        return actionList[0];
+        return new EnemyAIAction(this, targetCell, GetScore(actionList, unitCell, targetCell));
     }
 
-    public abstract EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell cell);
+    protected abstract int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell);
     #endregion
 
     #region //Tooltip

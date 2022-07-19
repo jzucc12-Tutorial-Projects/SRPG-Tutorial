@@ -122,25 +122,39 @@ public class MoveAction : BaseAction
     #endregion
 
     #region //Enemy Action
-    /// <summary>
-    /// Prioritizes not being seen by enemies and being further away
-    /// </summary>
-    /// <param name="unitCell"></param>
-    /// <param name="targetCell"></param>
-    /// <returns></returns>
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
+    protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
+    {
+        if(actionList.GetAggression() == 0) return 0;
+
+        int score = 0;
+        List<Unit> enemies = new List<Unit>(unitManager.GetUnitList());
+        enemies.RemoveAll(x => x.IsAI());
+
+        score += GetPositionalScore(true, enemies, unitCell, targetCell) * actionList.GetAggression()/10;
+        if(actionList.GetAggression() != 10) 
+            score += GetPositionalScore(false, enemies, unitCell, targetCell) * actionList.PassiveLevel()/10;
+        
+        score /= enemies.Count;
+        score -= 5 * actionList.ActionInListCount<MoveAction>();
+        return score;
+    }
+
+    private int GetPositionalScore(bool aggressive, List<Unit> enemies, GridCell startCell, GridCell targetCell)
     {
         int score = 0;
         Vector3 newPosition = targetCell.GetWorldPosition();
-        foreach(var player in unitManager.GetUnitList())
+        foreach(var enemy in enemies)
         {
-            if(player.IsAI()) continue;
-            var dir = (player.GetWorldPosition() - newPosition);
-            if(Physics.Raycast(newPosition, dir, dir.magnitude, GridGlobals.obstacleMask))
-                score += 25;
-            score += targetCell.GetGridDistance(player.GetGridCell()); 
+            var dir = (enemy.GetWorldPosition() - newPosition);
+            bool seen = Physics.Raycast(newPosition, dir, dir.magnitude, GridGlobals.obstacleMask);
+            if(!seen ^ aggressive)
+                score += 40;
+
+            int startDistance = pathfinder.GetPathLength(startCell, enemy.GetGridCell());
+            int endDistance = pathfinder.GetPathLength(targetCell, enemy.GetGridCell());
+            score += 5 * (endDistance - startDistance) * (aggressive ? -1 : 1); 
         }
-        return new EnemyAIAction(this, targetCell, score);
+        return score;
     }
     #endregion
 

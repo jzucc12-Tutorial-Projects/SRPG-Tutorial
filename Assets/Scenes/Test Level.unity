@@ -209,7 +209,7 @@ PrefabInstance:
     - target: {fileID: 5395285113869410169, guid: 37d6eb48bb8006545a7fcf89185a76e2,
         type: 3}
       propertyPath: m_text
-      value: David
+      value: Eli
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -655,7 +655,32 @@ PrefabInstance:
     - target: {fileID: 1599776258077834728, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_text
-      value: Merlin
+      value: IDR
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049166613275540673, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: aggression
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049166613275540673, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: iterations
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049166613275540673, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: iterateLists
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049166613275540673, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: iterateActions
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049166613275540673, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: aggressiveLevel
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5525297966106258002, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
@@ -1907,7 +1932,7 @@ PrefabInstance:
     - target: {fileID: 1599776258077834728, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_text
-      value: Merlin
+      value: Richard
       objectReference: {fileID: 0}
     - target: {fileID: 5525297966106258002, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
@@ -2329,10 +2354,35 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 2777695004307207687}
     m_Modifications:
+    - target: {fileID: 231023419207397835, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: maxCooldown
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 231023419207397837, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: maxCooldown
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 231023419207397849, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: maxCooldown
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 231023419207397861, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: maxCooldown
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1599776258077834728, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_text
       value: Merlin
+      objectReference: {fileID: 0}
+    - target: {fileID: 2591834491680548197, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: maxCooldown
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5525297966106258002, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
@@ -2354,6 +2404,11 @@ PrefabInstance:
       propertyPath: unitName
       value: Merlin
       objectReference: {fileID: 0}
+    - target: {fileID: 7402897808467536777, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: maxActionPoints
+      value: 99
+      objectReference: {fileID: 0}
     - target: {fileID: 7402897808467536822, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_RootOrder
@@ -2362,7 +2417,7 @@ PrefabInstance:
     - target: {fileID: 7402897808467536822, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7402897808467536822, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
@@ -2372,7 +2427,7 @@ PrefabInstance:
     - target: {fileID: 7402897808467536822, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.00008
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7402897808467536822, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
@@ -2514,7 +2569,7 @@ PrefabInstance:
     - target: {fileID: 5335469000824829583, guid: 9745d2be2f4e1e6408e5caad4b8ce1e2,
         type: 3}
       propertyPath: m_text
-      value: Meryl
+      value: George
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -2596,22 +2651,22 @@ PrefabInstance:
     - target: {fileID: 922817128287054149, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.00018842438
+      value: -0.00018837796
       objectReference: {fileID: 0}
     - target: {fileID: 922817128287054149, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000059430284
+      value: 0.000059415648
       objectReference: {fileID: 0}
     - target: {fileID: 922817128425817792, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.00018842438
+      value: -0.00018837796
       objectReference: {fileID: 0}
     - target: {fileID: 922817128425817792, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000059430284
+      value: 0.000059415648
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

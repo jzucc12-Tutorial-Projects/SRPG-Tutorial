@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -58,39 +59,12 @@ public class TremorAction : CooldownAction, IAnimatedAction, IOnSelectAction
     #endregion
 
     #region //Enemy AI
-    /// <summary>
-    /// Priotizes hitting more targets. Extra points for it being an enemy unit.
-    /// Likes hitting supply crates
-    /// </summary>
-    /// <param name="unitCell"></param>
-    /// <param name="targetCell"></param>
-    /// <returns></returns>
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
+    protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        int score = -7 * maxCooldown;
-        int numTargets = 0;
-
-        foreach(var cell in levelGrid.CheckGridRange(targetCell, aoeSize, circularRange, false))
-        {
-            numTargets++;
-            var targetable = cell.GetTargetable();
-            if(targetable == null) continue;
-
-            if(targetable is SupplyCrate)
-                score += 15;
-            else if(!(targetable is Unit))
-                score += 5;
-            else
-            {
-                Unit targetUnit = targetable as Unit;
-                if(targetUnit.IsAI()) continue;
-                int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - damage);
-                score += 50 - hpDiff/3;
-            }
-        }
-
-        if(numTargets == 1) score = Mathf.RoundToInt(score * 0.7f);
-        return new EnemyAIAction(this, targetCell, score);
+        AIDamageVars vars = new AIDamageVars(damage, 55, 35, 20);
+        if(actionList.GetAggression() > 5) vars.SetNonUnitValues(15, 5);
+        int score = unit.AOEScoring(GetTargets(targetCell), vars, 0, 0, 1);
+        return score + base.GetScore(actionList, unitCell, targetCell);
     }
     #endregion
 
@@ -99,13 +73,9 @@ public class TremorAction : CooldownAction, IAnimatedAction, IOnSelectAction
     {
         TremorStarted?.Invoke();
         CallLog($"{unit.GetName()} made the world tremor");
-        foreach(var cell in levelGrid.CheckGridRange(target, aoeSize, circularRange, true))
+        foreach(var target in GetTargets(target))
         {
-            ITargetable targetable = cell.GetTargetable();
-            if(targetable == null || !targetable.CanBeTargeted(unit, false)) continue;
-            Vector3 dir = targetable.GetWorldPosition() - GetTargetPosition();
-            if(Physics.Raycast(GetTargetPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
-            targetable.Damage(unit, damage);
+            target.Damage(unit, damage);
         }
     }
 
@@ -129,5 +99,16 @@ public class TremorAction : CooldownAction, IAnimatedAction, IOnSelectAction
     public override string GetActionName() => "Tremors";
 
     public override Vector3 GetTargetPosition() => target.GetWorldPosition();
+    public IEnumerable<ITargetable> GetTargets(GridCell targetCell)
+    {
+        foreach(var cell in levelGrid.CheckGridRange(targetCell, aoeSize, circularRange, true))
+        {
+            ITargetable targetable = cell.GetTargetable();
+            if(targetable == null || !targetable.CanBeTargeted(unit, false)) continue;
+            Vector3 dir = targetable.GetWorldPosition() - GetTargetPosition();
+            if(Physics.Raycast(GetTargetPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
+            yield return targetable;
+        }
+    }
     #endregion
 }

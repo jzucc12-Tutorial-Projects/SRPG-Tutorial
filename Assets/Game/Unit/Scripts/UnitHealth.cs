@@ -55,5 +55,6 @@ public class UnitHealth : MonoBehaviour
     #region //Getters
     public float GetHealthPercentage() => (float)currentHealth / maxHealth;
     public int GetHealth() => currentHealth;
+    public float GetPercentageFromValue(int value) => (float)value / maxHealth;
     #endregion
 }

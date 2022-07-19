@@ -12,6 +12,12 @@ public class Effect : MonoBehaviour
 
     public void SetPool(EffectPool pool) => this.pool = pool;
 
+    private void OnEnable()
+    {
+        if(!disableWithChild) return;
+        child.gameObject.SetActive(true);
+    }
+
     private void OnDisable() 
     {
         ReleaseMe();
@@ -21,7 +27,7 @@ public class Effect : MonoBehaviour
     {
         if(!disableWithChild) return;
         if(child.activeInHierarchy) return;
-        ReleaseMe();
+        gameObject.SetActive(false);
     }
 
     public void ReleaseMe() => pool.ReleaseEffect(this);

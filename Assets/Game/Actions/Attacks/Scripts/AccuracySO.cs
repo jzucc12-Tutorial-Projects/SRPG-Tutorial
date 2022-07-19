@@ -65,7 +65,7 @@ public class AccuracySO : ScriptableObject
         int roll = UnityEngine.Random.Range(0, 101);
         if (roll < CalculateCritChance(accuracy)) return critMult;
         else if (accuracy == 100) return 1;
-        return roll <= FudgeAccuracy(accuracy)? 1 : 0;
+        return roll < FudgeAccuracy(accuracy)? 1 : 0;
     }
 
     /// <summary>
@@ -125,5 +125,9 @@ public class AccuracySO : ScriptableObject
     public int GetBaseAccuracy() => baseAccuracy;
     public int GetCritChance() => critChance;
     public float GetCritMult() => critMult;
+    public bool IsNearRange(GridCell start, GridCell end)
+    {
+        return start.GetGridDistance(end, true) <= nearRange;
+    }
     #endregion
 }

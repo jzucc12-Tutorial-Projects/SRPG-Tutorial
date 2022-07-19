@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -68,41 +69,12 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     #endregion
 
     #region //Enemy AI
-    /// <summary>
-    /// Priotizes hitting more targets. Extra points for it being an enemy unit.
-    /// Less points if friendly. Even less if it is itself
-    /// Likes hitting supply crates
-    /// </summary>
-    /// <param name="unitCell"></param>
-    /// <param name="targetCell"></param>
-    /// <returns></returns>
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
+    protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        int score = -5 * maxCooldown;
-        int numTargets = 0;
-
-        foreach(var cell in levelGrid.GetLine(unitCell, targetCell))
-        {
-            numTargets++;
-            var targetable = cell.GetTargetable();
-            if(targetable == null) continue;
-
-            if(targetable is SupplyCrate)
-                score += 15;
-            else if(!(targetable is Unit))
-                score += 5;
-            else
-            {
-                Unit targetUnit = targetable as Unit;
-                int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - damage);
-                score += 50 - hpDiff/3;
-                if(targetUnit.IsAI()) score *= -1;
-                if(targetUnit == unit) score -= 50;
-            }
-        }
-
-        if(numTargets == 1) score = Mathf.RoundToInt(score * 0.5f);
-        return new EnemyAIAction(this, targetCell, score);
+        AIDamageVars vars = new AIDamageVars(damage, 35, 30, 25);
+        vars.SetNonUnitValues(10, 5);
+        int score = unit.AOEScoring(GetTargets(unitCell, targetCell), vars, -1, 0, 2/maxCooldown);
+        return score + base.GetScore(actionList, unitCell, targetCell);
     }
     #endregion
 
@@ -138,5 +110,14 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     public override string GetActionName() => "Lightning Bolt";
 
     public override Vector3 GetTargetPosition() => target.GetWorldPosition();
+    private IEnumerable<ITargetable> GetTargets(GridCell unitCell, GridCell targetCell)
+    {
+        foreach(var cell in levelGrid.GetLine(unitCell, targetCell))
+        {
+            var targetable = cell.GetTargetable();
+            if(targetable == null) continue;
+            yield return targetable;
+        }
+    }
     #endregion
 }

@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d1cf54bcbb93d74a9f26d9e1fd28dc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effect: {fileID: 2161815341973559113, guid: 0da6ed4c56e5aac4394afc6b44289855, type: 3}
+  effect: {fileID: 7842367500040833270, guid: 0da6ed4c56e5aac4394afc6b44289855, type: 3}
   defaultSize: 2
   maxSize: 5
 --- !u!1 &5342083542674862100

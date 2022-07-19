@@ -54,16 +54,10 @@ public class SpinAction : BaseAction
     #endregion
 
     #region //Enemy Action
-    /// <summary>
-    /// It's random baby!
-    /// </summary>
-    /// <param name="unitCell"></param>
-    /// <param name="targetCell"></param>
-    /// <returns></returns>
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
+    protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        if(UnityEngine.Random.Range(0,101) < 95) new EnemyAIAction(this, targetCell, UnityEngine.Random.Range(25, 51));
-        return new EnemyAIAction(this, targetCell, UnityEngine.Random.Range(41, 81));
+        if(UnityEngine.Random.Range(0,101) < 95) return UnityEngine.Random.Range(10, 31);
+        return UnityEngine.Random.Range(25, 51);
     }
     #endregion
 
@@ -83,5 +77,7 @@ public class SpinAction : BaseAction
     {
         return Mathf.Max(1, currentAP - 1);
     }
+    public int GetAccuracyDrop() => -accuracyDrop;
+    public float GetDamageBoost() => damageBoost;
     #endregion
 }

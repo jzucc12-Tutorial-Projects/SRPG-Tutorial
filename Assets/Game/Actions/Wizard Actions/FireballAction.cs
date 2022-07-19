@@ -43,18 +43,6 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
     {
         SetTrigger?.Invoke("Fireball");
     }
-
-    private IEnumerable<ITargetable> GetTargets(GridCell targetCell)
-    {
-        foreach(var cell in levelGrid.CheckGridRange(targetCell, aoeSize, circularRange, true))
-        {
-            ITargetable targetable = cell.GetTargetable();
-            if(targetable == null) continue;
-            Vector3 dir = targetable.GetWorldPosition() - GetTargetPosition();
-            if(Physics.Raycast(GetTargetPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
-            yield return targetable;
-        } 
-    }
     #endregion
 
     #region //Action selection
@@ -72,38 +60,12 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
     #endregion
 
     #region //Enemy AI
-    /// <summary>
-    /// Priotizes hitting more targets. Extra points for it being an enemy unit.
-    /// Less points if friendly. Even less if it is itself
-    /// Likes hitting supply crates
-    /// </summary>
-    /// <param name="unitCell"></param>
-    /// <param name="targetCell"></param>
-    /// <returns></returns>
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
+    protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        int score = -5 * maxCooldown;
-        int numTargets = 0;
-
-        foreach(var targetable in GetTargets(targetCell))
-        {
-            numTargets++;
-            if(targetable is SupplyCrate)
-                score += 15;
-            else if(!(targetable is Unit))
-                score += 5;
-            else
-            {
-                Unit targetUnit = targetable as Unit;
-                int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - damage);
-                score += 50 - hpDiff/3;
-                if(targetUnit.IsAI()) score *= -1;
-                if(targetUnit == unit) score -= 50;
-            }
-        }
-
-        if(numTargets == 1) score = Mathf.RoundToInt(score * 0.5f);
-        return new EnemyAIAction(this, targetCell, score);
+        AIDamageVars vars = new AIDamageVars(damage, 40, 25, 25);
+        if(actionList.GetAggression() > 5) vars.SetNonUnitValues(15, 5);
+        int score = unit.AOEScoring(GetTargets(targetCell), vars, -1, -30, 2/maxCooldown);
+        return score + base.GetScore(actionList, unitCell, targetCell);
     }
     #endregion
 
@@ -138,5 +100,16 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
     public override string GetActionName() => "Fireball";
 
     public override Vector3 GetTargetPosition() => target.GetWorldPosition();
+    private IEnumerable<ITargetable> GetTargets(GridCell targetCell)
+    {
+        foreach(var cell in levelGrid.CheckGridRange(targetCell, aoeSize, circularRange, true))
+        {
+            ITargetable targetable = cell.GetTargetable();
+            if(targetable == null) continue;
+            Vector3 dir = targetable.GetWorldPosition() - GetTargetPosition();
+            if(Physics.Raycast(GetTargetPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
+            yield return targetable;
+        } 
+    }
     #endregion
 }

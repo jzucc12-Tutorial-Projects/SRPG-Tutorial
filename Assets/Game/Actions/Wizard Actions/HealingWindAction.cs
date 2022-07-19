@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -59,33 +60,25 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
     #endregion
 
     #region //Enemy AI
-    /// <summary>
-    /// Priotizes healing moare allies.
-    /// Less points if there is an enemy.
-    /// Likes hitting supply crates
-    /// </summary>
-    /// <param name="unitCell"></param>
-    /// <param name="targetCell"></param>
-    /// <returns></returns>
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
+    protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        int score = -3 * maxCooldown;
+        int score = 0;
+        int numTargets = 0;
 
-        foreach(var cell in levelGrid.CheckGridRange(targetCell, aoeSize, circularRange, true))
+        foreach(var targetUnit in GetTargets(targetCell))
         {
-            var targetUnit = cell.GetUnit();
-            if(targetUnit == null) continue;
-
+            int unitScore = 0;
             float hpPercent = targetUnit.GetHealthPercentage();
-            if(hpPercent == 1) score += 0;
-            else if(hpPercent > 0.7f) score += 10;
-            else if(hpPercent > 0.5f) score += Mathf.RoundToInt(15 / hpPercent);
-            else if(hpPercent > 0.25f) score += Mathf.RoundToInt(30 / hpPercent);
-            else score += Mathf.RoundToInt(45 / hpPercent);
-            if(!targetUnit.IsAI()) score *= -1;
+            if(hpPercent == 1) continue; 
+            float factor = Mathf.Lerp(10, 25, actionList.GetAggression()/10f);
+            unitScore += Mathf.RoundToInt(factor/hpPercent);
+            if(!targetUnit.IsAI()) unitScore *= -1;
+            if(unitScore > 0) numTargets++;
+            score += unitScore;
         }
 
-        return new EnemyAIAction(this, targetCell, score);
+        if(numTargets == 1) score *= Mathf.RoundToInt(2f/maxCooldown);
+        return score + base.GetScore(actionList, unitCell, targetCell);
     }
     #endregion
 
@@ -96,12 +89,8 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
         wind.transform.position = GetTargetPosition();
         wind.transform.rotation = Quaternion.identity;
         CallLog($"{unit.GetName()} summoned a healing aura");
-        foreach(var cell in levelGrid.CheckGridRange(target, aoeSize, circularRange, true))
+        foreach(var targetUnit in GetTargets(target))
         {
-            Unit targetUnit = cell.GetUnit();
-            if(targetUnit == null) continue;
-            Vector3 dir = targetUnit.GetWorldPosition() - GetTargetPosition();
-            if(Physics.Raycast(GetTargetPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
             targetUnit.Heal(unit, healing);
         }
     }
@@ -125,5 +114,17 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
     public override string GetActionName() => "Healing Wind";
 
     public override Vector3 GetTargetPosition() => target.GetWorldPosition();
+
+    public IEnumerable<Unit> GetTargets(GridCell targetCell)
+    {
+        foreach(var cell in levelGrid.CheckGridRange(targetCell, aoeSize, circularRange, true))
+        {
+            Unit targetUnit = cell.GetUnit();
+            if(targetUnit == null) continue;
+            Vector3 dir = targetUnit.GetWorldPosition() - targetCell.GetWorldPosition();
+            if(Physics.Raycast(GetTargetPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
+            yield return unit;
+        }
+    }
     #endregion
 }

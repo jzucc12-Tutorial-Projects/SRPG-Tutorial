@@ -80,41 +80,19 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
     #endregion
 
     #region //Enemy action
-    /// <summary>
-    /// Priotizes hitting more targets. Extra points for it being an enemy unit.
-    /// Less points if friendly. Even less if it is itself
-    /// Likes hitting supply crates
-    /// </summary>
-    /// <param name="unitCell"></param>
-    /// <param name="targetCell"></param>
-    /// <returns></returns>
-    public override EnemyAIAction GetEnemyAIAction(GridCell unitCell, GridCell targetCell)
+    protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        int score = 0;
-        int numTargets = 0;
-
-        foreach(var targetable in grenadePrefab.GetTargets(targetCell))
-        {
-            numTargets++;
-            if(targetable is SupplyCrate)
-                score += 25;
-            else if(!(targetable is Unit))
-                score += 10;
-            else
-            {
-                Unit targetUnit = targetable as Unit;
-                bool onTarget = targetUnit.GetGridCell() == targetCell;
-                int hpDiff = Mathf.RoundToInt(targetUnit.GetHealth() - grenadePrefab.GetDamage(onTarget));
-                score += 60 - hpDiff/3;
-                if(targetUnit.IsAI()) score *= -1;
-                if(targetUnit == unit) score -= 50;
-            }
-        }
-
-        if(numTargets == 1) score = Mathf.RoundToInt(score * 0.5f);
         float quantityMod = currentQuantity / maxQuantity;
-        score = Mathf.RoundToInt(score * quantityMod);
-        return new EnemyAIAction(this, targetCell, score);
+        AIDamageVars vars = new AIDamageVars(grenadePrefab.GetDamage(false), 40, 25, 25);
+        if(actionList.GetAggression() > 5) vars.SetNonUnitValues(15, 5);
+        int score = unit.AOEScoring(grenadePrefab.GetTargets(targetCell), vars, -0.5f, -30, 0.9f);
+
+        Unit targetUnit = targetCell.GetUnit();
+        if(targetUnit != null)
+        {
+            score += 30 * (targetUnit.IsAI() ? -1 : 2);
+        }
+        return Mathf.RoundToInt(score * quantityMod);
     }
     #endregion
 

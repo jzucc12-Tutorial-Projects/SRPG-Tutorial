@@ -52,16 +52,10 @@ public class ReloadAction : BaseAction, IAltAction, IOnSelectAction
     #endregion
 
     #region //Enemy action
-    /// <summary>
-    /// Highly prioritizes as ammo lowers
-    /// </summary>
-    /// <param name="targetCell"></param>
-    /// <param name="unitCell"></param>
-    /// <returns></returns>
-    public override EnemyAIAction GetEnemyAIAction(GridCell targetCell, GridCell unitCell)
+    protected override int GetScore(EnemyAIActionList actionList, GridCell targetCell, GridCell unitCell)
     {
         float clipPercent = Mathf.Max(0.1f, shootAction.GetClipPercent());
-        return new EnemyAIAction(this, unitCell, Mathf.RoundToInt(10 / clipPercent));
+        return Mathf.RoundToInt((1 - clipPercent) * 50);
     }
     #endregion
 

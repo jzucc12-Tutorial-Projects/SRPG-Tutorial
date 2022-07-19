@@ -220,6 +220,11 @@ public class UnitActionSystem : MonoBehaviour
     {
         this.team1Turn = team1Turn;
         allowInput = !IsAITurn();
+
+        var onSelectAction = selectedAction as IOnSelectAction;
+        if(onSelectAction != null)
+            onSelectAction.OnUnSelected();
+
         Unit unit = IsAITurn() ? null : GetDefaultUnit(team1Turn);
         SetSelectedUnit(unit);
         UIChange();

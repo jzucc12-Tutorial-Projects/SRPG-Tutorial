@@ -164,6 +164,7 @@ public class Unit : MonoBehaviour, ITargetable
     public bool IsAI() => GameGlobals.IsAI(isTeam1);
     public float GetHealthPercentage() => unitHealth.GetHealthPercentage();
     public int GetHealth() => unitHealth.GetHealth();
+    public float GetTestHPPercent(int value) => unitHealth.GetPercentageFromValue(value);
     public bool IsAlive() => unitHealth.GetHealthPercentage() > 0;
     public GridCell GetGridCell() => transform.position.GetGridCell();
     public Vector3 GetWorldPosition() => ConvertToShoulderHeight(transform.position);
@@ -180,6 +181,13 @@ public class Unit : MonoBehaviour, ITargetable
     }
     public int GetAP() => currentActionPoints;
     public BaseAction[] GetActions() => actions;
+    public T GetAction<T>() where T : BaseAction
+    {
+        foreach(var action in actions)
+            if(action is T) return action as T;
+            
+        return null;
+    }
     public bool CanBeTargeted(Unit attackingUnit, bool isHealing)
     {
         bool differentFromTarget = IsTeam1() ^ attackingUnit.IsTeam1();
