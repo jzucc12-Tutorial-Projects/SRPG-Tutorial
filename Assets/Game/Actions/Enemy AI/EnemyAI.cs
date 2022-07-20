@@ -51,7 +51,6 @@ public class EnemyAI : MonoBehaviour
         var actionList = DetermineActions(enemy.GetGridCell());
         Func<bool> doneWaiting = () => !waiting || !enemy.IsAlive();
         int actionNo = 0;
-        Debug.Log(actionList);
 
         while(enemy.GetAP() > 0)
         {

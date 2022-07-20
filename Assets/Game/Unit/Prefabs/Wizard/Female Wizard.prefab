@@ -14,11 +14,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 931015900486270620, guid: 4bdf91d70ce5e9249926dce938239bd3,
         type: 3}
-    - target: {fileID: 231023419207397835, guid: c4f714f34391d1f4c8c690b346814d3e,
-        type: 3}
-      propertyPath: maxCooldown
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1599776258077834728, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_text

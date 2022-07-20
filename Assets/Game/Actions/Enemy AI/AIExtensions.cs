@@ -32,6 +32,7 @@ public static class EnemyAIExtensions
             
             score += unitScore;
         }
+        if(score == 0) return 0;
 
         if(numTargets == 1) score *= singleTargetMult;
         return Mathf.RoundToInt(score);

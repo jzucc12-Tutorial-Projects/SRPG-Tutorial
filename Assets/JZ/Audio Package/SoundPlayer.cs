@@ -13,8 +13,12 @@ namespace JZ.AUDIO
     {
         [SerializeField] private List<Sound> mySounds = new List<Sound>();
 
-
         #region //Monobehaviour
+        private void OnValidate() 
+        {
+            foreach(Sound sound in mySounds)
+                sound.SetUpSource();
+        }
         private void Awake()
         {
             foreach(Sound sound in mySounds)
@@ -86,6 +90,7 @@ namespace JZ.AUDIO
         public void Play(string soundName)
         {
             Sound sound = GetSound(soundName);
+            Debug.Log(sound.clip);
             if(sound == null) return;
             sound.Play();
         }

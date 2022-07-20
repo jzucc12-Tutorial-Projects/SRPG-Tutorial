@@ -2577,6 +2577,11 @@ PrefabInstance:
       propertyPath: m_text
       value: Adam
       objectReference: {fileID: 0}
+    - target: {fileID: 4049166613275540673, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: iterations
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 5525297966106258002, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_Mesh
