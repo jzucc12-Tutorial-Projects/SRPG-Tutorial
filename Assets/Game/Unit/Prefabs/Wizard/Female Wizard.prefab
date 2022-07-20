@@ -19,6 +19,26 @@ PrefabInstance:
       propertyPath: m_text
       value: Female Wizard
       objectReference: {fileID: 0}
+    - target: {fileID: 5224273189088755429, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: mySounds.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: afe74b1d9b7c86548a6854a31fb8b1c0, type: 3}
+    - target: {fileID: 5224273189088755429, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: mySounds.Array.data[1].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 713a2fab0d03151409868dad9c3ae2c8, type: 3}
+    - target: {fileID: 5224273189088755429, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: mySounds.Array.data[2].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 2ebfaf004acbbdf4680dd5c0a1d8af48, type: 3}
+    - target: {fileID: 5224273189088755429, guid: c4f714f34391d1f4c8c690b346814d3e,
+        type: 3}
+      propertyPath: mySounds.Array.data[2].volume
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5525297966106258002, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_Mesh
@@ -42,7 +62,7 @@ PrefabInstance:
     - target: {fileID: 7402897808467536822, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_RootOrder
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7402897808467536822, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}

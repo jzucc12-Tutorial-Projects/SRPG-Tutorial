@@ -87,13 +87,14 @@ public class LifeDrainAction : CooldownAction, IAnimatedAction, IOnSelectAction
         //Calculate damage
         float hitModifier = accuracySO.DamageMult(unit, unit.GetWorldPosition(), target);
         damageDealt = (int)(damage * hitModifier * unit.GetDamageMod());
+        unit.PlaySound("life drain");
 
         //Damage infliction
         if(hitModifier == 0) StartCoroutine(AttackMissed());
         else 
         {
             CallLog($"{unit.GetName()} is draining {target.GetName()}'s life");
-            target.Damage(unit, damageDealt);
+            target.Damage(unit, damageDealt, hitModifier > 1);
             var lifeDrain = effectsManager.GetLifeDrain();
             var targetPosition = target.GetWorldPosition();
             targetPosition.y = lifeDrain.transform.position.y;

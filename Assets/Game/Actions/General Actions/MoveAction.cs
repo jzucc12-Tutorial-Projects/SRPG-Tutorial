@@ -59,7 +59,7 @@ public class MoveAction : BaseAction
         positionList = new List<Vector3>();
         foreach(var gp in cellList)
             positionList.Add(gp.GetWorldPosition());
-            
+        
         StartCoroutine(Move());
         ActionStart(onFinish, gridCell);
     }
@@ -69,6 +69,8 @@ public class MoveAction : BaseAction
         currentMoves++;
         StartMoving?.Invoke();
         positionIndex = 0;
+        
+        unit.PlaySound("walking");
         while(positionIndex < positionList.Count)
         {
             var targetPosition = positionList[positionIndex];
@@ -81,6 +83,7 @@ public class MoveAction : BaseAction
             }
             positionIndex++;
         }
+        unit.StopSound("walking");
 
         ActionFinish();
         StopMoving?.Invoke();

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -87,10 +88,17 @@ namespace JZ.AUDIO
         #endregion
 
         #region //Playing and Stopping
+        public void PlayLastSound(string soundName)
+        {
+            transform.parent = null;
+            Sound sound = GetSound(soundName);
+            if(sound == null) Destroy(gameObject);
+            else StartCoroutine(DestroyOnEnd(sound));
+        }
+
         public void Play(string soundName)
         {
             Sound sound = GetSound(soundName);
-            Debug.Log(sound.clip);
             if(sound == null) return;
             sound.Play();
         }
@@ -126,6 +134,13 @@ namespace JZ.AUDIO
                 if(sound.GetVolumeType() != VolumeType.music) continue;
                 sound.Stop();
             }
+        }
+        
+        private IEnumerator DestroyOnEnd(Sound lastSound)
+        {
+            lastSound.Play();
+            yield return new WaitUntil(() => !lastSound.source.isPlaying);
+            Destroy(gameObject);
         }
         #endregion
 

@@ -50,7 +50,7 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
         if(targetable == null) return;
         if(targetable == GetComponent<ITargetable>()) return;
         Vector3 dir = targetable.GetWorldPosition() - GetTargetPosition();
-        targetable.Damage(unit, damage);
+        targetable.Damage(unit, damage, false);
     }
     #endregion
 
@@ -81,6 +81,7 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     #region //Animated action
     public void AnimationAct()
     {
+        unit.PlaySound("lightning bolt");
         var lightning = effectsManager.GetLightningBolt();
         lightning.transform.position = lightningOrigin.position;
         lightning.transform.rotation = unit.transform.rotation;

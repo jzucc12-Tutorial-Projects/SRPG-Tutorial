@@ -40,10 +40,11 @@ public class UnitHealth : MonoBehaviour
         return healAmount;
     }
 
-    public void DeathCheck()
+    public bool DeathCheck()
     {
-        if(currentHealth > 0) return;
+        if(currentHealth > 0) return false;
         Die();
+        return true;
     }
 
     private void Die()

@@ -62,9 +62,65 @@ Transform:
   - {fileID: 3807070064177847334}
   - {fileID: 3595676361351897055}
   - {fileID: 3807070062262228119}
+  - {fileID: 5147251035671956636}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8908389054830559012
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5147251035671956636}
+  - component: {fileID: 5453811990558203083}
+  m_Layer: 9
+  m_Name: Sound Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5147251035671956636
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8908389054830559012}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3807070063031039233}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5453811990558203083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8908389054830559012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb74e2e20294fe14dadaf19bc3e2d818, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySounds:
+  - title: destroyed
+    clip: {fileID: 8300000, guid: ad502f2038988fa40861f69deab38861, type: 3}
+    mixer: {fileID: 0}
+    volumeType: 0
+    source: {fileID: 0}
+    volume: 1
+    pitch: 1
+    isBackwards: 0
+    loop: 0
+    playOnStart: 0
 --- !u!1001 &3807070062336127839
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -322,6 +378,7 @@ MonoBehaviour:
   destroyedObject: {fileID: 6706412911729695563}
   aimPoint: {fileID: 3807070062262228119}
   maxHealth: 1
+  sfxPlayer: {fileID: 5453811990558203083}
 --- !u!1001 &6138508853038400687
 PrefabInstance:
   m_ObjectHideFlags: 0

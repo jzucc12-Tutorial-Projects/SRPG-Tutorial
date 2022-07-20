@@ -111,7 +111,8 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
 
         //Damage infliction
         if(hitModifier == 0) CallLog($"{unit.GetName()} missed {target.GetName()}");
-        target.Damage(unit, damageDealt);
+        unit.PlaySound(weaponName);
+        target.Damage(unit, damageDealt, hitModifier > 1);
     }
 
     public void AnimationEnd()

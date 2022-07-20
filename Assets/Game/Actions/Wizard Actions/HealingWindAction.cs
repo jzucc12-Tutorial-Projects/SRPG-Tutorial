@@ -88,7 +88,8 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
         var wind = effectsManager.GetHealingWind();
         wind.transform.position = GetTargetPosition();
         wind.transform.rotation = Quaternion.identity;
-        CallLog($"{unit.GetName()} summoned a healing aura");
+        CallLog($"{unit.GetName()} summoned a healing vortex");
+        unit.PlaySound("healing wind");
         foreach(var targetUnit in GetTargets(target))
         {
             targetUnit.Heal(unit, healing);
@@ -111,7 +112,7 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
     #endregion
 
     #region //Getters
-    public override string GetActionName() => "Healing Wind";
+    public override string GetActionName() => "Healing Vortex";
 
     public override Vector3 GetTargetPosition() => target.GetWorldPosition();
 
@@ -123,7 +124,7 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
             if(targetUnit == null) continue;
             Vector3 dir = targetUnit.GetWorldPosition() - targetCell.GetWorldPosition();
             if(Physics.Raycast(GetTargetPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
-            yield return unit;
+            yield return targetUnit;
         }
     }
     #endregion

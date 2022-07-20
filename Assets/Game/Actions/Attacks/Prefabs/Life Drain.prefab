@@ -191,7 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b469ebd79a8a18143978568ed533aee7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 15
+  moveSpeed: 7
   collisionDistance: 0.1
   hasCollisionParticles: 0
   collisionParticles: {fileID: 3968549524953367564, guid: 81b61c9b7a0e8bf419d8388376980c18,

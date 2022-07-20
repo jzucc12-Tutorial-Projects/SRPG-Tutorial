@@ -50,7 +50,7 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
 
         //Damage infliction
         if(hitModifier == 0) CallLog($"{unit.GetName()} missed {target.GetName()}");
-        target.Damage(unit, damageDealt);
+        target.Damage(unit, damageDealt, hitModifier > 1);
     }
     #endregion
 
@@ -87,6 +87,7 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
         manaBolt.transform.rotation = Quaternion.identity;
         var manaBoltTarget = target.GetWorldPosition();
         manaBoltTarget.y = manaBolt.transform.position.y;
+        unit.PlaySound("mana bolt");
         manaBolt.SetUp(manaBoltTarget, BoltHit);
     }
 

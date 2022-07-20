@@ -715,7 +715,7 @@ PrefabInstance:
     - target: {fileID: 4894477093656235619, guid: 81b6130a530548c41abaa3f42ecff58b,
         type: 3}
       propertyPath: m_text
-      value: Trish
+      value: Triss
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -1638,7 +1638,7 @@ PrefabInstance:
     - target: {fileID: 1599776258077834728, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_text
-      value: Adam
+      value: Annie
       objectReference: {fileID: 0}
     - target: {fileID: 5525297966106258002, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
@@ -2732,22 +2732,22 @@ PrefabInstance:
     - target: {fileID: 922817128287054149, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.00018842438
+      value: -0.00018837796
       objectReference: {fileID: 0}
     - target: {fileID: 922817128287054149, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000059430284
+      value: 0.000059415648
       objectReference: {fileID: 0}
     - target: {fileID: 922817128425817792, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.00018842438
+      value: -0.00018837796
       objectReference: {fileID: 0}
     - target: {fileID: 922817128425817792, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000059430284
+      value: 0.000059415648
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

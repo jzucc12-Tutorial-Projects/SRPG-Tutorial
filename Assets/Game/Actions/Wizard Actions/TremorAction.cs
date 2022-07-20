@@ -41,6 +41,7 @@ public class TremorAction : CooldownAction, IAnimatedAction, IOnSelectAction
     protected override void OnFacing()
     {
         SetTrigger?.Invoke("Tremor");
+        unit.PlaySound("tremor");
     }
     #endregion
 
@@ -75,7 +76,7 @@ public class TremorAction : CooldownAction, IAnimatedAction, IOnSelectAction
         CallLog($"{unit.GetName()} made the world tremor");
         foreach(var target in GetTargets(target))
         {
-            target.Damage(unit, damage);
+            target.Damage(unit, damage, false);
         }
     }
 

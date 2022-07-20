@@ -8,6 +8,26 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1471608314760387700, guid: 37d6eb48bb8006545a7fcf89185a76e2,
+        type: 3}
+      propertyPath: mySounds.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: afe74b1d9b7c86548a6854a31fb8b1c0, type: 3}
+    - target: {fileID: 1471608314760387700, guid: 37d6eb48bb8006545a7fcf89185a76e2,
+        type: 3}
+      propertyPath: mySounds.Array.data[1].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 713a2fab0d03151409868dad9c3ae2c8, type: 3}
+    - target: {fileID: 1471608314760387700, guid: 37d6eb48bb8006545a7fcf89185a76e2,
+        type: 3}
+      propertyPath: mySounds.Array.data[2].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 2ebfaf004acbbdf4680dd5c0a1d8af48, type: 3}
+    - target: {fileID: 1471608314760387700, guid: 37d6eb48bb8006545a7fcf89185a76e2,
+        type: 3}
+      propertyPath: mySounds.Array.data[2].volume
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4201871009660209432, guid: 37d6eb48bb8006545a7fcf89185a76e2,
         type: 3}
       propertyPath: unitName
@@ -21,7 +41,7 @@ PrefabInstance:
     - target: {fileID: 4201871009660209447, guid: 37d6eb48bb8006545a7fcf89185a76e2,
         type: 3}
       propertyPath: m_RootOrder
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4201871009660209447, guid: 37d6eb48bb8006545a7fcf89185a76e2,
         type: 3}

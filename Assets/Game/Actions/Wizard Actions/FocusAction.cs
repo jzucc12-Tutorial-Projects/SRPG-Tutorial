@@ -27,6 +27,7 @@ public class FocusAction : BaseAction, IAltAction, IOnSelectAction
     {
         ActionStart(onFinish, gridCell);
         cooldownAction.ReduceCooldown(reduceAmount);
+        unit.PlaySound("resupply");
         CallLog($"{unit.GetName()} focused on {cooldownAction.GetActionName()}");
         ActionFinish();
     }
@@ -35,7 +36,7 @@ public class FocusAction : BaseAction, IAltAction, IOnSelectAction
     #region //Action selection
     public void OnSelected()
     {
-        reduceAmount = unit.GetAP();
+        reduceAmount = GetAPCost(unit.GetAP());
     }
 
     public void OnUnSelected()
@@ -65,7 +66,7 @@ public class FocusAction : BaseAction, IAltAction, IOnSelectAction
     #region //Tooltip
     protected override void SpecificTooltipSetup()
     {
-        tooltip.costText = $"Uses all remaining AP.";
+        tooltip.costText = $"Uses 1AP per cooldown turn reduced.";
         tooltip.effectText = $"Reduces the cooldown of {cooldownAction.GetActionName()} by 1 per AP spent";
         tooltip.altText = $"Switch back to {cooldownAction.GetActionName()}";
     }
@@ -74,6 +75,6 @@ public class FocusAction : BaseAction, IAltAction, IOnSelectAction
     #region //Getters
     public BaseAction GetRootAction() => cooldownAction;
     public override string GetActionName() => $"Focus {cooldownAction.GetActionName()}";
-    public override int GetAPCost(int currentAP) => currentAP;
+    public override int GetAPCost(int currentAP) => Mathf.Min(cooldownAction.GetCurrentCooldown(), currentAP);
     #endregion
 }

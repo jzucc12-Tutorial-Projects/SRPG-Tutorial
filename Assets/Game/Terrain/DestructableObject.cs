@@ -1,3 +1,4 @@
+using JZ.AUDIO;
 using UnityEngine;
 
 /// <summary>
@@ -11,6 +12,7 @@ public class DestructableObject : MonoBehaviour, ITargetable
     [SerializeField] private Transform destroyedObject = null;
     [SerializeField] private Transform aimPoint = null;
     [SerializeField] private int maxHealth = 1;
+    [SerializeField] private SoundPlayer sfxPlayer = null;
     private int currentHealth = 0;
     #endregion
 
@@ -23,7 +25,7 @@ public class DestructableObject : MonoBehaviour, ITargetable
     #endregion
 
     #region //Damaging and destruction
-    public int Damage(Unit attacker, int damage)
+    public int Damage(Unit attacker, int damage, bool crit)
     {
         int damageDealt = Mathf.Min(damage, currentHealth);
         currentHealth -= damageDealt;
@@ -37,6 +39,7 @@ public class DestructableObject : MonoBehaviour, ITargetable
 
     private void ObjectDestroyed()
     {
+        sfxPlayer.PlayLastSound("destroyed");
         destroyedObject.gameObject.SetActive(true);
         Vector3 randomDir = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f));
         destroyedObject.ApplyExplosionToRBChildren(150f, destroyedObject.position + randomDir, 10f);

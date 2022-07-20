@@ -27,6 +27,7 @@ public class MedPackAction : TargetedAction, ISupply
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
         target = gridCell.GetUnit();
+        unit.PlaySound("heal");
         base.TakeAction(gridCell, onFinish);
     }
 

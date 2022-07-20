@@ -104,6 +104,7 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
         grenade.transform.position = spawnPoint.position;
         grenade.transform.rotation = Quaternion.identity;
         grenade.SetUp(unit, target);
+        unit.PlaySound("grenade throw");
     }
 
     public void AnimationEnd()

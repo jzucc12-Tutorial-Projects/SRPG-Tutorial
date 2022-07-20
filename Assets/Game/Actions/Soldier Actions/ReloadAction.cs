@@ -24,6 +24,7 @@ public class ReloadAction : BaseAction, IAltAction, IOnSelectAction
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
         ActionStart(onFinish, gridCell);
+        unit.PlaySound("resupply");
         shootAction.Resupply();
         CallLog($"{unit.GetName()} reloaded their {shootAction.GetActionName()}");
         ActionFinish();

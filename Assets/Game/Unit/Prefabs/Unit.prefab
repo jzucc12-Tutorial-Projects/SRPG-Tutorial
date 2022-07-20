@@ -41,6 +41,7 @@ Transform:
   - {fileID: 646435310035754094}
   - {fileID: 428039818931586957}
   - {fileID: 93128369691238121}
+  - {fileID: 5549389233059839140}
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -72,6 +73,7 @@ MonoBehaviour:
   unitName: Unit
   isTeam1: 1
   priority: 0
+  sfxPlayer: {fileID: 2798116146377789203}
   rotateSpeed: 10
   shoulderHeight: 1.7
   maxActionPoints: 2
@@ -582,6 +584,111 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &4392097825095910747
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5549389233059839140}
+  - component: {fileID: 2798116146377789203}
+  m_Layer: 7
+  m_Name: Sound Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5549389233059839140
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4392097825095910747}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 642008498672032320}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2798116146377789203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4392097825095910747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb74e2e20294fe14dadaf19bc3e2d818, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySounds:
+  - title: hit
+    clip: {fileID: 8300000, guid: c233ca41ade5014479de7503d1154e07, type: 3}
+    mixer: {fileID: 24300002, guid: cd240c015fcf4614ab081a3bacf437d1, type: 2}
+    volumeType: 2
+    source: {fileID: 0}
+    volume: 1
+    pitch: 1
+    isBackwards: 0
+    loop: 0
+    playOnStart: 0
+  - title: crit
+    clip: {fileID: 8300000, guid: 6d721fb53aa0d15489f11f38a87b20c4, type: 3}
+    mixer: {fileID: 24300002, guid: cd240c015fcf4614ab081a3bacf437d1, type: 2}
+    volumeType: 2
+    source: {fileID: 0}
+    volume: 1
+    pitch: 1
+    isBackwards: 0
+    loop: 0
+    playOnStart: 0
+  - title: death
+    clip: {fileID: 8300000, guid: 945424f2d91d3dc49a8ccaa2c78eca5c, type: 3}
+    mixer: {fileID: 24300002, guid: cd240c015fcf4614ab081a3bacf437d1, type: 2}
+    volumeType: 2
+    source: {fileID: 0}
+    volume: 0.7
+    pitch: 1
+    isBackwards: 0
+    loop: 0
+    playOnStart: 0
+  - title: melee
+    clip: {fileID: 8300000, guid: 1bc38097470c3f342b57e5170d58c0e9, type: 3}
+    mixer: {fileID: 0}
+    volumeType: 2
+    source: {fileID: 0}
+    volume: 0.25
+    pitch: 1
+    isBackwards: 0
+    loop: 0
+    playOnStart: 0
+  - title: walking
+    clip: {fileID: 8300000, guid: e07cfba7eeac13942880a5669d3cfb5a, type: 3}
+    mixer: {fileID: 0}
+    volumeType: 2
+    source: {fileID: 0}
+    volume: 0.25
+    pitch: 1.4
+    isBackwards: 0
+    loop: 1
+    playOnStart: 0
+  - title: resupply
+    clip: {fileID: 8300000, guid: ba531e5a49e49e84d8d4c953c92aef57, type: 3}
+    mixer: {fileID: 0}
+    volumeType: 2
+    source: {fileID: 0}
+    volume: 1
+    pitch: 1
+    isBackwards: 0
+    loop: 0
+    playOnStart: 0
 --- !u!1 &6088935826038264333
 GameObject:
   m_ObjectHideFlags: 0

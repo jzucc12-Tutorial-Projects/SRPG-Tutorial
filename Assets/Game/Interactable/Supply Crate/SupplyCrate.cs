@@ -52,6 +52,7 @@ public class SupplyCrate : MonoBehaviour, IInteractable
         foreach (var supply in actor.GetComponents<ISupply>())
             supply.Resupply();
 
+        actor.PlaySound("resupply");
         ActionLogListener.Publish($"{actor.GetName()} resupplied");
     }
     #endregion

@@ -1,4 +1,5 @@
 using System;
+using JZ.AUDIO;
 using UnityEngine;
 
 /// <summary>
@@ -10,6 +11,7 @@ public class Unit : MonoBehaviour, ITargetable
     [SerializeField] private string unitName = "Unit";
     [SerializeField] private bool isTeam1 = true;
     [SerializeField] private int priority = 0;
+    [SerializeField] private SoundPlayer sfxPlayer = null;
     #endregion
 
     #region //Health
@@ -77,17 +79,20 @@ public class Unit : MonoBehaviour, ITargetable
     #endregion
 
     #region //Health
-    public int Damage(Unit attacker, int damage) 
+    public int Damage(Unit attacker, int damage, bool crit) 
     {
         int damageAmount = unitHealth.Damage(damage);
         if(damageAmount > 0) 
         {
+            string hitText = crit ? "crit" : "hit";
             if(attacker == this)
-                ActionLogListener.Publish($"{attacker.GetName()} hit themself for {damageAmount} damage");
+                ActionLogListener.Publish($"{attacker.GetName()} {hitText} themself for {damageAmount} damage");
             else
-                ActionLogListener.Publish($"{attacker.GetName()} hit {GetName()} for {damageAmount} damage");
+                ActionLogListener.Publish($"{attacker.GetName()} {hitText} {GetName()} for {damageAmount} damage");
+        
+            if(!unitHealth.DeathCheck())
+                sfxPlayer.Play(hitText);
         }
-        unitHealth.DeathCheck();
         return damageAmount;
     }
     public int Heal(Unit healer, int amount)
@@ -107,6 +112,8 @@ public class Unit : MonoBehaviour, ITargetable
     private void OnDeath()
     {
         ActionLogListener.Publish($"{GetName()} has died");
+        sfxPlayer.transform.parent = null;
+        sfxPlayer.PlayLastSound("death");
         Destroy(gameObject);
         UnitDead?.Invoke(this);
     }
@@ -199,5 +206,7 @@ public class Unit : MonoBehaviour, ITargetable
     }
     public int GetAccuracyMod() => accuracyMod;
     public float GetDamageMod() => 1 + damageMod;
+    public void PlaySound(string clipName) => sfxPlayer.Play(clipName);
+    public void StopSound(string clipName) => sfxPlayer.Stop(clipName);
     #endregion
 }

@@ -42,6 +42,7 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
     protected override void OnFacing()
     {
         SetTrigger?.Invoke("Fireball");
+        unit.PlaySound("fireball");
     }
     #endregion
 
@@ -77,7 +78,7 @@ public class FireballAction : CooldownAction, IAnimatedAction, IOnSelectAction
         fireball.transform.rotation = Quaternion.identity;
         CallLog($"{unit.GetName()} summoned a fireball");
         foreach(var targetable in GetTargets(target))
-            targetable.Damage(unit, damage);
+            targetable.Damage(unit, damage, false);
     }
 
     public void AnimationEnd()

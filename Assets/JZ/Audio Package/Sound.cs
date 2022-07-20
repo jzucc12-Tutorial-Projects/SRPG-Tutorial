@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -16,6 +17,7 @@ namespace JZ.AUDIO
         [Header("Sound Properties")]
         [SerializeField] public string title = "";
         [SerializeField] public AudioClip clip = null;
+        [SerializeField] private AudioMixerGroup mixer = null;
         [SerializeField] private VolumeType volumeType = VolumeType.sfx;
         [HideInInspector] public AudioSource source = null;
         #endregion
@@ -51,9 +53,9 @@ namespace JZ.AUDIO
         public void SetUpSource()
         {
             if(source == null) return;
-            SetUpSource(source);
+            SetUpSource(source, false);
         }
-        public void SetUpSource(AudioSource source)
+        public void SetUpSource(AudioSource source, bool canPlay = true)
         {
             source.clip = clip;
             source.pitch = pitch;
@@ -65,9 +67,10 @@ namespace JZ.AUDIO
                 source.timeSamples = source.clip.samples - 1;
             }
             
+            source.outputAudioMixerGroup = mixer;
             this.source = source;
             SetSourceVolume();
-            if(playOnStart && !source.isPlaying) Play();
+            if(playOnStart && canPlay) Play();
         }
         #endregion
     
@@ -87,8 +90,10 @@ namespace JZ.AUDIO
         #region //Modification
         public void SetSourceVolume()
         {
-            source.volume = volume * JZAudioSettings.GetAdjustedVolume(volumeType);
+            source.volume = GetVolume();
         }
+
+        public float GetVolume() => volume * JZAudioSettings.GetAdjustedVolume(volumeType);
 
         public void ChangeClip(AudioClip clip)
         {
@@ -112,7 +117,7 @@ namespace JZ.AUDIO
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             if(property.isExpanded)
-                return base.GetPropertyHeight(property, label) * 14.5f;
+                return base.GetPropertyHeight(property, label) * 15f + 40;
             else
                 return base.GetPropertyHeight(property, label);
         }
@@ -120,7 +125,7 @@ namespace JZ.AUDIO
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var rect = position;
-            rect.position += new Vector2(0, 235);
+            rect.position += new Vector2(0, 260);
             rect.height = 20;
             EditorGUI.PropertyField(position, property, label, true);
 
@@ -129,6 +134,12 @@ namespace JZ.AUDIO
             {
                 var player = property.serializedObject.targetObject as SoundPlayer;
                 player.Play(property.displayName);
+            }
+            rect.position += new Vector2(0, 25);
+            if (GUI.Button(rect, "Stop"))
+            {
+                var player = property.serializedObject.targetObject as SoundPlayer;
+                player.Stop(property.displayName);
             }
         }
     }

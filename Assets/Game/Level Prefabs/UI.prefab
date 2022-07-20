@@ -1198,7 +1198,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1100, y: 775}
+  m_SizeDelta: {x: 1250, y: 775}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &4466519322972807922
 CanvasRenderer:
@@ -1557,6 +1557,8 @@ GameObject:
   - component: {fileID: 4466519323144152572}
   - component: {fileID: 4466519323144152574}
   - component: {fileID: 4466519323144152573}
+  - component: {fileID: 1319471876889557333}
+  - component: {fileID: 6473291564180421221}
   m_Layer: 5
   m_Name: Menus
   m_TagString: Untagged
@@ -1613,9 +1615,67 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerIsSoldier: 1
-  soldierWinContainer: {fileID: 1421631746903229390}
-  wizardWinContainer: {fileID: 1421631747786782913}
+  team1Container: {fileID: 1421631746903229390}
+  team2Container: {fileID: 1421631747786782913}
   waitTimer: 3
+  sfxPlayer: {fileID: 6473291564180421221}
+  bgMusic: {fileID: 1319471876889557333}
+--- !u!114 &1319471876889557333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4466519323144152571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb74e2e20294fe14dadaf19bc3e2d818, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySounds:
+  - title: background music
+    clip: {fileID: 8300000, guid: 79c4ea20c9b1ecc4c864c8fbdc032aaa, type: 3}
+    mixer: {fileID: 0}
+    volumeType: 1
+    source: {fileID: 0}
+    volume: 0.175
+    pitch: 1
+    isBackwards: 0
+    loop: 1
+    playOnStart: 1
+--- !u!114 &6473291564180421221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4466519323144152571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb74e2e20294fe14dadaf19bc3e2d818, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySounds:
+  - title: victory
+    clip: {fileID: 8300000, guid: b07b62ec4a660814c83ab0e2d48f8fc6, type: 3}
+    mixer: {fileID: 0}
+    volumeType: 2
+    source: {fileID: 0}
+    volume: 0.3
+    pitch: 1
+    isBackwards: 0
+    loop: 0
+    playOnStart: 0
+  - title: defeat
+    clip: {fileID: 8300000, guid: 055456531f8848344ae8627ebc3cd4cf, type: 3}
+    mixer: {fileID: 0}
+    volumeType: 2
+    source: {fileID: 0}
+    volume: 0.3
+    pitch: 1
+    isBackwards: 0
+    loop: 0
+    playOnStart: 0
 --- !u!1 &4466519323224913676
 GameObject:
   m_ObjectHideFlags: 0

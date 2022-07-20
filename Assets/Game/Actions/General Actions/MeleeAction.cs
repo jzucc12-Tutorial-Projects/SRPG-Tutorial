@@ -45,7 +45,8 @@ public class MeleeAction : TargetedAction, IAnimatedAction
     public void AnimationAct()
     {
         OnMeleeStatic?.Invoke();
-        target.Damage(unit, damage);
+        unit.PlaySound("melee");
+        target.Damage(unit, damage, false);
     }
 
     public void AnimationEnd()

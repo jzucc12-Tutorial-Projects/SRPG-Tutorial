@@ -25,12 +25,13 @@ public class Grenade : Projectile
         grenade.enabled = false;
         var levelGrid = FindObjectOfType<LevelGrid>();
         OnCollisionStatic?.Invoke();
+        thrower.PlaySound("grenade explode");
         foreach(var targetable in GetTargets(targetCell))
         {
             Vector3 dir = targetable.GetWorldPosition() - transform.position;
             if(Physics.Raycast(target, dir, dir.magnitude, obstacleLayer)) continue;
             var targetDamage = GetDamage(targetCell == targetable.GetGridCell());
-            targetable.Damage(thrower, targetDamage);
+            targetable.Damage(thrower, targetDamage, false);
         }
     }
 
