@@ -133,7 +133,7 @@ MonoBehaviour:
   apCost: 1
   maxMoveDistance: 4
   moveSpeed: 4
-  threshold: 0.03
+  threshold: 0.075
   freeMoves: 1
   totalMoves: 2
   costIncreasePerMove: 1
@@ -204,7 +204,7 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 0
-  damage: 70
+  damage: 75
 --- !u!114 &6225444261919296823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,9 +218,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aggression: 5
-  iterations: 25
+  movementsToConsider: 5
   iterateLists: 0
+  listIterations: 2
   iterateActions: 1
+  actionIterations: 50
+  actionIterationsPerFrame: 3
 --- !u!1 &704012140628820037
 GameObject:
   m_ObjectHideFlags: 0

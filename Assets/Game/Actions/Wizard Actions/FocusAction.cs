@@ -29,7 +29,7 @@ public class FocusAction : BaseAction, IAltAction, IOnSelectAction
         cooldownAction.ReduceCooldown(reduceAmount);
         unit.PlaySound("resupply");
         CallLog($"{unit.GetName()} focused on {cooldownAction.GetActionName()}");
-        ActionFinish();
+        ActionFinish(new List<GridCell>() { unit.GetGridCell() });
     }
     #endregion
 

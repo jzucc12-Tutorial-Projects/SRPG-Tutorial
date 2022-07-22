@@ -5,7 +5,7 @@ public static class GameGlobals
     {
         currentMode = newMode;
     }
-
+    public static bool IsThisMode(GameMode mode) => mode == currentMode;
     public static bool IsTeam1AI() => currentMode == GameMode.team1AI;
     public static bool IsTeam2AI() => currentMode == GameMode.team2AI;
     public static bool TwoPlayer() => currentMode == GameMode.twoPlayer;

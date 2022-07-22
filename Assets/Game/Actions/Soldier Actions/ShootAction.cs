@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -24,7 +25,8 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
     #endregion
 
     #region //Weapon state
-    private ITargetable target = null;
+    private GridCell targetCell = new GridCell(-1, -1);
+    private ITargetable target => levelGrid.GetTargetable(targetCell);
     private int currentClip;
     public event Action<IAnimatedAction> SetAnimatedAction;
     public event Action<string> SetTrigger;
@@ -43,7 +45,7 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
     #region //Action performing
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
-        target = gridCell.GetTargetable();
+        targetCell = gridCell;
         SetAnimatedAction?.Invoke(this);
         base.TakeAction(gridCell, onFinish);
     }
@@ -72,7 +74,7 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
         unitWeapon.SetActiveWeapon(weaponGO, animController);
 
         if(unit.IsAI()) return;
-        AccuracyHub.ShowAccuracyUI(unit, GetTargetedCells(unit.GetGridCell()), accuracySO);
+        AccuracyHub.ShowAccuracyUI(unit, GetTargetedCells(unit.GetGridCell()), accuracySO, levelGrid);
     }
 
     public void OnUnSelected()
@@ -85,9 +87,9 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
     #region //Enemy action
     protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        ITargetable target = targetCell.GetTargetable();
+        ITargetable target = levelGrid.GetTargetable(targetCell);
         AIDamageVars vars = new AIDamageVars(damage, 105, 20, 10);
-        if(actionList.GetAggression() > 5) vars.SetNonUnitValues(25, 15);
+        if(actionList.GetAggression() > 5) vars.SetNonUnitValues(15, 5);
         int score = unit.AccuracyDamageScoring(actionList.HasAction<SpinAction>(), target, vars, accuracySO, unitCell.GetWorldPosition());
         return score;
     }
@@ -117,7 +119,7 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
 
     public void AnimationEnd()
     {
-        ActionFinish();
+        ActionFinish(new List<GridCell>() { targetCell });
     }
     #endregion
 

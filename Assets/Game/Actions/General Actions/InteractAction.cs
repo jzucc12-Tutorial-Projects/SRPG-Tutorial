@@ -13,14 +13,19 @@ public class InteractAction : TargetedAction
     #region //Action performing
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
-        target = gridCell.GetInteractable();
+        target = levelGrid.GetInteractable(gridCell);
         base.TakeAction(gridCell, onFinish);
     }
 
     protected override void OnFacing()
     {
-        target.Interact(unit, ActionFinish);
+        target.Interact(unit, Finished);
         target = null;
+    }
+
+    private void Finished()
+    {
+        ActionFinish(new List<GridCell>() { target.GetGridCell() });
     }
     #endregion
 
@@ -31,7 +36,7 @@ public class InteractAction : TargetedAction
         
         foreach(var cell in GetRangeCells(unitCell))
         {
-            var interactable = cell.GetInteractable();
+            var interactable = levelGrid.GetInteractable(cell);
             if(interactable == null) continue;
             validCells.Add(cell);
         }

@@ -72,11 +72,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 640515295999141891, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
-      propertyPath: damage
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 640515295999141891, guid: 4190997705b9e8d419a2a1e826394619,
-        type: 3}
       propertyPath: blockingLayer.m_Bits
       value: 896
       objectReference: {fileID: 0}
@@ -448,7 +443,7 @@ MonoBehaviour:
   requiresUnit: 0
   requiresTargetable: 1
   targetAllies: 0
-  actionRange: 6
+  actionRange: 5
   facingLimit: 0.993
   waitTime: 0.5
   blockingLayer:
@@ -458,7 +453,7 @@ MonoBehaviour:
   bulletOrigin: {fileID: 213385559}
   weaponGO: {fileID: 4203205038678892587}
   animController: {fileID: 22100000, guid: 07dc407fa6e39f44687b586da6ec8abb, type: 2}
-  maxClip: 4
+  maxClip: 3
   damage: 25
   accuracySO: {fileID: 11400000, guid: ea9e9ea0aa7946c4e850396dd66588b4, type: 2}
 --- !u!114 &2255335593328114444
@@ -493,7 +488,7 @@ MonoBehaviour:
   requiresUnit: 0
   requiresTargetable: 1
   targetAllies: 0
-  actionRange: 10
+  actionRange: 8
   facingLimit: 0.993
   waitTime: 0.5
   blockingLayer:
@@ -503,7 +498,7 @@ MonoBehaviour:
   bulletOrigin: {fileID: 1189217241}
   weaponGO: {fileID: 4203198220207403924}
   animController: {fileID: 22100000, guid: d6ee3152b6a3c3344844385c027bd68e, type: 2}
-  maxClip: 7
+  maxClip: 5
   damage: 15
   accuracySO: {fileID: 11400000, guid: e8d6d181983f17d48864284eea71603c, type: 2}
 --- !u!114 &4522232182180476428
@@ -590,7 +585,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 768
   spawnPoint: {fileID: 4197579253955208349}
-  maxQuantity: 3
+  maxQuantity: 2
 --- !u!114 &6595300755385506393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -603,7 +598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f9308db309a3704aa0b7b63a4a9ae34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apCost: 2
+  apCost: 1
   circularRange: 1
   includeSelf: 1
   requiresUnit: 0

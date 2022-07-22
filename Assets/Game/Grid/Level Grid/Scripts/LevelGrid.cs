@@ -20,6 +20,35 @@ public class LevelGrid : MonoBehaviour
         gridSystem = new GridSystem<GridObject>(width, height, GridGlobals.cellSize, 
                                 (GridSystem<GridObject> g, GridCell gridCell) => new GridObject(g, gridCell));
     }
+
+    private void Start()
+    {
+        var cells = new List<GridCell>(gridSystem.GetGridCells());
+        UpdateGrid(cells);
+        foreach(var cell in gridSystem.GetGridCells())
+        {
+            var obj = gridSystem.GetGridObject(cell);
+            obj.cantTarget = cell.CantTarget();
+
+            if(cell.HasHighObstacle()) 
+            {
+                obj.hasObstacle = true;
+                obj.hasHighObstacle = true;
+            }
+            else if(cell.HasObstacle())
+                obj.hasObstacle = true;
+        }
+    }
+
+    private void OnEnable()
+    {
+        BaseAction.OnAnyActionEndedEarly += UpdateGrid;
+    }
+
+    private void OnDisable()
+    {
+        BaseAction.OnAnyActionEndedEarly -= UpdateGrid;
+    }
     #endregion
 
     #region //Validation
@@ -41,6 +70,25 @@ public class LevelGrid : MonoBehaviour
     }
 
     public bool IsValidCell(GridCell gridCell) => gridSystem.IsValidCell(gridCell);
+
+    public void UpdateGrid(List<GridCell> cells)
+    {
+        foreach(var cell in cells)
+        {
+            var obj = gridSystem.GetGridObject(cell);
+            obj.ResetObject();
+            obj.walkable = cell.IsWalkable();
+            var objInGrid = cell.GetAtCell();
+            if(objInGrid == null) continue;
+
+            if(objInGrid is Unit)
+                obj.myUnit = (Unit)objInGrid;
+            if(objInGrid is ITargetable)
+                obj.targetable = (ITargetable)objInGrid;
+            if(objInGrid is IInteractable)
+                obj.interactable = (IInteractable)objInGrid;
+        }
+    }
     #endregion
 
     #region //Getters
@@ -51,14 +99,49 @@ public class LevelGrid : MonoBehaviour
         return gridSystem.GetGridCells();
     }
 
-    public IEnumerable<GridCell> GetLine(GridCell origin, GridCell offset)
+    public IEnumerable<GridCell> GetLine(GridCell origin, GridCell target)
     {
+        if(target == origin) yield break;
+        GridCell offset = target - origin;
         GridCell nextCell = origin;
         while(IsValidCell(nextCell) && !nextCell.HasHighObstacle())
         {
             if(!nextCell.HasObstacle()) yield return nextCell;
             nextCell += offset;
         }
+    }
+
+    public bool HasAnyUnit(GridCell gridCell)
+    {
+        return gridSystem.GetGridObject(gridCell).myUnit != null;
+    }
+    public Unit GetUnit(GridCell gridCell)
+    {
+        return gridSystem.GetGridObject(gridCell).myUnit;
+    }
+    public IInteractable GetInteractable(GridCell gridCell)
+    {
+        return gridSystem.GetGridObject(gridCell).interactable;
+    }
+    public ITargetable GetTargetable(GridCell gridCell)
+    {
+        return gridSystem.GetGridObject(gridCell).targetable;
+    }
+    public bool HasObstacle(GridCell gridCell)
+    {
+        return gridSystem.GetGridObject(gridCell).hasObstacle;
+    }
+    public bool HasHighObstacle(GridCell gridCell)
+    {
+        return gridSystem.GetGridObject(gridCell).hasHighObstacle;
+    }
+    public bool CantTarget(GridCell gridCell)
+    {
+        return gridSystem.GetGridObject(gridCell).cantTarget;
+    }
+    public bool IsWalkable(GridCell gridCell)
+    {
+        return gridSystem.GetGridObject(gridCell).walkable;
     }
     #endregion
 }

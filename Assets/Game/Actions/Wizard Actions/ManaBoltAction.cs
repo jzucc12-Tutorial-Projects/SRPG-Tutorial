@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -11,7 +12,8 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
     [SerializeField] private int damage = 0;
     [SerializeField] private Transform manaBoltOrigin = null;
     [SerializeField, ScriptableObjectDropdown(typeof(AccuracySO))] private AccuracySO accuracySO = null;
-    private ITargetable target = null;
+    private GridCell targetCell = new GridCell(-1, -1);
+    private ITargetable target => levelGrid.GetTargetable(targetCell);
     private EffectsManager effectsManager = null;
     #endregion
 
@@ -32,7 +34,7 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
     #region //Action performing
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
-        target = gridCell.GetTargetable();
+        targetCell = gridCell;
         SetAnimatedAction?.Invoke(this);
         base.TakeAction(gridCell, onFinish);
     }
@@ -58,7 +60,7 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
     public void OnSelected()
     {
         if(unit.IsAI()) return;
-        AccuracyHub.ShowAccuracyUI(unit, GetTargetedCells(unit.GetGridCell()), accuracySO);
+        AccuracyHub.ShowAccuracyUI(unit, GetTargetedCells(unit.GetGridCell()), accuracySO, levelGrid);
     }
 
     public void OnUnSelected()
@@ -71,9 +73,9 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
     #region //Enemy action
     protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        ITargetable target = targetCell.GetTargetable();
-        AIDamageVars vars = new AIDamageVars(damage, 110, 20, 10);
-        if(actionList.GetAggression() > 5) vars.SetNonUnitValues(10, 5);
+        ITargetable target = levelGrid.GetTargetable(targetCell);
+        AIDamageVars vars = new AIDamageVars(damage, 90, 10, 10);
+        if(actionList.GetAggression() > 5) vars.SetNonUnitValues(10, 0);
         int score = unit.AccuracyDamageScoring(actionList.HasAction<SpinAction>(), target, vars, accuracySO, unitCell.GetWorldPosition());
         return score;
     }
@@ -93,7 +95,7 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
 
     public void AnimationEnd() 
     {
-        ActionFinish();
+        ActionFinish(new List<GridCell>() { targetCell });
     }
     #endregion
 

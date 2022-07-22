@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -12,7 +13,8 @@ public class LifeDrainAction : CooldownAction, IAnimatedAction, IOnSelectAction
     [SerializeField] private int damage = 0;
     [SerializeField] private float healPercent = 0;
     [SerializeField, ScriptableObjectDropdown(typeof(AccuracySO))] private AccuracySO accuracySO = null;
-    private Unit target = null;
+    private GridCell targetCell = new GridCell(-1, -1);
+    private Unit target => levelGrid.GetUnit(targetCell);
     private EffectsManager effectsManager = null;
     private int damageDealt;
     #endregion
@@ -34,7 +36,7 @@ public class LifeDrainAction : CooldownAction, IAnimatedAction, IOnSelectAction
     #region //Action performing
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
-        target = gridCell.GetUnit();
+        targetCell = gridCell;
         damageDealt = 0;
         SetAnimatedAction?.Invoke(this);
         base.TakeAction(gridCell, onFinish);
@@ -56,7 +58,7 @@ public class LifeDrainAction : CooldownAction, IAnimatedAction, IOnSelectAction
     public void OnSelected()
     {
         if(unit.IsAI()) return;
-        AccuracyHub.ShowAccuracyUI(unit, GetTargetedCells(unit.GetGridCell()), accuracySO);
+        AccuracyHub.ShowAccuracyUI(unit, GetTargetedCells(unit.GetGridCell()), accuracySO, levelGrid);
     }
 
     public void OnUnSelected()
@@ -70,12 +72,12 @@ public class LifeDrainAction : CooldownAction, IAnimatedAction, IOnSelectAction
     protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
         int score = 0;
-        Unit targetUnit = targetCell.GetUnit();
-        AIDamageVars vars = new AIDamageVars(damage, 65, 30, 20);
+        Unit targetUnit = levelGrid.GetUnit(targetCell);
+        AIDamageVars vars = new AIDamageVars(damage, 60, 30, 20);
         score += unit.AccuracyDamageScoring(actionList.HasAction<SpinAction>(), targetUnit, vars, accuracySO, unitCell.GetWorldPosition());
 
         float myHPPercent = unit.GetHealthPercentage();
-        score += Mathf.RoundToInt(12/myHPPercent);
+        if(myHPPercent < 1) score += Mathf.RoundToInt(12/myHPPercent);
         return score + base.GetScore(actionList, unitCell, targetCell);
     }
     #endregion
@@ -87,7 +89,6 @@ public class LifeDrainAction : CooldownAction, IAnimatedAction, IOnSelectAction
         //Calculate damage
         float hitModifier = accuracySO.DamageMult(unit, unit.GetWorldPosition(), target);
         damageDealt = (int)(damage * hitModifier * unit.GetDamageMod());
-        unit.PlaySound("life drain");
 
         //Damage infliction
         if(hitModifier == 0) StartCoroutine(AttackMissed());
@@ -114,7 +115,7 @@ public class LifeDrainAction : CooldownAction, IAnimatedAction, IOnSelectAction
 
     public void AnimationEnd()
     {
-        ActionFinish();
+        ActionFinish(new List<GridCell>() { targetCell });
         SetTrigger?.Invoke("Life Drain End");
     }
     #endregion

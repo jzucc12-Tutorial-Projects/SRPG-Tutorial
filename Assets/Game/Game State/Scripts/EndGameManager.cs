@@ -28,7 +28,7 @@ public class EndGameManager : MonoBehaviour
 
     private void OnDisable()
     {
-        UnitManager.GameOverSided += GameOver;
+        UnitManager.GameOverSided -= GameOver;
     }
     #endregion
 

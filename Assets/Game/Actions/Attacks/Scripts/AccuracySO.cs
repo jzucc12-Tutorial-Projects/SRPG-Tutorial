@@ -84,7 +84,6 @@ public class AccuracySO : ScriptableObject
     {
         //Set up
         GridCell attackerGridCell = attackerPosition.GetGridCell();
-        int accuracy = baseAccuracy;
         bool isUnit = target is Unit;
         int drop = 0;
 
@@ -109,10 +108,10 @@ public class AccuracySO : ScriptableObject
         if(dropWithHealth)
         {
             float hpMissing = 1 - attacker.GetHealthPercentage();
-            accuracy += healthDrop * Mathf.RoundToInt(hpMissing / healthTick);
+            drop += healthDrop * Mathf.RoundToInt(hpMissing / healthTick);
         }
 
-        return accuracy - drop + attacker.GetAccuracyMod();
+        return baseAccuracy - drop + attacker.GetAccuracyMod();
     }
 
     public int CalculateCritChance(int accuracy)

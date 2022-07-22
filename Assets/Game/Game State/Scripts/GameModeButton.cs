@@ -11,7 +11,7 @@ public class GameModeButton : MonoBehaviour
 
     private void Awake()
     {
-        SetActive(GameMode.team2AI);
+        SetActive(!GameGlobals.IsThisMode(myMode));
     }
 
     private void OnEnable()
@@ -34,6 +34,11 @@ public class GameModeButton : MonoBehaviour
 
     private void SetActive(GameMode newMode)
     {
-        button.interactable = newMode != myMode;
+        SetActive(!GameGlobals.IsThisMode(myMode));
+    }
+
+    private void SetActive(bool active)
+    {
+        button.interactable = active;
     }
 }

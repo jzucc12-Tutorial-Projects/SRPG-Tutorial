@@ -89,7 +89,11 @@ public class UnitAnimator : MonoBehaviour
     public void CurrentAct() => Act?.Invoke();
 
     //Called from  the animation events. Call at the end of the animation.
-    public void CurrentEnd() => End?.Invoke();
+    public void CurrentEnd() 
+    {
+        End?.Invoke();
+        ResetAnimatedAction();
+    }
 
     private void SetAnimatedAction(IAnimatedAction animatedAction)
     {

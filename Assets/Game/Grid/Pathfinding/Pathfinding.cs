@@ -36,7 +36,21 @@ public class Pathfinding : MonoBehaviour
                 var hit = Physics.Raycast(worldPosition + Vector3.down * offset, Vector3.up, 2 * offset, GridGlobals.obstacleMask);
             }
         }
+
+        var cells = new List<GridCell>(gridSystem.GetGridCells());
+        UpdateGrid(cells);
+
         if(debugMode) gridSystem.CreateDebugObjects(transform, pathNodePrefab);
+    }
+
+    private void OnEnable()
+    {
+        BaseAction.OnAnyActionEndedEarly += UpdateGrid;
+    }
+
+    public void OnDisable()
+    {
+        BaseAction.OnAnyActionEndedEarly -= UpdateGrid;
     }
     #endregion
 
@@ -168,6 +182,15 @@ public class Pathfinding : MonoBehaviour
 
         cells.Reverse();
         return cells;
+    }
+    
+    private void UpdateGrid(List<GridCell> cells)
+    {
+        foreach(var cell in cells)
+        {
+            var node = gridSystem.GetGridObject(cell);
+            node.walkable = cell.IsWalkable();
+        }
     }
     #endregion
 

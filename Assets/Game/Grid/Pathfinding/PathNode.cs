@@ -9,6 +9,7 @@ public class PathNode
     private PathNode previousNode = null;
     private int gCost = 0;
     private int hCost = 0;
+    public bool walkable = false;
     #endregion
 
 
@@ -27,7 +28,7 @@ public class PathNode
     #endregion
 
     #region //Getters
-    public bool IsWalkable() => gridCell.IsWalkable();
+    public bool IsWalkable() => walkable;
     public PathNode GetPreviousNode() => previousNode;
     public GridCell GetGridCell() => gridCell;
     public int GetFCost() => gCost + hCost;

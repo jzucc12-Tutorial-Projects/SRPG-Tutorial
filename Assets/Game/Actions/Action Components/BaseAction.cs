@@ -24,6 +24,7 @@ public abstract class BaseAction : MonoBehaviour
     protected Action OnActionFinish;
     public static event Action<BaseAction, GridCell> OnAnyActionStarted;
     public static event Action OnAnyActionEnded;
+    public static event Action<List<GridCell>> OnAnyActionEndedEarly;
     #endregion
 
 
@@ -51,8 +52,9 @@ public abstract class BaseAction : MonoBehaviour
         OnAnyActionStarted?.Invoke(this, gridCell);
     }
 
-    protected void ActionFinish()
+    protected void ActionFinish(List<GridCell> targetedCells)
     {
+        OnAnyActionEndedEarly?.Invoke(targetedCells);
         OnActionFinish?.Invoke();
         OnAnyActionEnded?.Invoke();
         OnActionFinish = null;

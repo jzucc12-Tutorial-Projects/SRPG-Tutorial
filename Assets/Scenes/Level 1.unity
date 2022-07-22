@@ -717,6 +717,11 @@ PrefabInstance:
       propertyPath: m_text
       value: Triss
       objectReference: {fileID: 0}
+    - target: {fileID: 7921452890224807754, guid: 81b6130a530548c41abaa3f42ecff58b,
+        type: 3}
+      propertyPath: aggression
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 81b6130a530548c41abaa3f42ecff58b, type: 3}
@@ -2458,6 +2463,16 @@ PrefabInstance:
       propertyPath: m_text
       value: Johanna
       objectReference: {fileID: 0}
+    - target: {fileID: 7921452890224807754, guid: 81b6130a530548c41abaa3f42ecff58b,
+        type: 3}
+      propertyPath: aggression
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7921452890224807754, guid: 81b6130a530548c41abaa3f42ecff58b,
+        type: 3}
+      propertyPath: listIterations
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 81b6130a530548c41abaa3f42ecff58b, type: 3}
@@ -2576,11 +2591,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: Adam
-      objectReference: {fileID: 0}
-    - target: {fileID: 4049166613275540673, guid: c4f714f34391d1f4c8c690b346814d3e,
-        type: 3}
-      propertyPath: iterations
-      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 5525297966106258002, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
@@ -2732,22 +2742,22 @@ PrefabInstance:
     - target: {fileID: 922817128287054149, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.00018837796
+      value: -0.00018842438
       objectReference: {fileID: 0}
     - target: {fileID: 922817128287054149, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000059415648
+      value: 0.000059430284
       objectReference: {fileID: 0}
     - target: {fileID: 922817128425817792, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.00018837796
+      value: -0.00018842438
       objectReference: {fileID: 0}
     - target: {fileID: 922817128425817792, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000059415648
+      value: 0.000059430284
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

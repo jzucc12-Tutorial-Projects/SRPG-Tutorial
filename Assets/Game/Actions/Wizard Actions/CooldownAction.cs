@@ -66,7 +66,7 @@ public abstract class CooldownAction : TargetedAction, ISupply
     #region //Enemy AI Action
     protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        if(actionList.HasAction<CooldownAction>()) return -25;
+        if(actionList.HasAction<CooldownAction>()) return -15;
         return 0;
     }
     #endregion

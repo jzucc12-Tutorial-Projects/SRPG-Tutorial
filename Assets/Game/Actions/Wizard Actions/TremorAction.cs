@@ -12,6 +12,7 @@ public class TremorAction : CooldownAction, IAnimatedAction, IOnSelectAction
     [SerializeField] private int aoeSize = 2;
     [SerializeField] private int damage = 30;
     private GridCell target;
+    private List<GridCell> targetCells = new List<GridCell>();
     private MouseWorld mouseWorld = null;
     public static Action TremorStarted;
     #endregion
@@ -62,8 +63,7 @@ public class TremorAction : CooldownAction, IAnimatedAction, IOnSelectAction
     #region //Enemy AI
     protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        AIDamageVars vars = new AIDamageVars(damage, 55, 35, 20);
-        if(actionList.GetAggression() > 5) vars.SetNonUnitValues(15, 5);
+        AIDamageVars vars = new AIDamageVars(damage, 60, 40, 20);
         int score = unit.AOEScoring(GetTargets(targetCell), vars, 0, 0, 1);
         return score + base.GetScore(actionList, unitCell, targetCell);
     }
@@ -82,7 +82,7 @@ public class TremorAction : CooldownAction, IAnimatedAction, IOnSelectAction
 
     public void AnimationEnd()
     {
-        ActionFinish();
+        ActionFinish(targetCells);
     }
     #endregion
 
@@ -102,12 +102,14 @@ public class TremorAction : CooldownAction, IAnimatedAction, IOnSelectAction
     public override Vector3 GetTargetPosition() => target.GetWorldPosition();
     public IEnumerable<ITargetable> GetTargets(GridCell targetCell)
     {
+        targetCells.Clear();
         foreach(var cell in levelGrid.CheckGridRange(targetCell, aoeSize, circularRange, true))
         {
-            ITargetable targetable = cell.GetTargetable();
+            ITargetable targetable = levelGrid.GetTargetable(cell);
             if(targetable == null || !targetable.CanBeTargeted(unit, false)) continue;
-            Vector3 dir = targetable.GetWorldPosition() - GetTargetPosition();
-            if(Physics.Raycast(GetTargetPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
+            Vector3 dir = targetable.GetWorldPosition() - targetCell.GetWorldPosition();
+            if(Physics.Raycast(targetCell.GetWorldPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
+            targetCells.Add(cell);
             yield return targetable;
         }
     }

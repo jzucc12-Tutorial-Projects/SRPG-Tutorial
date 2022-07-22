@@ -74,55 +74,34 @@ public static class GridExtensions
         }
     }
 
-    /// <summary>
-    /// Finds the x,z offset between the start and end cell
-    /// </summary>
-    /// <param name="startCell"></param>
-    /// <param name="endCell"></param>
-    /// <param name="ignoreDiagonals"></param>
-    /// <returns></returns>
-    public static GridCell GetOffset(this GridCell startCell, GridCell endCell)
-    {
-        return endCell - startCell;
-    }
-
-    public static bool HasAnyUnit(this GridCell gridCell)
-    {
-        return GetUnit(gridCell) != null;
-    }
-    public static Unit GetUnit(this GridCell gridCell)
-    {
-        return GetComponentAtCell<Unit>(gridCell, GridGlobals.unitMask);
-    }
-    public static List<Unit> GetUnits(this GridCell gridCell)
-    {
-        return GetComponentsAtCell<Unit>(gridCell, GridGlobals.unitMask);
-    }
-    public static IInteractable GetInteractable(this GridCell gridCell)
-    {
-        return GetComponentAtCell<IInteractable>(gridCell, GridGlobals.interactableMask);
-    }
-    public static ITargetable GetTargetable(this GridCell gridCell)
-    {
-        return GetComponentAtCell<ITargetable>(gridCell, GridGlobals.targetableMask);
-    }
+    #region //Getting at cell
     public static bool HasObstacle(this GridCell gridCell)
     {
         return Raycast(gridCell, GridGlobals.obstacleMask);
-    }
-    public static bool CantTarget(this GridCell gridCell)
-    {
-        return Raycast(gridCell, GridGlobals.noTargetMask);
     }
     public static bool HasHighObstacle(this GridCell gridCell)
     {
         return HighRaycast(gridCell, GridGlobals.obstacleMask, out RaycastHit hit);
     }
+    public static bool CantTarget(this GridCell gridCell)
+    {
+        return Raycast(gridCell, GridGlobals.noTargetMask);
+    }
     public static bool IsWalkable(this GridCell gridCell)
     {
         return GetComponentAtCell<Collider>(gridCell, GridGlobals.blockWalkingMask) == null;
     }
+    public static IObjectInGrid GetAtCell(this GridCell gridCell)
+    {
+        //I'm shooting for everything and only returning the first because with a single hit, sometimes
+        //a child GO is struck and the cell is registered blank by mistake.
+        var hits = GetComponentsAtCell<IObjectInGrid>(gridCell, -1);
+        if(hits.Count > 0) return hits[0];
+        else return null;
+    }
+    #endregion
 
+    #region //Cell raycasts
     public static T GetComponentAtCell<T>(this GridCell gridCell, LayerMask mask)
     {
         if(Raycast(gridCell, mask, out RaycastHit hit))
@@ -130,7 +109,6 @@ public static class GridExtensions
         else 
             return default(T);
     }
-
     public static List<T> GetComponentsAtCell<T>(this GridCell gridCell, LayerMask mask)
     {
         var list = new List<T>();
@@ -144,12 +122,10 @@ public static class GridExtensions
         }
         return list;
     }
-
     private static bool Raycast(GridCell gridCell, LayerMask mask)
     {
         return Raycast(gridCell, mask, out RaycastHit hit);
     }
-
     private static bool Raycast(GridCell gridCell, LayerMask mask, out RaycastHit hit)
     {
         return Physics.Raycast(gridCell.GetWorldPosition()+Vector3.down, Vector3.up*GridGlobals.raycastLength, out hit, GridGlobals.raycastLength, mask);
@@ -167,4 +143,5 @@ public static class GridExtensions
         float length = 1.25f;
         return Physics.Raycast(gridCell.GetWorldPosition()+(length+2)*Vector3.up, Vector3.down*length, out hit, length, mask);
     }
+    #endregion
 }

@@ -90,13 +90,13 @@ public abstract class TargetedAction : BaseAction
         {
             if(requiresUnit)
             {
-                var targetUnit = cell.GetUnit();
+                var targetUnit = levelGrid.GetUnit(cell);
                 if(targetUnit == null) continue;
                 if(!targetUnit.CanBeTargeted(unit, targetAllies)) continue;
             }
             else if(requiresTargetable)
             {
-                var target = cell.GetTargetable();
+                var target = levelGrid.GetTargetable(cell);
                 if(target == null) continue;
                 if(!target.CanBeTargeted(unit, targetAllies)) continue;
             }
@@ -116,10 +116,10 @@ public abstract class TargetedAction : BaseAction
         foreach(var cell in levelGrid.CheckGridRange(attackerCell, actionRange, circularRange, includeSelf))
         {
             //Omit cells that have obstacles (needed for actions that aren't impeded by obstacles)
-            if(cell.HasObstacle()) continue;
+            if(levelGrid.HasObstacle(cell)) continue;
 
             //Level grid is square by default. This takes non-square levels into account
-            if(cell.CantTarget()) continue;
+            if(levelGrid.CantTarget(cell)) continue;
 
             Vector3 targetPosition = unit.ConvertToShoulderHeight(cell);
             Vector3 aimDir = (targetPosition - attackerWorldPosition).normalized;
@@ -134,7 +134,7 @@ public abstract class TargetedAction : BaseAction
                 //If so, only skip if that cell does not have a targetable
                 GridCell hitCell = hit.point.GetGridCell();
                 if(cell != hitCell) continue;
-                if(hitCell.GetTargetable() == null) continue;
+                if(levelGrid.GetTargetable(hitCell) == null) continue;
             }
 
             validCells.Add(cell);

@@ -16,8 +16,8 @@ MonoBehaviour:
   nonUnitMult: 0.5
   fudgeSO: {fileID: 11400000, guid: 7ea39e92a955ea446a84e097490d3609, type: 2}
   dropWithDistance: 1
-  distanceDrop: 3
-  nearRange: 5
+  distanceDrop: 5
+  nearRange: 4
   dropWithBlocking: 1
   blockingDrop: 7
   accuracyBlockingLayer:

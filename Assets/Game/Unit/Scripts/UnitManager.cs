@@ -79,6 +79,9 @@ public class UnitManager : MonoBehaviour
 
     #region //Getters
     public List<Unit> GetUnitList() => unitList;
+    public List<Unit> GetTeam1List() => team1List;
+    public List<Unit> GetTeam2List() => team2List;
+
     public Unit GetRootUnit(bool isTeam1)
     {
         var list = isTeam1 ? team1List : team2List;

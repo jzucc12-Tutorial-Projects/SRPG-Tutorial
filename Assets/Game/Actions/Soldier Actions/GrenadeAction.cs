@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -11,6 +12,7 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
     [SerializeField] private Transform spawnPoint = null;
     [SerializeField] private int maxQuantity = 3;
     private Grenade grenadePrefab = null;
+    private Grenade activeGrenade = null;
     private int currentQuantity;
     private Vector3 target;
     private MouseWorld mouseWorld = null;
@@ -84,10 +86,11 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
     {
         float quantityMod = currentQuantity / maxQuantity;
         AIDamageVars vars = new AIDamageVars(grenadePrefab.GetDamage(false), 40, 25, 25);
-        if(actionList.GetAggression() > 5) vars.SetNonUnitValues(15, 5);
+
+        var targets = new List<ITargetable>();
         int score = unit.AOEScoring(grenadePrefab.GetTargets(targetCell), vars, -0.5f, -30, 0.9f);
 
-        Unit targetUnit = targetCell.GetUnit();
+        Unit targetUnit = levelGrid.GetUnit(targetCell);
         if(targetUnit != null)
         {
             score += 30 * (targetUnit.IsAI() ? -1 : 2);
@@ -100,17 +103,19 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
     public void AnimationAct()
     {
         currentQuantity--;
-        var grenade = effectsManager.GetGrenade();
-        grenade.transform.position = spawnPoint.position;
-        grenade.transform.rotation = Quaternion.identity;
-        grenade.SetUp(unit, target);
+        activeGrenade = effectsManager.GetGrenade();
+        activeGrenade.transform.position = spawnPoint.position;
+        activeGrenade.transform.rotation = Quaternion.identity;
+        activeGrenade.SetUp(unit, target);
         unit.PlaySound("grenade throw");
     }
 
     public void AnimationEnd()
     {
         unitWeapon.ShowActiveWeapon();
-        ActionFinish();
+        activeGrenade.GetTargets(target.GetGridCell());
+        ActionFinish(activeGrenade.targetCells);
+        activeGrenade = null;
     }
     #endregion
 

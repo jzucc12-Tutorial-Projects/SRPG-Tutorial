@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -26,7 +27,7 @@ public class MedPackAction : TargetedAction, ISupply
     #region //Action performing
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
-        target = gridCell.GetUnit();
+        target = levelGrid.GetUnit(gridCell);
         unit.PlaySound("heal");
         base.TakeAction(gridCell, onFinish);
     }
@@ -35,8 +36,8 @@ public class MedPackAction : TargetedAction, ISupply
     {
         currentQuantity--;
         target.Heal(unit, healingAmount);
+        ActionFinish(new List<GridCell>() { target.GetGridCell() });
         target = null;
-        ActionFinish();
     }
 
     public void Resupply()
@@ -63,7 +64,7 @@ public class MedPackAction : TargetedAction, ISupply
     protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
         int score = 0;
-        Unit targetUnit = targetCell.GetUnit();
+        Unit targetUnit = levelGrid.GetUnit(targetCell);
         float myHPPercent = unit.GetHealthPercentage();
         if(myHPPercent == 1) return 0;
 

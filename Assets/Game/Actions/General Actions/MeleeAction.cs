@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -9,7 +10,8 @@ public class MeleeAction : TargetedAction, IAnimatedAction
     #region //Variables
     [Header("Melee Action")]
     [SerializeField] private int damage = 70;
-    private ITargetable target = null;
+    private GridCell targetCell = new GridCell(-1, -1);
+    private ITargetable target => levelGrid.GetTargetable(targetCell);
     public static event Action OnMeleeStatic;
     public event Action<IAnimatedAction> SetAnimatedAction;
     public event Action<string> SetTrigger;
@@ -19,7 +21,7 @@ public class MeleeAction : TargetedAction, IAnimatedAction
     #region //Action performing
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
-        target = gridCell.GetTargetable();
+        targetCell = gridCell;
         SetAnimatedAction?.Invoke(this);
         base.TakeAction(gridCell, onFinish);
     }
@@ -33,7 +35,7 @@ public class MeleeAction : TargetedAction, IAnimatedAction
     #region //Enemy action
     protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        ITargetable target = targetCell.GetTargetable();
+        ITargetable target = levelGrid.GetTargetable(targetCell);
         AIDamageVars vars = new AIDamageVars(damage, 100, 20, 10);
         if(actionList.GetAggression() > 5) vars.SetNonUnitValues(10, 5);
         return unit.DamageScoring(target, vars);
@@ -51,7 +53,7 @@ public class MeleeAction : TargetedAction, IAnimatedAction
 
     public void AnimationEnd()
     {
-        ActionFinish();
+        ActionFinish(new List<GridCell>() { targetCell });
     }
     #endregion
 

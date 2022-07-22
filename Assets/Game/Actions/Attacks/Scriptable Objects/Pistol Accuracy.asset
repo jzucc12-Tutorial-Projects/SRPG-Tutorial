@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd8abb7d1809244eadeb85428c35588, type: 3}
   m_Name: Pistol Accuracy
   m_EditorClassIdentifier: 
-  baseAccuracy: 95
+  baseAccuracy: 93
   nonUnitMult: 0.75
   fudgeSO: {fileID: 11400000, guid: 7ea39e92a955ea446a84e097490d3609, type: 2}
   dropWithDistance: 1

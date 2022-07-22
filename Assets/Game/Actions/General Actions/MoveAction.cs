@@ -66,6 +66,7 @@ public class MoveAction : BaseAction
 
     private IEnumerator Move()
     {
+        GridCell startCell = unit.GetGridCell();
         currentMoves++;
         StartMoving?.Invoke();
         positionIndex = 0;
@@ -85,7 +86,7 @@ public class MoveAction : BaseAction
         }
         unit.StopSound("walking");
 
-        ActionFinish();
+        ActionFinish(new List<GridCell>() { startCell, unit.GetGridCell() });
         StopMoving?.Invoke();
     }
     #endregion
@@ -107,8 +108,8 @@ public class MoveAction : BaseAction
 
         foreach(var cell in levelGrid.CheckGridRange(unit.GetGridCell(), maxMoveDistance, circularRange, includeSelf))
         {
-            if(!cell.IsWalkable()) continue;
-            if(cell.HasAnyUnit()) continue;
+            if(!levelGrid.IsWalkable(cell)) continue;
+            if(levelGrid.HasAnyUnit(cell)) continue;
             if(!pathfinder.HasWalkablePath(unitCell, cell)) continue;
             if(pathfinder.GetPathLength(unitCell, cell) > maxMoveDistance) continue;
             validCellList.Add(cell);

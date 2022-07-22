@@ -8,12 +8,12 @@ public static class AccuracyHub
     public static event Action StopTargeting;
 
 
-    public static void ShowAccuracyUI(Unit attacker, List<GridCell> targetCells, AccuracySO accuracySO)
+    public static void ShowAccuracyUI(Unit attacker, List<GridCell> targetCells, AccuracySO accuracySO, LevelGrid levelGrid)
     {
         Dictionary<ITargetable, (int, int, int)> targets = new Dictionary<ITargetable, (int, int, int)>();
         foreach(var gridCell in targetCells)
         {
-            ITargetable target = gridCell.GetTargetable();
+            ITargetable target = levelGrid.GetTargetable(gridCell);
             if(targets.ContainsKey(target)) continue;
             int accuracy = accuracySO.CalculateAccuracy(attacker, attacker.GetWorldPosition(), target);
             int fudgeAccuracy = accuracySO.FudgeAccuracy(accuracy);

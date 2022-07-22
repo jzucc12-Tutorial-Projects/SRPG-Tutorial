@@ -45,13 +45,10 @@ public class EnemyAIHub : MonoBehaviour
     {
         yield return new WaitForSeconds(startUpTime);
 
-        var units = unitManager.GetUnitList();
+        var units = GameGlobals.IsTeam1AI() ? unitManager.GetTeam1List() : unitManager.GetTeam2List();
         var enemies = new List<Unit>();
         foreach(var unit in units)
-        {
-            if(!unit.IsAI()) continue;
             enemies.Add(unit);
-        }
 
         foreach(Unit enemy in enemies)
         {

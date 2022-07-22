@@ -12,6 +12,7 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     [SerializeField] private int damage = 30;
     [SerializeField] private Transform lightningOrigin = null;
     private GridCell target;
+    private List<GridCell> targetCells = new List<GridCell>();
     private MouseWorld mouseWorld = null;
     private EffectsManager effectsManager = null;
     #endregion
@@ -35,6 +36,7 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
         target = gridCell;
+        GetTargets(unit.GetGridCell(), gridCell);
         SetAnimatedAction?.Invoke(this);
         base.TakeAction(gridCell, onFinish);
     }
@@ -71,8 +73,7 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     #region //Enemy AI
     protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        AIDamageVars vars = new AIDamageVars(damage, 35, 30, 25);
-        vars.SetNonUnitValues(10, 5);
+        AIDamageVars vars = new AIDamageVars(damage, 60, 80, 25);
         int score = unit.AOEScoring(GetTargets(unitCell, targetCell), vars, -1, 0, 2/maxCooldown);
         return score + base.GetScore(actionList, unitCell, targetCell);
     }
@@ -92,7 +93,7 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
 
     public void AnimationEnd()
     {
-        ActionFinish();
+        ActionFinish(targetCells);
     }
     #endregion
 
@@ -113,10 +114,12 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     public override Vector3 GetTargetPosition() => target.GetWorldPosition();
     private IEnumerable<ITargetable> GetTargets(GridCell unitCell, GridCell targetCell)
     {
+        targetCells.Clear();
         foreach(var cell in levelGrid.GetLine(unitCell, targetCell))
         {
-            var targetable = cell.GetTargetable();
+            var targetable = levelGrid.GetTargetable(cell);
             if(targetable == null) continue;
+            targetCells.Add(cell);
             yield return targetable;
         }
     }

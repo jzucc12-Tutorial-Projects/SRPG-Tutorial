@@ -13,6 +13,8 @@ public class EnemyAIActionList
 
 
     #region //Constructor
+    public EnemyAIActionList() { }
+    
     public EnemyAIActionList(int maxAP, int aggression) 
     { 
         this.maxAP = maxAP;

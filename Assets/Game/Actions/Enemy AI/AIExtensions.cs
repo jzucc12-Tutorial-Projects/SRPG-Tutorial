@@ -21,19 +21,21 @@ public static class EnemyAIExtensions
         foreach(var targetable in targets)
         {
             float unitScore = attacker.DamageScoring(targetable, vars);
-            if(unitScore > 0) numTargets++;
 
             Unit targetUnit = targetable as Unit;
             if(targetUnit != null)
             {
                 if(targetUnit.IsAI()) unitScore *= sameTeamMult;
-                if(targetUnit == attacker) unitScore += isMeMod;
+                if(targetUnit == attacker)
+                {
+                    if(isMeMod == 0) unitScore = 0;
+                    else unitScore += isMeMod;
+                }
             }
-            
+            if(unitScore > 0) numTargets++;
             score += unitScore;
         }
         if(score == 0) return 0;
-
         if(numTargets == 1) score *= singleTargetMult;
         return Mathf.RoundToInt(score);
     }

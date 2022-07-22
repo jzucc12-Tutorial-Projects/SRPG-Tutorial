@@ -1007,7 +1007,7 @@ PrefabInstance:
     - target: {fileID: 7054100785206631000, guid: f5f8f6c463b496541b61106c987a40eb,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2
+      value: 14.00028
       objectReference: {fileID: 0}
     - target: {fileID: 7054100785206631000, guid: f5f8f6c463b496541b61106c987a40eb,
         type: 3}
@@ -1951,7 +1951,7 @@ PrefabInstance:
     - target: {fileID: 4201871009660209446, guid: 37d6eb48bb8006545a7fcf89185a76e2,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4201871009660209447, guid: 37d6eb48bb8006545a7fcf89185a76e2,
         type: 3}
@@ -2986,11 +2986,6 @@ PrefabInstance:
       propertyPath: m_text
       value: Merlin
       objectReference: {fileID: 0}
-    - target: {fileID: 4067694496716825116, guid: c4f714f34391d1f4c8c690b346814d3e,
-        type: 3}
-      propertyPath: maxHealth
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5525297966106258002, guid: c4f714f34391d1f4c8c690b346814d3e,
         type: 3}
       propertyPath: m_Mesh
@@ -3268,22 +3263,22 @@ PrefabInstance:
     - target: {fileID: 922817128287054149, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.00018837796
+      value: -0.00018842438
       objectReference: {fileID: 0}
     - target: {fileID: 922817128287054149, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000059415648
+      value: 0.000059430284
       objectReference: {fileID: 0}
     - target: {fileID: 922817128425817792, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.00018837796
+      value: -0.00018842438
       objectReference: {fileID: 0}
     - target: {fileID: 922817128425817792, guid: 85113af399885d3479a9264fc3235c27,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000059415648
+      value: 0.000059430284
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

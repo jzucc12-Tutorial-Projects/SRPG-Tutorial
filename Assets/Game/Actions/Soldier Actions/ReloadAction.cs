@@ -27,7 +27,7 @@ public class ReloadAction : BaseAction, IAltAction, IOnSelectAction
         unit.PlaySound("resupply");
         shootAction.Resupply();
         CallLog($"{unit.GetName()} reloaded their {shootAction.GetActionName()}");
-        ActionFinish();
+        ActionFinish(new List<GridCell>() { unit.GetGridCell() });
     }
     #endregion
 

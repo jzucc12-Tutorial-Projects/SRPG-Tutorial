@@ -123,7 +123,7 @@ public class GridSystemVisual : MonoBehaviour
         if(targetOnly && activeMouseMaterial == defaultMouseMaterial) return;
 
         //Only show AOE if the mouse is on a valid cell
-        if(centerPoint.HasObstacle()) return;
+        if(levelGrid.HasObstacle(centerPoint)) return;
         foreach(var cell in levelGrid.CheckGridRange(centerPoint, aoeSize))
         {
             Vector3 dir = (cell - centerPoint).GetWorldPosition();
@@ -136,8 +136,7 @@ public class GridSystemVisual : MonoBehaviour
     {
         if(activeMouseMaterial == defaultMouseMaterial) return;
 
-        GridCell offset = origin - currentUnit.GetGridCell();
-        foreach(var cell in levelGrid.GetLine(origin, offset))
+        foreach(var cell in levelGrid.GetLine(currentUnit.GetGridCell(), origin))
             ShowCell(cell, activeMouseMaterial, false);
     }
 

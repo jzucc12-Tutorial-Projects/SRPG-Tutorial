@@ -37,7 +37,7 @@ public class SpinAction : BaseAction
             transform.eulerAngles += new Vector3(0, spinAdd, 0);
             yield return null;
         }
-        ActionFinish();
+        ActionFinish(new List<GridCell> { unit.GetGridCell() } );
     }
     #endregion
 

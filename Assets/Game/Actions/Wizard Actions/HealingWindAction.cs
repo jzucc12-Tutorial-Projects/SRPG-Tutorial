@@ -76,8 +76,6 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
             if(unitScore > 0) numTargets++;
             score += unitScore;
         }
-
-        if(numTargets == 1) score *= Mathf.RoundToInt(2f/maxCooldown);
         return score + base.GetScore(actionList, unitCell, targetCell);
     }
     #endregion
@@ -98,7 +96,11 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
 
     public void AnimationEnd()
     {
-        ActionFinish();
+        var cells = new List<GridCell>();
+        foreach(var target in GetTargets(target))
+            cells.Add(target.GetGridCell());
+
+        ActionFinish(cells);
     }
     #endregion
 
@@ -120,10 +122,10 @@ public class HealingWindAction : CooldownAction, IAnimatedAction, IOnSelectActio
     {
         foreach(var cell in levelGrid.CheckGridRange(targetCell, aoeSize, circularRange, true))
         {
-            Unit targetUnit = cell.GetUnit();
+            Unit targetUnit = levelGrid.GetUnit(cell);
             if(targetUnit == null) continue;
             Vector3 dir = targetUnit.GetWorldPosition() - targetCell.GetWorldPosition();
-            if(Physics.Raycast(GetTargetPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
+            if(Physics.Raycast(targetCell.GetWorldPosition(), dir, dir.magnitude, GridGlobals.obstacleMask)) continue;
             yield return targetUnit;
         }
     }

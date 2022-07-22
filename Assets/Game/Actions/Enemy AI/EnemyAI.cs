@@ -5,16 +5,11 @@ using UnityEngine;
 
 
 /// LIMITATIONS:
-/// The AI will either move first, last, or not at all. It won't act, move, and then act
-/// The AI will not move multiple times in a given turn
-/// Currently the AI favors movements that place it further away from enemies. Playing passively.
-/// AI can't track current ammo, stock, etc when choosing an action
+/// AI makes one or more lists of random actions and picks the list with the highest accumulative score
+/// AI can't track current ammo, stock, etc when choosing an action.
 /// The AI will replan its turn after every action it takes.
 
 /// POSSIBLE CHANGES:
-/// Make handling movement better. I first need to decide if I want there to be a limit on one or two movements per turn. Scoring moving is also weird.
-///     Reason choosing between being aggressive (wanting to be near foes) or being defensive (wanting to get away from foes). I could potentially
-///     make it dependent upon remaining AP, health, and a few other factors. TBD.
 /// Possibly have the AI consider the new plan rather than always take it
 
 /// <summary>
@@ -23,13 +18,24 @@ using UnityEngine;
 [RequireComponent(typeof(Unit))]
 public class EnemyAI : MonoBehaviour
 {
-    #region //Variables
+    #region //Cached Components
     private Unit enemy = null;
     private MoveAction moveAction = null;
+    EnemyAIActionList myActions = new EnemyAIActionList();
+
+    //These were made so that I could use coroutines to go through the AI and improve performance
+    EnemyAIActionList bestList = new EnemyAIActionList();
+    EnemyAIAction bestAction = null;
+    #endregion
+
+    #region AI behaviour
     [SerializeField, Range(0,10)] private int aggression = 5;
-    [SerializeField, Min(1)] private int iterations = 1;
+    [SerializeField, Min(1)] private int movementsToConsider = 5;
     [SerializeField] private bool iterateLists = false;
+    [SerializeField, ShowIf("iterateLists"), Min(1)] private int listIterations = 1;
     [SerializeField] private bool iterateActions = true;
+    [SerializeField, ShowIf("iterateActions"), Min(1)] private int actionIterations = 1;
+    [SerializeField, Min(1), ShowIf("iterateActions")] private int actionIterationsPerFrame = 5;
     #endregion
 
 
@@ -48,7 +54,7 @@ public class EnemyAI : MonoBehaviour
         //Set up
         bool waiting = false;
         Action actionComplete = () => waiting = false;
-        var actionList = DetermineActions(enemy.GetGridCell());
+        yield return GetStartingList(enemy.GetGridCell());
         Func<bool> doneWaiting = () => !waiting || !enemy.IsAlive();
         int actionNo = 0;
 
@@ -59,7 +65,7 @@ public class EnemyAI : MonoBehaviour
             waiting = true;
             
             //Get next action. Abort if out of actions
-            EnemyAIAction aiAction = actionList.GetAction(actionNo);
+            EnemyAIAction aiAction = myActions.GetAction(actionNo);
             if(aiAction == null) break;
 
             //Take the current action if possible
@@ -74,15 +80,17 @@ public class EnemyAI : MonoBehaviour
             }
 
             //Update list with current state
-            var testList = MakeActionList(new EnemyAIActionList(actionList, actionNo), enemy.GetGridCell());
-            if(!performed && testList == actionList) break;
-            actionList = testList;
+            yield return GetBestList(new EnemyAIActionList(myActions, actionNo), enemy.GetGridCell());
+            if(!performed && bestList == myActions) break;
+            myActions = bestList;
         }
     }
 
-    private EnemyAIActionList DetermineActions(GridCell unitCell)
+    private IEnumerator GetStartingList(GridCell unitCell)
     {
+        // Get every movement option
         var lists = new List<EnemyAIActionList>();
+        var dict = new Dictionary<EnemyAIActionList, GridCell>();
         foreach(var cell in moveAction.GetValidCells(unitCell))
         {
             var list = new EnemyAIActionList(enemy.GetAP(), aggression);
@@ -90,18 +98,32 @@ public class EnemyAI : MonoBehaviour
             {
                 var aiAction = moveAction.GetAIAction(list, unitCell, cell);
                 list.AddAIAction(aiAction);
+                lists.Add(list);
+                dict.Add(list, cell);
             }
-            lists.Add(MakeActionList(list, cell));
         }
 
-        //Return the best list
+        //Choose the 5 best and add current
         lists.Sort((EnemyAIActionList a, EnemyAIActionList b) => b.GetScore() - a.GetScore());
-        return lists[0];
+        if(lists.Count > movementsToConsider) lists.RemoveRange(movementsToConsider, lists.Count - movementsToConsider);
+        var currentPosList = new EnemyAIActionList(enemy.GetAP(), aggression);
+        lists.Add(currentPosList);
+        dict.Add(currentPosList, unitCell);
+
+        //Get the best list
+        for(int ii = 0; ii < lists.Count; ii++)
+        {
+            var list = lists[ii];
+            yield return GetBestList(list, dict[list]);;
+            lists[ii] = bestList;
+        }
+        lists.Sort((EnemyAIActionList a, EnemyAIActionList b) => b.GetScore() - a.GetScore());
+        myActions = lists[0];
     }
     #endregion
 
     #region //Get actions
-    private EnemyAIActionList MakeActionList(EnemyAIActionList list, GridCell unitCell)
+    private IEnumerator GetBestList(EnemyAIActionList list, GridCell unitCell)
     {
         //Determine possible actions and locations
         var actionOptions = new Dictionary<BaseAction, List<GridCell>>();
@@ -112,35 +134,45 @@ public class EnemyAI : MonoBehaviour
             if(cells.Count == 0) continue;
             actionOptions.Add(action, cells);
         }
-        if(actionOptions.Keys.Count == 0) return null;
-
-        //Generate lists
-        var lists = new List<EnemyAIActionList>();
-        int iterationCount = iterateLists ? iterations : 1;
-        for(int ii = 0; ii < iterationCount; ii++)
+        if(actionOptions.Keys.Count == 0)
         {
-            var newList = new EnemyAIActionList(list);
-            while(newList.GetAP() > 0)
-            {
-                EnemyAIAction enemyAction = GetBestAction(newList, unitCell, actionOptions);
-                if(enemyAction == null) break;
-                newList.AddAIAction(enemyAction);
-            }
-            lists.Add(newList);
+            bestList = null;
         }
+        else
+        {
+            //Generate lists
+            var lists = new List<EnemyAIActionList>();
+            int iterationCount = iterateLists ? listIterations : 1;
+            for(int ii = 0; ii < iterationCount; ii++)
+            {
+                var newList = new EnemyAIActionList(list);
+                while(newList.GetAP() > 0)
+                {
+                    //Add action
+                    yield return GetBestAction(newList, unitCell, actionOptions);
+                    if(bestAction == null) break;
+                    newList.AddAIAction(bestAction);
 
-        //Return the best list
-        lists.Sort((EnemyAIActionList a, EnemyAIActionList b) => b.GetScore() - a.GetScore());
-        return lists[0];
+                    //Reassign position if the action moved the unit
+                    if(bestAction.action == moveAction)
+                        unitCell = bestAction.targetCell;
+                }
+                lists.Add(newList);
+            }
+
+            //Return the best list
+            lists.Sort((EnemyAIActionList a, EnemyAIActionList b) => b.GetScore() - a.GetScore());
+            bestList = lists[0];
+        }
     }
 
-    private EnemyAIAction GetBestAction(EnemyAIActionList list, GridCell unitCell, Dictionary<BaseAction, List<GridCell>> actionOptions)
+    private IEnumerator GetBestAction(EnemyAIActionList list, GridCell unitCell, Dictionary<BaseAction, List<GridCell>> actionOptions)
     {
         //Simulation set up
         int currentIteration = 0;
         var actions = new List<BaseAction>(actionOptions.Keys);
         var aiActions = new List<EnemyAIAction>();
-        int iterationCount = iterateActions ? iterations : 1;
+        int iterationCount = iterateActions ? actionIterations : 1;
 
         //Make options. Weird way to break reference to the source
         var myOptions = new Dictionary<BaseAction, List<GridCell>>();
@@ -170,12 +202,16 @@ public class EnemyAI : MonoBehaviour
             if(testAction.score <= 0) continue;
             aiActions.Add(testAction);
             currentIteration++;
+            if(currentIteration % actionIterationsPerFrame == 0) yield return null;
         }
 
         //Get Best Action
-        if(aiActions.Count == 0) return null;
-        aiActions.Sort((EnemyAIAction a, EnemyAIAction b) => b.score - a.score);
-        return aiActions[0];
+        if(aiActions.Count == 0) bestAction = null;
+        else
+        {
+            aiActions.Sort((EnemyAIAction a, EnemyAIAction b) => b.score - a.score);
+            bestAction = aiActions[0];
+        }
     }
 
     private bool TryAction(EnemyAIActionList list, BaseAction action)
