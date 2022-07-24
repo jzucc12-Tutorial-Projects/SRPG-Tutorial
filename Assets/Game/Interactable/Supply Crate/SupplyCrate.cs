@@ -37,8 +37,8 @@ public class SupplyCrate : MonoBehaviour, IInteractable
         Resupply(actor);
         if(timesUsed >= maxUses) 
         {
-            Destroy(tooltip.gameObject);
-            Destroy(this);
+            DestroyImmediate(tooltip.gameObject);
+            DestroyImmediate(this);
         }
         else
         {

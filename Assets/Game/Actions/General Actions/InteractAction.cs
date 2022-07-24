@@ -7,25 +7,25 @@ using UnityEngine;
 /// </summary>
 public class InteractAction : TargetedAction
 {
-    private IInteractable target = null;
+    private GridCell targetCell = new GridCell(-1, -1);
+    private IInteractable target => levelGrid.GetInteractable(targetCell);
 
 
     #region //Action performing
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
-        target = levelGrid.GetInteractable(gridCell);
+        targetCell = gridCell;
         base.TakeAction(gridCell, onFinish);
     }
 
     protected override void OnFacing()
     {
         target.Interact(unit, Finished);
-        target = null;
     }
 
     private void Finished()
     {
-        ActionFinish(new List<GridCell>() { target.GetGridCell() });
+        ActionFinish(new List<GridCell>() { targetCell });
     }
     #endregion
 

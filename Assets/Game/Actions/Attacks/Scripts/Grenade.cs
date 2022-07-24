@@ -17,17 +17,12 @@ public class Grenade : Projectile
     private GridCell targetCell => target.GetGridCell();
     public static Action OnCollisionStatic;
     private Unit thrower = null;
-    public List<GridCell> targetCells { get; private set; }
-    private LevelGrid levelGrid = null;
+    private List<GridCell> targetCells = new List<GridCell>();
+    private LevelGrid levelGrid => FindObjectOfType<LevelGrid>();
     #endregion
 
 
-    private void Awake()
-    {
-        levelGrid = FindObjectOfType<LevelGrid>();
-        targetCells = new List<GridCell>();
-    }
-
+    #region //Projectile
     protected override void Collision()
     {
         grenade.enabled = false;
@@ -42,6 +37,16 @@ public class Grenade : Projectile
         }
     }
 
+    public void SetUp(Unit thrower, Vector3 target, Action OnCollision = null)
+    {
+        grenade.enabled = true;
+        targetCells = new List<GridCell>();
+        this.thrower = thrower;
+        SetUp(target, OnCollision);
+    }
+    #endregion
+
+    #region //Getters
     public IEnumerable<ITargetable> GetTargets(GridCell targetCell)
     {
         foreach(var cell in levelGrid.CheckGridRange(targetCell, explosionRadius, true, true))
@@ -61,11 +66,6 @@ public class Grenade : Projectile
         else return damage;
     }
 
-    public void SetUp(Unit thrower, Vector3 target, Action OnCollision = null)
-    {
-        grenade.enabled = true;
-        targetCells = new List<GridCell>();
-        this.thrower = thrower;
-        SetUp(target, OnCollision);
-    }
+    public List<GridCell> GetTargetCells() => targetCells;
+    #endregion
 }

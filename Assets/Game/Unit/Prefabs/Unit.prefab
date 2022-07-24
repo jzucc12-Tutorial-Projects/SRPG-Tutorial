@@ -90,6 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  aiMaxHPBoost: 50
 --- !u!114 &4329673137153643020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,7 +219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aggression: 5
-  movementsToConsider: 5
+  movementsToConsider: 7
   iterateLists: 0
   listIterations: 2
   iterateActions: 1

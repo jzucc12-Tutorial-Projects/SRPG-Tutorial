@@ -41,6 +41,7 @@ public class EndGameManager : MonoBehaviour
 
     private IEnumerator GameOverWait(bool team1Won)
     {
+        Time.timeScale = 0.3f;
         yield return new WaitForSecondsRealtime(waitTimer);
         if(GameGlobals.TwoPlayer() || !GameGlobals.IsAI(team1Won))
             sfxPlayer.Play("victory");

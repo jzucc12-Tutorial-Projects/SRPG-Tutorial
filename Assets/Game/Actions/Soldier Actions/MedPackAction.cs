@@ -68,7 +68,7 @@ public class MedPackAction : TargetedAction, ISupply
         float myHPPercent = unit.GetHealthPercentage();
         if(myHPPercent == 1) return 0;
 
-        float factor = Mathf.Lerp(10, 25, actionList.GetAggression()/10f);
+        float factor = Mathf.Lerp(20, 40, actionList.PassiveLevel()/10f);
         score += Mathf.RoundToInt(factor/myHPPercent);
         return score;
     }

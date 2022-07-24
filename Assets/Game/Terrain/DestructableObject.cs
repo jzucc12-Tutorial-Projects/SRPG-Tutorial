@@ -14,6 +14,7 @@ public class DestructableObject : MonoBehaviour, ITargetable
     [SerializeField] private int maxHealth = 1;
     [SerializeField] private SoundPlayer sfxPlayer = null;
     private int currentHealth = 0;
+    bool destroyed = false;
     #endregion
 
 
@@ -27,6 +28,7 @@ public class DestructableObject : MonoBehaviour, ITargetable
     #region //Damaging and destruction
     public int Damage(Unit attacker, int damage, bool crit)
     {
+        if(destroyed) return 0;
         int damageDealt = Mathf.Min(damage, currentHealth);
         currentHealth -= damageDealt;
         if(currentHealth <= 0) 
@@ -39,12 +41,13 @@ public class DestructableObject : MonoBehaviour, ITargetable
 
     private void ObjectDestroyed()
     {
+        destroyed = true;
         sfxPlayer.PlayLastSound("destroyed");
         destroyedObject.gameObject.SetActive(true);
         Vector3 randomDir = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f));
         destroyedObject.ApplyExplosionToRBChildren(150f, destroyedObject.position + randomDir, 10f);
         destroyedObject.transform.parent = null;
-        Destroy(rootObject);
+        rootObject.SetActive(false);
     }
     #endregion
 

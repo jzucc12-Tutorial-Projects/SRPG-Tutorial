@@ -303,6 +303,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: e939321fba13eac4e8154147baf7b90f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e939321fba13eac4e8154147baf7b90f, type: 3}
       propertyPath: m_RootOrder
       value: -1

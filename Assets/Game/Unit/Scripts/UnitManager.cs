@@ -63,7 +63,6 @@ public class UnitManager : MonoBehaviour
         if(list.Count > 0) return;
         GameOver?.Invoke();
         GameOverSided?.Invoke(!unit.IsTeam1());
-        Time.timeScale = 0.2f;
     }
 
     private void SortList(List<Unit> list)

@@ -16,11 +16,6 @@ public class TurnSystem : MonoBehaviour
 
 
     #region //Monobehaviour
-    private void Awake()
-    {
-        team1Turn = GameGlobals.TwoPlayer() || GameGlobals.IsTeam2AI();
-    }
-
     private void OnEnable()
     {
         UnitManager.GameOver += TurnOff;
@@ -52,7 +47,11 @@ public class TurnSystem : MonoBehaviour
         IncrementTurn?.Invoke(team1Turn);
         IncrementTurnLate?.Invoke(team1Turn);    
 
-        string turnText = team1Turn ? "Player" : "Enemy";
+        string turnText;
+        if(GameGlobals.TwoPlayer())
+            turnText = team1Turn ? "Player 1" : "Player 2";
+        else
+            turnText = team1Turn ? "Player" : "Enemy";
         ActionLogListener.Publish($"It's now the {turnText}'s turn");
     }
 

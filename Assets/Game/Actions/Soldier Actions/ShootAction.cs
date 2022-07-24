@@ -17,7 +17,8 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
     #endregion
 
     #region //Firing info
-    [Header("Firing Info")]
+    [Header("Shoot Action")]
+    [SerializeField] private int aiScoringBonus = 0;
     [Tooltip("Shots before a reload is needed")] [SerializeField] private int maxClip = 6;
     [SerializeField] private int damage = 40;
     [SerializeField, ScriptableObjectDropdown(typeof(AccuracySO))] private AccuracySO accuracySO = null;
@@ -91,6 +92,8 @@ public class ShootAction : TargetedAction, IAnimatedAction, ISupply, IOnSelectAc
         AIDamageVars vars = new AIDamageVars(damage, 105, 20, 10);
         if(actionList.GetAggression() > 5) vars.SetNonUnitValues(15, 5);
         int score = unit.AccuracyDamageScoring(actionList.HasAction<SpinAction>(), target, vars, accuracySO, unitCell.GetWorldPosition());
+        score += aiScoringBonus;
+        score -= Mathf.RoundToInt(20 * (1 - GetClipPercent()));
         return score;
     }
     #endregion

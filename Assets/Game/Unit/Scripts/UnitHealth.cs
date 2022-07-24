@@ -8,6 +8,7 @@ public class UnitHealth : MonoBehaviour
 {
     #region //Variables
     [SerializeField] private int maxHealth = 100;
+    [SerializeField] private int aiMaxHPBoost = 50;
     private int currentHealth;
     public event Action OnDeath;
     public event Action<float> OnHPChange;
@@ -50,6 +51,13 @@ public class UnitHealth : MonoBehaviour
     private void Die()
     {
         OnDeath?.Invoke();
+    }
+
+    public void AIMaxHPBoost()
+    {
+        maxHealth += aiMaxHPBoost;
+        currentHealth = maxHealth;
+        OnHPChange?.Invoke(GetHealthPercentage());
     }
     #endregion
 

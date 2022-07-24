@@ -41,7 +41,7 @@ public class TargetingUI : MonoBehaviour
         if(targets.TryGetValue(targetable, out (int, int, int) values))
         {
             uiContainer.SetActive(true);
-            accuracyText.text = $"{values.Item1}/{values.Item2}%"; //Used in actual builds
+            accuracyText.text = $"{values.Item1}%"; //Used in actual builds
             // accuracyText.text = $"{values.Item1}/{values.Item2}%"; //Used to see fudged accuracy when in dev
             critText.text = $"{values.Item3}%";
         }

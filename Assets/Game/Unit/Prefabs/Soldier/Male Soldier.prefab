@@ -113,7 +113,7 @@ PrefabInstance:
     - target: {fileID: 642008498672032320, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
       propertyPath: m_RootOrder
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 642008498672032320, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
@@ -391,6 +391,11 @@ PrefabInstance:
       propertyPath: maxHealth
       value: 200
       objectReference: {fileID: 0}
+    - target: {fileID: 6208183024560329706, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: aiMaxHPBoost
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 7930978741787514549, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
       propertyPath: ragdollPrefab
@@ -453,6 +458,7 @@ MonoBehaviour:
   bulletOrigin: {fileID: 213385559}
   weaponGO: {fileID: 4203205038678892587}
   animController: {fileID: 22100000, guid: 07dc407fa6e39f44687b586da6ec8abb, type: 2}
+  aiScoringBonus: 15
   maxClip: 3
   damage: 25
   accuracySO: {fileID: 11400000, guid: ea9e9ea0aa7946c4e850396dd66588b4, type: 2}
@@ -498,6 +504,7 @@ MonoBehaviour:
   bulletOrigin: {fileID: 1189217241}
   weaponGO: {fileID: 4203198220207403924}
   animController: {fileID: 22100000, guid: d6ee3152b6a3c3344844385c027bd68e, type: 2}
+  aiScoringBonus: 0
   maxClip: 5
   damage: 15
   accuracySO: {fileID: 11400000, guid: e8d6d181983f17d48864284eea71603c, type: 2}
@@ -543,6 +550,7 @@ MonoBehaviour:
   bulletOrigin: {fileID: 213385559}
   weaponGO: {fileID: 4203205038678892587}
   animController: {fileID: 22100000, guid: 07dc407fa6e39f44687b586da6ec8abb, type: 2}
+  aiScoringBonus: -5
   maxClip: 1
   damage: 40
   accuracySO: {fileID: 11400000, guid: 49743cb6674cefe49bb45aacc8bdb67c, type: 2}
@@ -610,7 +618,7 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 896
-  healingAmount: 60
+  healingAmount: 70
   maxQuantity: 1
 --- !u!4 &4206039011323308099 stripped
 Transform:

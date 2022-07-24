@@ -25,6 +25,7 @@ public class Unit : MonoBehaviour, ITargetable
     [SerializeField] private float rotateSpeed = 5;
     [SerializeField] private float shoulderHeight = 1.7f;
     private GridCell gridCell;
+    private bool holdingMove = false;
     #endregion
 
     #region //Action
@@ -66,11 +67,23 @@ public class Unit : MonoBehaviour, ITargetable
 
     private void Start()
     {
+        if(IsAI()) unitHealth.AIMaxHPBoost();
         gridCell = GetGridCell();
     }
 
     private void Update()
     {
+        if(Time.timeScale == 0 && sfxPlayer.IsSoundPlaying("walking"))
+        {
+            sfxPlayer.Stop("walking");
+            holdingMove = true;
+        }
+        else if(Time.timeScale == 1 && holdingMove)
+        {
+            sfxPlayer.Play("walking");
+            holdingMove = false;
+        }
+
         GridCell newCell = GetGridCell();
         if(newCell == gridCell) return;
         gridCell = newCell;
@@ -114,7 +127,7 @@ public class Unit : MonoBehaviour, ITargetable
         ActionLogListener.Publish($"{GetName()} has died");
         sfxPlayer.transform.parent = null;
         sfxPlayer.PlayLastSound("death");
-        Destroy(gameObject);
+        gameObject.SetActive(false);
         UnitDead?.Invoke(this);
     }
     #endregion

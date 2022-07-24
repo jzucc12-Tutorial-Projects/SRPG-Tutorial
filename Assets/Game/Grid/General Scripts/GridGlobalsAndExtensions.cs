@@ -91,12 +91,10 @@ public static class GridExtensions
     {
         return GetComponentAtCell<Collider>(gridCell, GridGlobals.blockWalkingMask) == null;
     }
-    public static IObjectInGrid GetAtCell(this GridCell gridCell)
+    public static List<IObjectInGrid> GetAtCell(this GridCell gridCell)
     {
-        //I'm shooting for everything and only returning the first because with a single hit, sometimes
-        //a child GO is struck and the cell is registered blank by mistake.
-        var hits = GetComponentsAtCell<IObjectInGrid>(gridCell, -1);
-        if(hits.Count > 0) return hits[0];
+        var comps = GetComponentsAtCell<IObjectInGrid>(gridCell, -1);
+        if(comps.Count > 0) return comps;
         else return null;
     }
     #endregion
@@ -115,10 +113,9 @@ public static class GridExtensions
         var hits = Physics.RaycastAll(gridCell.GetWorldPosition()+Vector3.down, Vector3.up*GridGlobals.raycastLength, GridGlobals.raycastLength, mask);
         foreach(var hit in hits)
         {
-            if(hit.collider.TryGetComponent<T>(out T component))
-            {
-                list.Add(component);
-            }
+            var comps = hit.collider.GetComponents<T>();
+            foreach(var comp in comps)
+                list.Add(comp);
         }
         return list;
     }

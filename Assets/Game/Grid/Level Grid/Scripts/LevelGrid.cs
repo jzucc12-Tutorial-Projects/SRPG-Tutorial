@@ -78,15 +78,18 @@ public class LevelGrid : MonoBehaviour
             var obj = gridSystem.GetGridObject(cell);
             obj.ResetObject();
             obj.walkable = cell.IsWalkable();
-            var objInGrid = cell.GetAtCell();
-            if(objInGrid == null) continue;
+            var objsInGrid = cell.GetAtCell();
+            if(objsInGrid == null) continue;
 
-            if(objInGrid is Unit)
-                obj.myUnit = (Unit)objInGrid;
-            if(objInGrid is ITargetable)
-                obj.targetable = (ITargetable)objInGrid;
-            if(objInGrid is IInteractable)
-                obj.interactable = (IInteractable)objInGrid;
+            foreach(var objInGrid in objsInGrid)
+            {
+                if(objInGrid is Unit)
+                    obj.myUnit = (Unit)objInGrid;
+                if(objInGrid is ITargetable)
+                    obj.targetable = (ITargetable)objInGrid;
+                if(objInGrid is IInteractable)
+                    obj.interactable = (IInteractable)objInGrid;
+            }
         }
     }
     #endregion
@@ -103,7 +106,7 @@ public class LevelGrid : MonoBehaviour
     {
         if(target == origin) yield break;
         GridCell offset = target - origin;
-        GridCell nextCell = origin;
+        GridCell nextCell = origin + offset;
         while(IsValidCell(nextCell) && !nextCell.HasHighObstacle())
         {
             if(!nextCell.HasObstacle()) yield return nextCell;

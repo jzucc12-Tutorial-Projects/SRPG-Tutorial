@@ -114,7 +114,7 @@ public class GrenadeAction : TargetedAction, IAnimatedAction, ISupply, IOnSelect
     {
         unitWeapon.ShowActiveWeapon();
         activeGrenade.GetTargets(target.GetGridCell());
-        ActionFinish(activeGrenade.targetCells);
+        ActionFinish(activeGrenade.GetTargetCells());
         activeGrenade = null;
     }
     #endregion

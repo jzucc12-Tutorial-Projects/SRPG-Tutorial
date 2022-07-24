@@ -87,7 +87,7 @@ PrefabInstance:
     - target: {fileID: 642008498672032320, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
       propertyPath: m_RootOrder
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 642008498672032320, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
@@ -354,6 +354,16 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 6384183f6064f3948bbe8a0366b4b82c, type: 2}
+    - target: {fileID: 6208183024560329706, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: maxHealth
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 6208183024560329706, guid: 4190997705b9e8d419a2a1e826394619,
+        type: 3}
+      propertyPath: aiMaxHPBoost
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7930978741787514549, guid: 4190997705b9e8d419a2a1e826394619,
         type: 3}
       propertyPath: ragdollPrefab
@@ -441,7 +451,7 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 0
-  maxCooldown: 2
+  maxCooldown: 3
   aoeSize: 2
   damage: 40
 --- !u!114 &231023419207397836
@@ -482,7 +492,7 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 0
-  maxCooldown: 1
+  maxCooldown: 2
   aoeSize: 1
   healing: 40
 --- !u!114 &231023419207397838
@@ -605,8 +615,8 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 896
-  maxCooldown: 3
-  damage: 40
+  maxCooldown: 2
+  damage: 35
   healPercent: 0.75
   accuracySO: {fileID: 11400000, guid: a42ee84d08b431248b94c3a362cb1bef, type: 2}
 --- !u!114 &8113985476390056165

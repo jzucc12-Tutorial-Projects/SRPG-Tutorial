@@ -74,7 +74,7 @@ public class ManaBoltAction : TargetedAction, IAnimatedAction, IOnSelectAction
     protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
         ITargetable target = levelGrid.GetTargetable(targetCell);
-        AIDamageVars vars = new AIDamageVars(damage, 90, 10, 10);
+        AIDamageVars vars = new AIDamageVars(damage, 85, 10, 10);
         if(actionList.GetAggression() > 5) vars.SetNonUnitValues(10, 0);
         int score = unit.AccuracyDamageScoring(actionList.HasAction<SpinAction>(), target, vars, accuracySO, unitCell.GetWorldPosition());
         return score;

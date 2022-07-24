@@ -96,9 +96,9 @@ public abstract class TargetedAction : BaseAction
             }
             else if(requiresTargetable)
             {
-                var target = levelGrid.GetTargetable(cell);
-                if(target == null) continue;
-                if(!target.CanBeTargeted(unit, targetAllies)) continue;
+                var targetable = levelGrid.GetTargetable(cell);
+                if(targetable == null) continue;
+                if(!targetable.CanBeTargeted(unit, targetAllies)) continue;
             }
 
             validCells.Add(cell);

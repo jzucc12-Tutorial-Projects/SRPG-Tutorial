@@ -40,6 +40,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3807070063031039233}
+  - component: {fileID: 1286769790960839925}
+  - component: {fileID: 5825250149608286650}
   m_Layer: 9
   m_Name: Destructable Halfwall
   m_TagString: Untagged
@@ -64,8 +66,39 @@ Transform:
   - {fileID: 3807070062262228119}
   - {fileID: 5147251035671956636}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1286769790960839925
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3807070063031039232}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.4964375, z: 3.9997382}
+  m_Center: {x: 0, y: 0.74390066, z: 0.0025970002}
+--- !u!114 &5825250149608286650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3807070063031039232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61f9b0cb0bb7f594db5c8ce0162e3310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rootObject: {fileID: 3807070063031039232}
+  objectName: a halfwall
+  destroyedObject: {fileID: 6706412911729695563}
+  aimPoint: {fileID: 3807070062262228119}
+  maxHealth: 1
+  sfxPlayer: {fileID: 5453811990558203083}
 --- !u!1 &8908389054830559012
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,7 +271,7 @@ PrefabInstance:
         type: 3}
       propertyPath: rootObject
       value: 
-      objectReference: {fileID: 3807070064178331654}
+      objectReference: {fileID: 3807070063031039232}
     - target: {fileID: 2810993983762999876, guid: c7aae0e13a004d34f87c8652eaed4153,
         type: 3}
       propertyPath: m_Name
@@ -342,43 +375,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3807070064178235046}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3807070064178331654 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: e939321fba13eac4e8154147baf7b90f,
-    type: 3}
-  m_PrefabInstance: {fileID: 3807070064178235046}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &7967320722536658762
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3807070064178331654}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.4, y: 3, z: 0.4}
-  m_Center: {x: 0.2, y: 1.5, z: 0.2}
---- !u!114 &7967320722536658773
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3807070064178331654}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61f9b0cb0bb7f594db5c8ce0162e3310, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rootObject: {fileID: 3807070063031039232}
-  objectName: a halfwall
-  destroyedObject: {fileID: 6706412911729695563}
-  aimPoint: {fileID: 3807070062262228119}
-  maxHealth: 1
-  sfxPlayer: {fileID: 5453811990558203083}
 --- !u!1001 &6138508853038400687
 PrefabInstance:
   m_ObjectHideFlags: 0

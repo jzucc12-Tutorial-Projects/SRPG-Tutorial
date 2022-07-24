@@ -36,7 +36,6 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     public override void TakeAction(GridCell gridCell, Action onFinish)
     {
         target = gridCell;
-        GetTargets(unit.GetGridCell(), gridCell);
         SetAnimatedAction?.Invoke(this);
         base.TakeAction(gridCell, onFinish);
     }
@@ -73,7 +72,7 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     #region //Enemy AI
     protected override int GetScore(EnemyAIActionList actionList, GridCell unitCell, GridCell targetCell)
     {
-        AIDamageVars vars = new AIDamageVars(damage, 60, 80, 25);
+        AIDamageVars vars = new AIDamageVars(damage, 75, 80, 25);
         int score = unit.AOEScoring(GetTargets(unitCell, targetCell), vars, -1, 0, 2/maxCooldown);
         return score + base.GetScore(actionList, unitCell, targetCell);
     }
@@ -82,6 +81,7 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     #region //Animated action
     public void AnimationAct()
     {
+        targetCells = GetLightningCells(unit.GetGridCell(), target);
         unit.PlaySound("lightning bolt");
         var lightning = effectsManager.GetLightningBolt();
         lightning.transform.position = lightningOrigin.position;
@@ -112,14 +112,22 @@ public class LightningBoltAction : CooldownAction, IAnimatedAction, IOnSelectAct
     public override string GetActionName() => "Lightning Bolt";
 
     public override Vector3 GetTargetPosition() => target.GetWorldPosition();
+
+    private List<GridCell> GetLightningCells(GridCell unitCell, GridCell targetCell)
+    {
+        List<GridCell> cells = new List<GridCell>();
+        foreach(var cell in levelGrid.GetLine(unitCell, targetCell))
+            cells.Add(cell);
+
+        return cells;
+    }
+
     private IEnumerable<ITargetable> GetTargets(GridCell unitCell, GridCell targetCell)
     {
-        targetCells.Clear();
-        foreach(var cell in levelGrid.GetLine(unitCell, targetCell))
+        foreach(var cell in GetLightningCells(unitCell, targetCell))
         {
             var targetable = levelGrid.GetTargetable(cell);
             if(targetable == null) continue;
-            targetCells.Add(cell);
             yield return targetable;
         }
     }

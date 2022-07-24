@@ -70,7 +70,8 @@ public class UnitActionSystem : MonoBehaviour
 
     private void Start()
     {
-        SetSelectedUnit(GetDefaultUnit(team1Turn));
+        var unit = GetDefaultUnit(team1Turn);
+        if(!unit.IsAI()) SetSelectedUnit(unit);
         ClearBusy();
     }
     #endregion
@@ -78,7 +79,7 @@ public class UnitActionSystem : MonoBehaviour
     #region //Handle inputs
     private void HandleMouseClick(InputAction.CallbackContext context)
     {
-        if(!AllowInput()) return;
+        if(!AllowInput(false)) return;
 
         //Only allow action selection on single click
         if(!doubleClick) 
@@ -108,18 +109,19 @@ public class UnitActionSystem : MonoBehaviour
 
     private void HandleShiftUnit(InputAction.CallbackContext context)
     {
-        if(!AllowInput()) return;
+        if(!AllowInput(true)) return;
         if(selectedUnit == null) return;
         int shift = (int)inputManager.changeTeammates.ReadValue<float>();
         var newUnit = unitManager.GetShiftUnit(selectedUnit, team1Turn, shift);
         SetSelectedUnit(newUnit);
     }
 
-    private bool AllowInput()
+    private bool AllowInput(bool allowOverGO)
     {
         if(isBusy) return false;
         if(!allowInput) return false;
-        return !EventSystem.current.IsPointerOverGameObject();
+        if(!allowOverGO && EventSystem.current.IsPointerOverGameObject()) return false;
+        return true;
     }
     #endregion
 
