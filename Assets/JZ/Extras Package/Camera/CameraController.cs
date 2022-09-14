@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
 
     #region //General input
     private bool allowInput = true;
-    [SerializeField] private bool testMode = true;
+    [SerializeField] private bool debug = true;
     private bool snap = false;
     private bool alignWithTarget = false;
     #endregion
@@ -75,13 +75,16 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        //For easy switching when I show this to people
-        if(testMode && Input.GetKeyDown(KeyCode.M))
-            snap = !snap;
+        // //For easy switching when I show this to people
+        // if(debug && Input.GetKeyDown(KeyCode.M))
+        //     snap = !snap;
 
-        //For easy switching when I show this to people
-        if(testMode && Input.GetKeyDown(KeyCode.N))
-            alignWithTarget = !alignWithTarget;
+        // //For easy switching when I show this to people
+        // if(debug && Input.GetKeyDown(KeyCode.N))
+        //     alignWithTarget = !alignWithTarget;
+
+        if(debug && Input.GetKeyDown(KeyCode.O))
+            SnapNearest90();
 
         if(!allowInput) return;
         MoveCamera(inputManager.GetCameraMove(), 1);
@@ -180,4 +183,12 @@ public class CameraController : MonoBehaviour
         transposer.m_FollowOffset = Vector3.Lerp(transposer.m_FollowOffset, followOffset, Time.deltaTime * zoomSpeed);
     }
     #endregion
+
+    [ContextMenu("Snap nearest 90")]
+    public void SnapNearest90()
+    {
+        float quadrant = Mathf.RoundToInt(transform.eulerAngles.y / 90);
+        Debug.Log(quadrant);
+        transform.eulerAngles = new Vector3(0, 90 * quadrant, 0);
+    }
 }
