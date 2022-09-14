@@ -77,6 +77,7 @@ MonoBehaviour:
   rotateSpeed: 10
   shoulderHeight: 1.7
   maxActionPoints: 2
+  currentActionPoints: 0
 --- !u!114 &6208183024560329706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,6 +92,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   aiMaxHPBoost: 50
+  currentHealth: 0
 --- !u!114 &4329673137153643020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,7 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aggression: 5
-  movementsToConsider: 7
+  movementsToConsider: 5
   iterateLists: 0
   listIterations: 2
   iterateActions: 1

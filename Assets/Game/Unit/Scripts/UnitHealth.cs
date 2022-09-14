@@ -9,7 +9,7 @@ public class UnitHealth : MonoBehaviour
     #region //Variables
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private int aiMaxHPBoost = 50;
-    private int currentHealth;
+    [SerializeField] private int currentHealth;
     public event Action OnDeath;
     public event Action<float> OnHPChange;
     public event Action OnDamage;

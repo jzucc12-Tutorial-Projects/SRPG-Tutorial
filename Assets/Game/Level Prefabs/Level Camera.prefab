@@ -605,7 +605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vCam: {fileID: 922817128287054148}
-  testMode: 1
+  testMode: 0
   minBounds: {x: -5, y: 0, z: -5}
   maxBounds: {x: 25, y: 0, z: 30}
   moveSpeed: 7

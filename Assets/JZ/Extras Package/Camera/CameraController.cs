@@ -75,13 +75,13 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        // //For easy switching when I show this to people
-        // if(testMode && Input.GetKeyDown(KeyCode.M))
-        //     snap = !snap;
+        //For easy switching when I show this to people
+        if(testMode && Input.GetKeyDown(KeyCode.M))
+            snap = !snap;
 
-        // //For easy switching when I show this to people
-        // if(testMode && Input.GetKeyDown(KeyCode.N))
-        //     alignWithTarget = !alignWithTarget;
+        //For easy switching when I show this to people
+        if(testMode && Input.GetKeyDown(KeyCode.N))
+            alignWithTarget = !alignWithTarget;
 
         if(!allowInput) return;
         MoveCamera(inputManager.GetCameraMove(), 1);

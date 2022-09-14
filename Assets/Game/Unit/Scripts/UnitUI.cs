@@ -55,5 +55,12 @@ public class UnitUI : MonoBehaviour
     {
         healthBar.fillAmount = percentageLeft;
     }
+
+    [ContextMenu("Refresh")]
+    public void Refresh()
+    {
+        UpdateActionPointsText();
+        healthBar.fillAmount = healthSystem.GetHealthPercentage();
+    }
     #endregion
 }

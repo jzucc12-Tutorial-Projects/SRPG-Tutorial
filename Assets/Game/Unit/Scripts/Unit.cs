@@ -32,7 +32,7 @@ public class Unit : MonoBehaviour, ITargetable
     [SerializeField] private int maxActionPoints = 2;
     private BaseAction[] actions = new BaseAction[0];
     public event Action OnActionPointChange;
-    private int currentActionPoints = 0;
+    [SerializeField] private int currentActionPoints = 0;
     private int accuracyMod = 0; //Should only apply to attacks that rely on accuracy
     private float damageMod = 0; //Should only applies to attacks that rely on accuracy
     #endregion
@@ -99,7 +99,7 @@ public class Unit : MonoBehaviour, ITargetable
         {
             string hitText = crit ? "crit" : "hit";
             if(attacker == this)
-                ActionLogListener.Publish($"{attacker.GetName()} {hitText} themself for {damageAmount} damage");
+                ActionLogListener.Publish($"{attacker.GetName()} {hitText} themselves for {damageAmount} damage");
             else
                 ActionLogListener.Publish($"{attacker.GetName()} {hitText} {GetName()} for {damageAmount} damage");
         
@@ -114,7 +114,7 @@ public class Unit : MonoBehaviour, ITargetable
         if(healAmount > 0) 
         {
             if(healer == this)
-                ActionLogListener.Publish($"{healer.GetName()} healed themself for {healAmount} hp");
+                ActionLogListener.Publish($"{healer.GetName()} healed themselves for {healAmount} hp");
             else
                 ActionLogListener.Publish($"{healer.GetName()} healed {GetName()} for {healAmount} hp");
         }

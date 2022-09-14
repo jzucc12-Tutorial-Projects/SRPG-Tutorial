@@ -150,8 +150,8 @@ public class MoveAction : BaseAction
         foreach(var enemy in enemies)
         {
             var dir = (enemy.GetWorldPosition() - newPosition);
-            bool seen = Physics.Raycast(newPosition, dir, dir.magnitude, GridGlobals.obstacleMask);
-            if(!seen ^ aggressive)
+            bool notSeen = Physics.Raycast(newPosition, dir, dir.magnitude, GridGlobals.obstacleMask);
+            if(notSeen ^ aggressive)
                 score += 40;
 
             int startDistance = pathfinder.GetPathLength(startCell, enemy.GetGridCell());

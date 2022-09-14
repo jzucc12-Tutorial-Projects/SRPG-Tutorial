@@ -2490,6 +2490,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7921452890224807754, guid: 81b6130a530548c41abaa3f42ecff58b,
         type: 3}
+      propertyPath: iterateLists
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7921452890224807754, guid: 81b6130a530548c41abaa3f42ecff58b,
+        type: 3}
       propertyPath: listIterations
       value: 3
       objectReference: {fileID: 0}

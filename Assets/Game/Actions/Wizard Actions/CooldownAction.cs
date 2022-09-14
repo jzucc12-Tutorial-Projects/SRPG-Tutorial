@@ -8,7 +8,8 @@ public abstract class CooldownAction : TargetedAction, ISupply
 {
     #region //variables
     [Header("Cooldown action")]
-    [SerializeField, Min(1)] protected int maxCooldown = 1;
+    public bool showCooldown;
+    [SerializeField, Min(0)] protected int maxCooldown = 1;
     protected int currentCooldown = 0;
     #endregion
 

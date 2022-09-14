@@ -451,6 +451,7 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 0
+  showCooldown: 0
   maxCooldown: 3
   aoeSize: 2
   damage: 40
@@ -492,6 +493,7 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 0
+  showCooldown: 0
   maxCooldown: 2
   aoeSize: 1
   healing: 40
@@ -533,6 +535,7 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 256
+  showCooldown: 0
   maxCooldown: 2
   aoeSize: 2
   damage: 50
@@ -574,6 +577,7 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 256
+  showCooldown: 0
   maxCooldown: 3
   damage: 60
   lightningOrigin: {fileID: 3953428685138820985}
@@ -615,6 +619,7 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 896
+  showCooldown: 0
   maxCooldown: 2
   damage: 35
   healPercent: 0.75
